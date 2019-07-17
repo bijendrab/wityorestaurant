@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public interface RestaurantConfigurationService {
-    //public List<HashMap<String,Object>> getConfig();
+    HashMap<String,Object> getConfig();
 
-    public Object add(ConfigurationDTO config);
+    Object add(ConfigurationDTO config);
 }

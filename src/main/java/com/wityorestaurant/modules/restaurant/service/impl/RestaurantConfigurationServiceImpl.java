@@ -9,6 +9,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 @Service(value = "RestaurantConfigurationService")
 public class RestaurantConfigurationServiceImpl implements RestaurantConfigurationService {
     @Autowired
@@ -61,9 +67,50 @@ public class RestaurantConfigurationServiceImpl implements RestaurantConfigurati
 
     }
 
-   /* public List<HashMap<String,Object>> getConfig() {
-        List<Category> list = new ArrayList<>();
-        categoryRepository.findAll().iterator().forEachRemaining(list::add);
-        return list;
-    }*/
+    public HashMap<String,Object> getConfig() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        RestaurantUser restUser = userRepository.findByUsername(auth.getName());
+        HashMap<String,Object> configList=new HashMap<>();
+        List<HashMap<String,Object>>catList=new ArrayList<>();
+        List<HashMap<String,Object>>subCatList=new ArrayList<>();
+        List<HashMap<String,Object>>cuisineList=new ArrayList<>();
+        List<HashMap<String,Object>>quanityOpList=new ArrayList<>();
+        for(Category catItem:restUser.getRestDetails().getCategories()) {
+            HashMap<String,Object> cat=new HashMap<>();
+            cat.put("id",catItem.getId());
+            cat.put("categoryName",catItem.getCategoryName());
+            cat.put("categoryType",catItem.getCategoryType());
+            cat.put("sequence",catItem.getSequence());
+            catList.add(cat);
+        }
+        for(SubCategory subCatItem:restUser.getRestDetails().getSubCategories()) {
+            HashMap<String,Object> subcat=new HashMap<>();
+            subcat.put("id",subCatItem.getId());
+            subcat.put("CategoryName",subCatItem.getSubCategoryName());
+            subcat.put("CategoryType",subCatItem.getSubCategoryType());
+            subcat.put("sequence",subCatItem.getSequence());
+            subCatList.add(subcat);
+        }
+        for(Cuisine cuisineItem:restUser.getRestDetails().getCuisines()) {
+            HashMap<String,Object> cusine=new HashMap<>();
+            cusine.put("id",cuisineItem.getId());
+            cusine.put("categoryName",cuisineItem.getCuisineName());
+            cusine.put("categoryType",cuisineItem.getCuisineType());
+            cusine.put("sequence",cuisineItem.getSequence());
+            cuisineList.add(cusine);
+        }
+        for(QuantityOption qOItem:restUser.getRestDetails().getQuantityOptions()) {
+            HashMap<String,Object> quantityop=new HashMap<>();
+            quantityop.put("id",qOItem.getId());
+            quantityop.put("categoryName",qOItem.getQuantityOptionName());
+            quantityop.put("categoryType",qOItem.getQuantityOptionType());
+            quantityop.put("sequence",qOItem.getSequence());
+            quanityOpList.add(quantityop);
+        }
+        configList.put("categories",catList);
+        configList.put("subCategories",subCatList);
+        configList.put("cuisines",cuisineList);
+        configList.put("quantityOptions",quanityOpList);
+        return configList;
+    }
 }

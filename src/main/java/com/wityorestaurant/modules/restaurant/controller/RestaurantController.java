@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -82,6 +83,12 @@ public class RestaurantController {
     @PostMapping("/addconfig")
     public Object addConfig(@RequestBody ConfigurationDTO config) {
         return restConfigServiceImpl.add(config);
+
+    }
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping("/getconfig")
+    public ResponseEntity<?> getConfig() {
+        return new ResponseEntity<Object>(restConfigServiceImpl.getConfig(),HttpStatus.FOUND);
 
     }
 }
