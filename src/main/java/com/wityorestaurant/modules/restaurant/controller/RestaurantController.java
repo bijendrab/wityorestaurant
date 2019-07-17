@@ -81,8 +81,8 @@ public class RestaurantController {
     }
     @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/addconfig")
-    public Object addConfig(@RequestBody ConfigurationDTO config) {
-        return restConfigServiceImpl.add(config);
+    public ResponseEntity<?> addConfig(@RequestBody ConfigurationDTO config) {
+        return new ResponseEntity<>(restConfigServiceImpl.add(config),HttpStatus.ACCEPTED);
 
     }
     @PreAuthorize("hasRole('ROLE_USER')")
