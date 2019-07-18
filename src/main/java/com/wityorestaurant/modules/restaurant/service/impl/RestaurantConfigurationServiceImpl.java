@@ -86,24 +86,24 @@ public class RestaurantConfigurationServiceImpl implements RestaurantConfigurati
         for(SubCategory subCatItem:restUser.getRestDetails().getSubCategories()) {
             HashMap<String,Object> subcat=new HashMap<>();
             subcat.put("id",subCatItem.getId());
-            subcat.put("CategoryName",subCatItem.getSubCategoryName());
-            subcat.put("CategoryType",subCatItem.getSubCategoryType());
+            subcat.put("subCategoryName",subCatItem.getSubCategoryName());
+            subcat.put("subCategoryType",subCatItem.getSubCategoryType());
             subcat.put("sequence",subCatItem.getSequence());
             subCatList.add(subcat);
         }
         for(Cuisine cuisineItem:restUser.getRestDetails().getCuisines()) {
             HashMap<String,Object> cusine=new HashMap<>();
             cusine.put("id",cuisineItem.getId());
-            cusine.put("categoryName",cuisineItem.getCuisineName());
-            cusine.put("categoryType",cuisineItem.getCuisineType());
+            cusine.put("cuisineName",cuisineItem.getCuisineName());
+            cusine.put("cuisineType",cuisineItem.getCuisineType());
             cusine.put("sequence",cuisineItem.getSequence());
             cuisineList.add(cusine);
         }
         for(QuantityOption qOItem:restUser.getRestDetails().getQuantityOptions()) {
             HashMap<String,Object> quantityop=new HashMap<>();
             quantityop.put("id",qOItem.getId());
-            quantityop.put("categoryName",qOItem.getQuantityOptionName());
-            quantityop.put("categoryType",qOItem.getQuantityOptionType());
+            quantityop.put("quantityOptionName",qOItem.getQuantityOptionName());
+            quantityop.put("quantityOptionType",qOItem.getQuantityOptionType());
             quantityop.put("sequence",qOItem.getSequence());
             quanityOpList.add(quantityop);
         }

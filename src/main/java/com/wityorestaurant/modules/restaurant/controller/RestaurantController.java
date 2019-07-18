@@ -88,7 +88,7 @@ public class RestaurantController {
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/getconfig")
     public ResponseEntity<?> getConfig() {
-        return new ResponseEntity<Object>(restConfigServiceImpl.getConfig(),HttpStatus.FOUND);
+        return new ResponseEntity<Object>(restConfigServiceImpl.getConfig(),HttpStatus.ACCEPTED);
 
     }
 }
