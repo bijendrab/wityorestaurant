@@ -95,9 +95,6 @@ public class Product implements Serializable {
         this.prepTime = prepTime;
     }
 
-   /* public Long getProductId() {
-        return this.pId;
-    }*/
 
     public String getCategory() {
         return this.category;
@@ -131,9 +128,6 @@ public class Product implements Serializable {
         return this.quantityOption;
     }
 
-    /*public void setProductId(Long pId) {
-        this.pId = pId;
-    }*/
 
     public void setCategory(String category) {
         this.category = category;
