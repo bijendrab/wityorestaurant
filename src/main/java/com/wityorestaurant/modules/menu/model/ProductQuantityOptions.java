@@ -13,7 +13,7 @@ import java.io.Serializable;
 @Table(name = "itemQuantity")
 public class ProductQuantityOptions implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int QOId;
 
     @Column(name="qoption")

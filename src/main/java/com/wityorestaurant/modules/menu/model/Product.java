@@ -56,12 +56,12 @@ public class Product implements Serializable {
     private  String selectedQuantity;
 
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name="restId")
-    /*@JsonProperty("restId")
-    @JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="restId")
-    @JsonIdentityReference(alwaysAsId=true)*/
-    @JsonIgnore
+    @JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="restId")
+    @JsonIdentityReference(alwaysAsId=true)
+    @JsonProperty("restId")
+    //@JsonIgnore
     private RestaurantDetails restaurantDetails;
 
     @OneToMany(mappedBy = "product",orphanRemoval = true,cascade = CascadeType.ALL,fetch=FetchType.EAGER)

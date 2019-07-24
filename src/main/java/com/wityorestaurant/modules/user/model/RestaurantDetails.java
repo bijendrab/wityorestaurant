@@ -58,7 +58,7 @@ public class RestaurantDetails implements Serializable {
     @Fetch(value = FetchMode.SUBSELECT)
     private List<QuantityOption> quantityOptions;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "restaurantDetails",orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "restaurantDetails",orphanRemoval = true)
     @Fetch(value = FetchMode.SUBSELECT)
     private List<Product> product;
 
