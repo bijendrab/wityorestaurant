@@ -14,13 +14,7 @@ import java.util.Set;
 public class Product implements Serializable {
     @Id
     @Column(name = "productId")
-    /*@GeneratedValue(strategy = GenerationType.AUTO)*/
     private String productId;
-
-    /*@EmbeddedId
-    @JsonIdentityReference(alwaysAsId=true)
-    @JsonProperty("productId")
-    private ProductIdentity pId;*/
 
     @Column(name="category")
     private String category;
@@ -61,7 +55,6 @@ public class Product implements Serializable {
     @JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="restId")
     @JsonIdentityReference(alwaysAsId=true)
     @JsonProperty("restId")
-    //@JsonIgnore
     private RestaurantDetails restaurantDetails;
 
     @OneToMany(mappedBy = "product",orphanRemoval = true,cascade = CascadeType.ALL,fetch=FetchType.EAGER)
