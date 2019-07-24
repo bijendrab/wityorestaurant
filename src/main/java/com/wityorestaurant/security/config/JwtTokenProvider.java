@@ -2,16 +2,12 @@ package com.wityorestaurant.security.config;
 
 import java.security.Key;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.wityorestaurant.modules.restaurant.model.RestaurantUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
 import com.wityorestaurant.common.Constant;
@@ -26,8 +22,6 @@ import io.jsonwebtoken.UnsupportedJwtException;
 
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
-
-import static com.wityorestaurant.common.Constant.AUTHORITIES_KEY;
 
 @Component
 public class JwtTokenProvider {

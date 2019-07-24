@@ -1,7 +1,6 @@
 package com.wityorestaurant.security.config;
 
 import java.io.IOException;
-import java.util.Collections;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -17,7 +16,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.wityorestaurant.common.Constant;
-import com.wityorestaurant.modules.restaurant.model.RestaurantUser;
 import com.wityorestaurant.security.service.RestaurantUserDetailsService;
 
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
