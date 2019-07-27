@@ -2,8 +2,8 @@ package com.wityorestaurant.modules.menu.controller;
 
 import com.wityorestaurant.modules.menu.model.Product;
 import com.wityorestaurant.modules.menu.service.RestaurantMenuService;
-import com.wityorestaurant.modules.user.repository.RestaurantUserRepository;
-import com.wityorestaurant.modules.user.service.RestaurantUserService;
+import com.wityorestaurant.modules.restaurant.repository.RestaurantUserRepository;
+import com.wityorestaurant.modules.restaurant.service.RestaurantUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

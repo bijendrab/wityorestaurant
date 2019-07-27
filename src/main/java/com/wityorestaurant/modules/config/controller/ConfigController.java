@@ -1,15 +1,20 @@
 package com.wityorestaurant.modules.config.controller;
-import com.wityorestaurant.modules.config.dto.ConfigurationDTO;
-import com.wityorestaurant.modules.config.service.RestaurantConfigurationService;
-import com.wityorestaurant.modules.user.repository.RestaurantUserRepository;
-import com.wityorestaurant.modules.user.service.RestaurantUserService;
-import com.wityorestaurant.security.config.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.wityorestaurant.modules.config.dto.ConfigurationDTO;
+import com.wityorestaurant.modules.config.service.RestaurantConfigurationService;
+import com.wityorestaurant.modules.restaurant.repository.RestaurantUserRepository;
+import com.wityorestaurant.modules.restaurant.service.RestaurantUserService;
 
 
 @RestController

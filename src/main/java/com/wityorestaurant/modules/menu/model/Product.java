@@ -1,7 +1,7 @@
 package com.wityorestaurant.modules.menu.model;
 
 import com.fasterxml.jackson.annotation.*;
-import com.wityorestaurant.modules.user.model.RestaurantDetails;
+import com.wityorestaurant.modules.restaurant.model.RestaurantDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

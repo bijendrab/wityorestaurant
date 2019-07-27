@@ -1,9 +1,8 @@
 package com.wityorestaurant.modules.menu.service;
 
-import com.wityorestaurant.modules.menu.model.Product;
-
 import java.util.List;
-import java.util.Optional;
+
+import com.wityorestaurant.modules.menu.model.Product;
 
 public interface RestaurantMenuService {
     List<Product> getAllProducts();
