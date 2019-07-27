@@ -1,4 +1,4 @@
-package com.wityorestaurant.modules.menu.dto;
+package com.wityorestaurant.modules.restaurant.dto;
 
 import java.util.Map;
 

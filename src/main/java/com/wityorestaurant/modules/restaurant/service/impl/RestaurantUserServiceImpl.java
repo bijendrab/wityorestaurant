@@ -1,11 +1,13 @@
 package com.wityorestaurant.modules.restaurant.service.impl;
 
 import com.wityorestaurant.modules.restaurant.dto.RegistrationDTO;
+import com.wityorestaurant.modules.restaurant.dto.RestaurantListDto;
 import com.wityorestaurant.modules.restaurant.exception.UsernameAlreadyExistsException;
 import com.wityorestaurant.modules.restaurant.model.RestaurantDetails;
 import com.wityorestaurant.modules.restaurant.model.RestaurantUser;
 import com.wityorestaurant.modules.restaurant.model.Role;
 import com.wityorestaurant.modules.restaurant.model.RoleName;
+import com.wityorestaurant.modules.restaurant.repository.RestaurantRepository;
 import com.wityorestaurant.modules.restaurant.repository.RestaurantUserRepository;
 import com.wityorestaurant.modules.restaurant.repository.RoleRepository;
 import com.wityorestaurant.modules.restaurant.service.RestaurantUserService;
@@ -15,13 +17,18 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static java.lang.Boolean.TRUE;
 @Service(value = "RestaurantUserService")
 public class RestaurantUserServiceImpl implements RestaurantUserService {
     @Autowired
     private RestaurantUserRepository userRepository;
+    
+    @Autowired
+    private RestaurantRepository restaurantRepository;
 
     @Autowired
     RoleRepository roleRepository;
@@ -79,6 +86,23 @@ public class RestaurantUserServiceImpl implements RestaurantUserService {
                 throw new RuntimeException("Server not responding, please try again later");
             }
         }
+    }
+    
+    public RestaurantListDto getAllRestaurantIdsAndName() {
+    	try {
+    		RestaurantListDto dto = new RestaurantListDto();
+			List<RestaurantDetails> restaurantList = restaurantRepository.findAll();
+			Map<Long, String> dtoMap = new HashMap<Long, String>();
+			if(restaurantList.size() != 0) {
+				for(RestaurantDetails restaurant : restaurantList) {
+					dtoMap.put(restaurant.getRestId(), restaurant.getRestName());
+				}
+				dto.setRestaurantDetails(dtoMap);
+				return dto;
+			}
+		} catch (Exception e) {
+		}
+    	return null;
     }
 
     //@Override
