@@ -96,4 +96,8 @@ public class RestaurantMenuServiceImpl implements RestaurantMenuService {
             pqo.add(potion);
         }
     }
+
+	public List<Product> getMenuByRestaurantId(Long restId) {
+		return menuRepository.findByRestaurantId(restId);
+	}
 }

@@ -16,4 +16,8 @@ public interface RestaurantMenuService {
     Product editMenuItem(Product product);
 
     String setMenuItemStatus(String productId);
+    
+    List<Product> getMenuByRestaurantId(Long restId);
 }
+
+
