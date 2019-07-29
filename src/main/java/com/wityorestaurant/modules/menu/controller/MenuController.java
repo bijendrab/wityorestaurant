@@ -12,7 +12,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
-@RequestMapping("/api/restaurant")
+@RequestMapping("/api/menu")
 public class MenuController {
     @Autowired
     RestaurantUserService restUserServiceImpl;
@@ -61,5 +61,10 @@ public class MenuController {
     @PutMapping("/setMenuItemStatus/{itemId}")
     public ResponseEntity<?> setMenuItemStatus(@PathVariable(value = "itemId")String itemId) {
         return new ResponseEntity<>(restMenuServiceImpl.setMenuItemStatus(itemId),HttpStatus.ACCEPTED);
+    }
+    
+    @GetMapping("/{restaurantId}")
+    public ResponseEntity<?> getMenuItemByRestaurantId(@PathVariable("restaurantId") Long restId){
+    	return new ResponseEntity<>(restMenuServiceImpl.getMenuByRestaurantId(restId),HttpStatus.ACCEPTED);
     }
 }

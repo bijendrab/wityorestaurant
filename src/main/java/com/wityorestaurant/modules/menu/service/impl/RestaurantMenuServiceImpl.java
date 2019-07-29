@@ -12,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.wityorestaurant.modules.menu.dto.RestaurantMenuDto;
 import com.wityorestaurant.modules.menu.model.Product;
 import com.wityorestaurant.modules.menu.model.ProductQuantityOptions;
 import com.wityorestaurant.modules.menu.repository.MenuRepository;
@@ -96,4 +97,11 @@ public class RestaurantMenuServiceImpl implements RestaurantMenuService {
             pqo.add(potion);
         }
     }
+
+	public RestaurantMenuDto getMenuByRestaurantId(Long restId) {
+		RestaurantMenuDto dto = new RestaurantMenuDto();
+		List<Product> menuList = menuRepository.findByRestaurantId(restId);
+		dto.setRestaurantMenu(menuList);
+		return dto;
+	}
 }
