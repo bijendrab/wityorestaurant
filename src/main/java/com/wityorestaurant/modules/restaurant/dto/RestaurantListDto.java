@@ -1,16 +1,18 @@
 package com.wityorestaurant.modules.restaurant.dto;
 
-import java.util.Map;
+import java.util.List;
 
 public class RestaurantListDto {
 	
-	private Map<Long, String> restaurantDetails;
+	private List<RestaurantIdNameDto> restaurantDetails;
 
-	public Map<Long, String> getRestaurantDetails() {
+	public List<RestaurantIdNameDto> getRestaurantDetails() {
 		return restaurantDetails;
 	}
 
-	public void setRestaurantDetails(Map<Long, String> restaurantDetails) {
+	public void setRestaurantDetails(List<RestaurantIdNameDto> restaurantDetails) {
 		this.restaurantDetails = restaurantDetails;
 	}
+
+
 }

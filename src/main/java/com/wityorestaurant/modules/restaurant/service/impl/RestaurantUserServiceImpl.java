@@ -1,6 +1,7 @@
 package com.wityorestaurant.modules.restaurant.service.impl;
 
 import com.wityorestaurant.modules.restaurant.dto.RegistrationDTO;
+import com.wityorestaurant.modules.restaurant.dto.RestaurantIdNameDto;
 import com.wityorestaurant.modules.restaurant.dto.RestaurantListDto;
 import com.wityorestaurant.modules.restaurant.exception.UsernameAlreadyExistsException;
 import com.wityorestaurant.modules.restaurant.model.RestaurantDetails;
@@ -91,13 +92,16 @@ public class RestaurantUserServiceImpl implements RestaurantUserService {
     public RestaurantListDto getAllRestaurantIdsAndName() {
     	try {
     		RestaurantListDto dto = new RestaurantListDto();
+    		List<RestaurantIdNameDto> responseList = new ArrayList<RestaurantIdNameDto>();
 			List<RestaurantDetails> restaurantList = restaurantRepository.findAll();
-			Map<Long, String> dtoMap = new HashMap<Long, String>();
 			if(restaurantList.size() != 0) {
 				for(RestaurantDetails restaurant : restaurantList) {
-					dtoMap.put(restaurant.getRestId(), restaurant.getRestName());
+					RestaurantIdNameDto idName = new RestaurantIdNameDto();
+					idName.setRestaurantId(restaurant.getRestId());
+					idName.setRestaurantName(restaurant.getRestName());
+					responseList.add(idName);
 				}
-				dto.setRestaurantDetails(dtoMap);
+				dto.setRestaurantDetails(responseList);
 				return dto;
 			}
 		} catch (Exception e) {
