@@ -42,7 +42,7 @@ public class Product implements Serializable {
 
     @NotNull(message = "Product Name is mandatory")
     @Column(name = "name")
-    private String name;
+    private String productName;
 
 
     @Column(name = "isAdd")
@@ -56,7 +56,7 @@ public class Product implements Serializable {
     private Boolean isEnabled;
 
     @Column(name = "prepTime")
-    private int prepTime;
+    private int preparationTime;
 
     @Column(name="selectedQuantity")
     private  String selectedQuantity;
@@ -99,12 +99,12 @@ public class Product implements Serializable {
         this.isEnabled = isEnabled;
     }
 
-    public int getPrepTime() {
-        return prepTime;
+    public int getPreparationTime() {
+        return preparationTime;
     }
 
-    public void setPrepTime(int prepTime) {
-        this.prepTime = prepTime;
+    public void setPreparationTime(int preparationTime) {
+        this.preparationTime = preparationTime;
     }
 
 
@@ -124,8 +124,8 @@ public class Product implements Serializable {
         return this.description;
     }
 
-    public String getName() {
-        return this.name;
+    public String getProductName() {
+        return this.productName;
     }
 
     public Boolean getIsAdd() {
@@ -157,8 +157,8 @@ public class Product implements Serializable {
         this.description = description;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setProductName(String productName) {
+        this.productName = productName;
     }
 
     public void setIsAdd(Boolean isAdd) {
