@@ -1,4 +1,5 @@
 package com.wityorestaurant.modules.config.controller;
+import com.wityorestaurant.modules.config.dto.RestTableDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,5 +47,17 @@ public class ConfigController {
     public ResponseEntity<?> getConfig() {
         return new ResponseEntity<Object>(restConfigServiceImpl.getConfig(),HttpStatus.ACCEPTED);
 
+    }
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @PostMapping("/addTable")
+    public ResponseEntity<?> addTable(@RequestBody RestTableDTO restTableConfig) {
+        return new ResponseEntity<>(restConfigServiceImpl.addTable(restTableConfig),HttpStatus.ACCEPTED);
+
+    }
+
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping("/getTables")
+    public ResponseEntity<?> getTables() {
+        return new ResponseEntity<>(restConfigServiceImpl.getAllTables(),HttpStatus.ACCEPTED);
     }
 }

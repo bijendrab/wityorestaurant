@@ -14,15 +14,12 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.wityorestaurant.modules.config.model.*;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.wityorestaurant.modules.config.model.Category;
-import com.wityorestaurant.modules.config.model.Cuisine;
-import com.wityorestaurant.modules.config.model.QuantityOption;
-import com.wityorestaurant.modules.config.model.SubCategory;
 import com.wityorestaurant.modules.menu.model.Product;
 
 @Entity
@@ -71,6 +68,10 @@ public class RestaurantDetails implements Serializable {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "restaurantDetails",orphanRemoval = true)
     @Fetch(value = FetchMode.SUBSELECT)
     private List<Product> product;
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "restaurantDetails",orphanRemoval = true, cascade = CascadeType.ALL)
+    @Fetch(value = FetchMode.SUBSELECT)
+    private List<RestTable> restTables;
 
     public RestaurantDetails() {}
 
@@ -232,5 +233,13 @@ public class RestaurantDetails implements Serializable {
 
     public void setProduct(List<Product> product) {
         this.product = product;
+    }
+
+    public List<RestTable> getRestTables() {
+        return restTables;
+    }
+
+    public void setRestTables(List<RestTable> restTables) {
+        this.restTables = restTables;
     }
 }

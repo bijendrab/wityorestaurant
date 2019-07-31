@@ -1,11 +1,9 @@
 package com.wityorestaurant.modules.config.service.impl;
 
 import com.wityorestaurant.modules.config.dto.ConfigurationDTO;
+import com.wityorestaurant.modules.config.dto.RestTableDTO;
 import com.wityorestaurant.modules.config.model.*;
-import com.wityorestaurant.modules.config.repository.CategoryRepository;
-import com.wityorestaurant.modules.config.repository.CuisineRepository;
-import com.wityorestaurant.modules.config.repository.QuantityOptionRepository;
-import com.wityorestaurant.modules.config.repository.SubCategoryRepository;
+import com.wityorestaurant.modules.config.repository.*;
 import com.wityorestaurant.modules.config.service.RestaurantConfigurationService;
 import com.wityorestaurant.modules.restaurant.model.RestaurantUser;
 import com.wityorestaurant.modules.restaurant.repository.RestaurantUserRepository;
@@ -20,6 +18,8 @@ import java.util.List;
 
 @Service(value = "RestaurantConfigurationService")
 public class RestaurantConfigurationServiceImpl implements RestaurantConfigurationService {
+    @Autowired
+    private RestTableRepository restTableRepository;
     @Autowired
     private CategoryRepository categoryRepository;
     @Autowired
@@ -69,6 +69,18 @@ public class RestaurantConfigurationServiceImpl implements RestaurantConfigurati
         }
 
     }
+    public Object addTable(RestTableDTO tableConfig) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        RestaurantUser tempUser = userRepository.findByUsername(auth.getName());
+        RestTable restTable = new RestTable();
+        restTable.setTableNumber(tableConfig.getTableNumber());
+        restTable.setTableSize(tableConfig.getTableSize());
+        restTable.setQrCode(tableConfig.getQrCode());
+        restTable.setRestaurantDetails(tempUser.getRestDetails());
+        return restTableRepository.save(restTable);
+    }
+
+
 
     public HashMap<String,Object> getConfig() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -115,5 +127,11 @@ public class RestaurantConfigurationServiceImpl implements RestaurantConfigurati
         configList.put("cuisines",cuisineList);
         configList.put("quantityOptions",quanityOpList);
         return configList;
+    }
+
+    public List<RestTable> getAllTables() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        RestaurantUser tempUser = userRepository.findByUsername(auth.getName());
+        return tempUser.getRestDetails().getRestTables();
     }
 }
