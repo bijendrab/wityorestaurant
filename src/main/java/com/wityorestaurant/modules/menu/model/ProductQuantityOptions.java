@@ -19,10 +19,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class ProductQuantityOptions implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int QOId;
+    @Column(name="qoid")
+    private int productQuantityOptionId;
 
     @Column(name="qoption")
-    private String option;
+    private String quantityOption;
 
     @Column(name = "quantity")
     private String quantity;
@@ -40,20 +41,20 @@ public class ProductQuantityOptions implements Serializable {
     public ProductQuantityOptions() {
     }
 
-    public int getQOId() {
-        return QOId;
+    public int getProductQuantityOptionId() {
+        return productQuantityOptionId;
     }
 
-    public void setQOId(int QOId) {
-        this.QOId = QOId;
+    public void setProductQuantityOptionId(int QOId) {
+        this.productQuantityOptionId = QOId;
     }
 
-    public String getOption() {
-        return option;
+    public String getQuantityOption() {
+        return quantityOption;
     }
 
-    public void setOption(String option) {
-        this.option = option;
+    public void setQuantityOption(String option) {
+        this.quantityOption = option;
     }
 
     public String getQuantity() {

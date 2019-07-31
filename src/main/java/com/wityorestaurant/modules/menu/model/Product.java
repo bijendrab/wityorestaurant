@@ -1,12 +1,24 @@
 package com.wityorestaurant.modules.menu.model;
 
-import com.fasterxml.jackson.annotation.*;
-import com.wityorestaurant.modules.restaurant.model.RestaurantDetails;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.wityorestaurant.modules.restaurant.model.RestaurantDetails;
 
 @Entity
 @Table(name = "item")
@@ -58,7 +70,7 @@ public class Product implements Serializable {
     private RestaurantDetails restaurantDetails;
 
     @OneToMany(mappedBy = "product",orphanRemoval = true,cascade = CascadeType.ALL,fetch=FetchType.EAGER)
-    private Set<ProductQuantityOptions> quantityOption;
+    private Set<ProductQuantityOptions> productQuantityOptions;
 
 
     public Product() { }
@@ -124,8 +136,8 @@ public class Product implements Serializable {
         return this.selectedQuantity;
     }
 
-    public Set<ProductQuantityOptions> getQuantityOption() {
-        return this.quantityOption;
+    public Set<ProductQuantityOptions> getProductQuantityOptions() {
+        return this.productQuantityOptions;
     }
 
 
@@ -157,8 +169,8 @@ public class Product implements Serializable {
         this.selectedQuantity = selectedQuantity;
     }
 
-    public void setQuantityOption(Set<ProductQuantityOptions> quantityOption) {
-        this.quantityOption = quantityOption;
+    public void setProductQuantityOptions(Set<ProductQuantityOptions> quantityOption) {
+        this.productQuantityOptions = quantityOption;
     }
 
 

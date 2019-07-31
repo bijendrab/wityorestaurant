@@ -92,7 +92,7 @@ public class RestaurantMenuServiceImpl implements RestaurantMenuService {
 
    public void setMenu(Product product) {
         Set<ProductQuantityOptions> pqo = new HashSet<ProductQuantityOptions>();
-        for (ProductQuantityOptions potion : product.getQuantityOption()) {
+        for (ProductQuantityOptions potion : product.getProductQuantityOptions()) {
             potion.setProduct(product);
             pqo.add(potion);
         }
