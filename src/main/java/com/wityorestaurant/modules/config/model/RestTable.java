@@ -9,11 +9,11 @@ import java.io.Serializable;
 
 @Entity
 @JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
-@Table(name = "resttable")
+@Table(name = "restaurant_table")
 public class RestTable implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long tableId;
 
     @Column(name = "tableNumber")
     private Integer tableNumber;
@@ -30,12 +30,12 @@ public class RestTable implements Serializable {
     @JsonIgnore
     private RestaurantDetails restaurantDetails;
 
-    public Long getId() {
-        return id;
+    public Long getTableId() {
+        return tableId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setTableId(Long id) {
+        this.tableId = id;
     }
 
     public Integer getTableNumber() {

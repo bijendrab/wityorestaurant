@@ -24,7 +24,7 @@ import com.wityorestaurant.modules.menu.model.Product;
 
 @Entity
 @JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="restId")
-@Table(name = "restDetails")
+@Table(name = "restaurant_details")
 public class RestaurantDetails implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
