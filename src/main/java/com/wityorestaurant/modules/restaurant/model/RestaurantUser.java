@@ -14,7 +14,7 @@ import java.util.Set;
 
 @Entity
 @JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="userId")
-@Table(name = "restaurant_user")
+@Table(name = "restUser")
 public class RestaurantUser implements UserDetails, Serializable {
 
     private static final long serialVersionUID = 2681531852204068105L;
