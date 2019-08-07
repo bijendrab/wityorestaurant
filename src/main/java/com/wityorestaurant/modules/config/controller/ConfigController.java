@@ -1,13 +1,20 @@
 package com.wityorestaurant.modules.config.controller;
 import com.wityorestaurant.modules.config.dto.RestTableDTO;
+import com.wityorestaurant.modules.config.model.Staff;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -59,5 +66,36 @@ public class ConfigController {
     @GetMapping("/getTables")
     public ResponseEntity<?> getTables() {
         return new ResponseEntity<>(restConfigServiceImpl.getAllTables(),HttpStatus.ACCEPTED);
+    }
+
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @PostMapping("/staff/add/{restaurantId}")
+    public ResponseEntity<?> addStaff(@RequestBody Staff staff, @PathVariable Long restaurantId) {
+        return new ResponseEntity<Staff>(restConfigServiceImpl.addNewStaff(staff, restaurantId), HttpStatus.OK);
+    }
+    
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @DeleteMapping("/staff/delete/{staffId}")
+    public ResponseEntity<?> removeStaff(@PathVariable Long staffId) {
+        return new ResponseEntity<Boolean>(restConfigServiceImpl.deleteStaffById(staffId), HttpStatus.OK);
+    }
+    
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @PutMapping("/staff/update")
+    public ResponseEntity<?> updateStaff(@RequestBody Staff staff) {
+        return new ResponseEntity<Staff>(restConfigServiceImpl.updateStaff(staff), HttpStatus.OK);
+    }
+    
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping("/staff/get-all-staffs")
+    public ResponseEntity<?> getAllStaff() {
+        return new ResponseEntity<List<Staff>>(restConfigServiceImpl.getAllStaffs(), HttpStatus.OK);
+    }
+    
+    
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping("/staff/get-custom-staffs")
+    public ResponseEntity<?> getCustomStaffs() {
+        return new ResponseEntity<List<Staff>>(restConfigServiceImpl.getCustomStaffs(), HttpStatus.OK);
     }
 }
