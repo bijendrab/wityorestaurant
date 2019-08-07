@@ -1,23 +1,46 @@
 package com.wityorestaurant.modules.config.service.impl;
 
-import com.wityorestaurant.modules.config.dto.ConfigurationDTO;
-import com.wityorestaurant.modules.config.dto.RestTableDTO;
-import com.wityorestaurant.modules.config.model.*;
-import com.wityorestaurant.modules.config.repository.*;
-import com.wityorestaurant.modules.config.service.RestaurantConfigurationService;
-import com.wityorestaurant.modules.restaurant.model.RestaurantUser;
-import com.wityorestaurant.modules.restaurant.repository.RestaurantUserRepository;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import com.wityorestaurant.modules.config.dto.ConfigurationDTO;
+import com.wityorestaurant.modules.config.dto.RestTableDTO;
+import com.wityorestaurant.modules.config.model.Category;
+import com.wityorestaurant.modules.config.model.ConfigType;
+import com.wityorestaurant.modules.config.model.Cuisine;
+import com.wityorestaurant.modules.config.model.QuantityOption;
+import com.wityorestaurant.modules.config.model.RestTable;
+import com.wityorestaurant.modules.config.model.Staff;
+import com.wityorestaurant.modules.config.model.SubCategory;
+import com.wityorestaurant.modules.config.repository.CategoryRepository;
+import com.wityorestaurant.modules.config.repository.CuisineRepository;
+import com.wityorestaurant.modules.config.repository.QuantityOptionRepository;
+import com.wityorestaurant.modules.config.repository.RestTableRepository;
+import com.wityorestaurant.modules.config.repository.StaffRepository;
+import com.wityorestaurant.modules.config.repository.SubCategoryRepository;
+import com.wityorestaurant.modules.config.service.RestaurantConfigurationService;
+import com.wityorestaurant.modules.restaurant.model.RestaurantDetails;
+import com.wityorestaurant.modules.restaurant.model.RestaurantUser;
+import com.wityorestaurant.modules.restaurant.repository.RestaurantRepository;
+import com.wityorestaurant.modules.restaurant.repository.RestaurantUserRepository;
 
 @Service(value = "RestaurantConfigurationService")
 public class RestaurantConfigurationServiceImpl implements RestaurantConfigurationService {
+	
+	
+	Logger logger = LoggerFactory.getLogger(RestaurantConfigurationServiceImpl.class);
+	
     @Autowired
     private RestTableRepository restTableRepository;
     @Autowired
@@ -30,6 +53,10 @@ public class RestaurantConfigurationServiceImpl implements RestaurantConfigurati
     private QuantityOptionRepository quantityoptionRepository;
     @Autowired
     private RestaurantUserRepository userRepository;
+    @Autowired
+    private StaffRepository staffRepository;
+    @Autowired 
+    private RestaurantRepository restaurantRepository;
 
     public Object add(ConfigurationDTO config) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -134,4 +161,71 @@ public class RestaurantConfigurationServiceImpl implements RestaurantConfigurati
         RestaurantUser tempUser = userRepository.findByUsername(auth.getName());
         return tempUser.getRestDetails().getRestTables();
     }
+    
+    /*=========================STAFF RELATED CODING: BEGINS=============================*/
+    
+    public Staff addNewStaff(Staff staff, Long restaurantId) {
+    	try {
+    		Optional<RestaurantDetails> oRestaurant = restaurantRepository.findById(restaurantId);
+    		staff.setRetaurant(oRestaurant.get());
+			return staffRepository.save(staff);
+		} catch (Exception e) {
+			logger.error("UnableToAddStaffException: {}", e.getMessage());
+		}
+    	return null;
+    }
+    
+    public Staff updateStaff(Staff updatedStaff) {
+    	try {
+    		Optional<Staff> oStaff = staffRepository.findById(updatedStaff.getStaffId());
+    		if(oStaff.isPresent()){
+    			return staffRepository.save(updatedStaff);
+    		}
+			
+		} catch (Exception e) {
+			logger.error("UnableToUpdateStaffException: {}", e.getMessage());
+		}
+    	return null;
+    }
+    
+    public boolean deleteStaffById(Long staffId) {
+    	try {
+    		Optional<Staff> oStaff = staffRepository.findById(staffId);
+    		if(oStaff.isPresent()){
+    			staffRepository.delete(oStaff.get());
+    			return true;
+    		}
+		} catch (Exception e) {
+			logger.error("UnableToUpdateStaffException: {}", e.getMessage());
+		}
+    	return false;
+    }
+    
+    
+    /*
+     * @Description: Function to return staff by roles: waiter and order taker
+     * */
+    public List<Staff> getCustomStaffs(){
+    	try {
+    		List<Staff> existingStaff = staffRepository.findAll();
+        	return existingStaff.stream().filter(staff-> staff.getStaffRole().equalsIgnoreCase("Waiter")||staff.getStaffRole().equalsIgnoreCase("Order Taker")).collect(Collectors.toList());	
+		} catch (Exception e) {
+			logger.error("UnableToFetchStaffException: {}", e.getMessage());
+		}
+    	return Collections.emptyList();
+    	
+    }
+    
+    public List<Staff> getAllStaffs(){
+    	try {
+    		return staffRepository.findAll();
+		} catch (Exception e) {
+			logger.error("UnableToFetchStaffException: {}", e.getMessage());
+		}
+    	return Collections.emptyList();
+    }
+    
+    
+    
+    /*=========================STAFF RELATED CODING: ENDS=============================*/
 }
