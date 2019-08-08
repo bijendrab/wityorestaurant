@@ -1,15 +1,15 @@
 package com.wityorestaurant.modules.config.dto;
 
 public class RestTableDTO {
-    private Integer tableNumber;
+    private Long tableNumber;
     private Integer tableSize;
     private Integer qrCode;
 
-    public Integer getTableNumber() {
+    public Long getTableNumber() {
         return tableNumber;
     }
 
-    public void setTableNumber(Integer tableNumber) {
+    public void setTableNumber(Long tableNumber) {
         this.tableNumber = tableNumber;
     }
 

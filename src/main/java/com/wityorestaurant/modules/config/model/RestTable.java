@@ -1,11 +1,15 @@
 package com.wityorestaurant.modules.config.model;
 
 import com.fasterxml.jackson.annotation.*;
+import com.wityorestaurant.modules.reservation.model.Reservation;
 import com.wityorestaurant.modules.restaurant.model.RestaurantDetails;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
@@ -16,7 +20,7 @@ public class RestTable implements Serializable {
     private Long id;
 
     @Column(name = "tableNumber")
-    private Integer tableNumber;
+    private Long tableNumber;
 
     @Column(name = "tableSize")
     @Min(2)
@@ -27,8 +31,14 @@ public class RestTable implements Serializable {
 
     @ManyToOne
     @JoinColumn(name="restId")
-    @JsonIgnore
+    @JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="restId")
+    @JsonIdentityReference(alwaysAsId=true)
+    @JsonProperty("restId")
     private RestaurantDetails restaurantDetails;
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "relatedTable",orphanRemoval = true, cascade = CascadeType.ALL)
+    @Fetch(value = FetchMode.SUBSELECT)
+    private List<Reservation> reservationList;
 
     public Long getId() {
         return id;
@@ -38,11 +48,11 @@ public class RestTable implements Serializable {
         this.id = id;
     }
 
-    public Integer getTableNumber() {
+    public Long getTableNumber() {
         return tableNumber;
     }
 
-    public void setTableNumber(Integer tableNumber) {
+    public void setTableNumber(Long tableNumber) {
         this.tableNumber = tableNumber;
     }
 
@@ -68,5 +78,13 @@ public class RestTable implements Serializable {
 
     public void setRestaurantDetails(RestaurantDetails restaurantDetails) {
         this.restaurantDetails = restaurantDetails;
+    }
+
+    public List<Reservation> getReservationList() {
+        return reservationList;
+    }
+
+    public void setReservationList(List<Reservation> reservationList) {
+        this.reservationList = reservationList;
     }
 }
