@@ -11,7 +11,7 @@ import java.sql.Date;
 
 /*@Entity
 @Table(name = "checkRequest")*/
-public class CheckRequestDTO implements Serializable {
+public class ReservationDetailsDto implements Serializable {
     /*@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -35,7 +35,7 @@ public class CheckRequestDTO implements Serializable {
     @Embedded
     private TimeSpan ts;
 
-    public CheckRequestDTO() {
+    public ReservationDetailsDto() {
 
     }
 /*

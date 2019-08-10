@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.wityorestaurant.modules.customerdata.CustomerInfoDTO;
 import com.wityorestaurant.modules.config.model.RestTable;
 import com.wityorestaurant.modules.config.repository.RestTableRepository;
-import com.wityorestaurant.modules.reservation.dto.CheckRequestDTO;
+import com.wityorestaurant.modules.reservation.dto.ReservationDetailsDto;
 import com.wityorestaurant.modules.reservation.model.Reservation;
 import com.wityorestaurant.modules.reservation.model.TimeSpan;
 import com.wityorestaurant.modules.reservation.repository.ReservationRepository;
@@ -28,7 +28,7 @@ public class ReservationManagerImpl implements ReservationManager {
     private RestTableRepository tableDao;
 
     public Reservation reserveResult
-            (CheckRequestDTO r) {
+            (ReservationDetailsDto r) {
 
         Reservation resResult = processRequest(r);
 
@@ -42,7 +42,7 @@ public class ReservationManagerImpl implements ReservationManager {
     }
 
     public Reservation processRequest
-            (CheckRequestDTO r) {
+            (ReservationDetailsDto r) {
 
         List<RestTable> fittingTables = tableDao.findAll();
 
