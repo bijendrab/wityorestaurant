@@ -31,7 +31,7 @@ import com.wityorestaurant.modules.restaurant.service.RestaurantUserService;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
-@RequestMapping("/api/restaurant")
+@RequestMapping("/api/restaurant-config")
 public class ConfigController {
     @Autowired
     RestaurantUserService restUserServiceImpl;

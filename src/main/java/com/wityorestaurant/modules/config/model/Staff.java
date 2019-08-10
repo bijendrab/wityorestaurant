@@ -9,6 +9,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotBlank;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.wityorestaurant.modules.restaurant.model.RestaurantDetails;
 
 @Entity
@@ -26,6 +27,7 @@ public class Staff {
 	private String phoneNumber;
 	@OneToOne
 	@JoinColumn(name = "restaurant_id", nullable = false)
+	@JsonIgnore
 	private RestaurantDetails retaurant;
 
 	public Staff() {
