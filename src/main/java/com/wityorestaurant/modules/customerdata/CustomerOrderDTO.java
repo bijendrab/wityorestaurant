@@ -2,7 +2,7 @@ package com.wityorestaurant.modules.customerdata;
 
 import java.util.List;
 
-public class CustomerCheckoutItems {
+public class CustomerOrderDTO {
     private List<CustomerCartItems> cartItems;
     private CustomerInfoDTO customer;
 

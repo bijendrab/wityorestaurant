@@ -1,6 +1,6 @@
 package com.wityorestaurant.modules.orderservice.controller;
 
-import com.wityorestaurant.modules.customerdata.CustomerCheckoutItems;
+import com.wityorestaurant.modules.customerdata.CustomerOrderDTO;
 import com.wityorestaurant.modules.orderservice.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,8 +14,8 @@ public class OrderController {
     @Autowired
     OrderService orderService;
 
-    @PostMapping("/{restaurantId}")
-    public ResponseEntity<?> reserve(@PathVariable("restaurantId") Long restId, @RequestBody CustomerCheckoutItems customerCheckoutItems){
+    @PostMapping("/checkout/{restaurantId}")
+    public ResponseEntity<?> reserve(@PathVariable("restaurantId") Long restId, @RequestBody CustomerOrderDTO customerCheckoutItems){
         return new ResponseEntity<>(orderService.processOrderRequest(customerCheckoutItems), HttpStatus.ACCEPTED);
     }
 }

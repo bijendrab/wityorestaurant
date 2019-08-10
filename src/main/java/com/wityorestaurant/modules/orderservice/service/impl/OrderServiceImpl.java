@@ -2,7 +2,7 @@ package com.wityorestaurant.modules.orderservice.service.impl;
 
 import com.google.gson.Gson;
 import com.wityorestaurant.modules.customerdata.CustomerCartItems;
-import com.wityorestaurant.modules.customerdata.CustomerCheckoutItems;
+import com.wityorestaurant.modules.customerdata.CustomerOrderDTO;
 import com.wityorestaurant.modules.orderservice.model.Order;
 import com.wityorestaurant.modules.orderservice.model.OrderItem;
 import com.wityorestaurant.modules.orderservice.model.OrderStatus;
@@ -22,7 +22,7 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private OrderRepository orderRepository;
 
-    public Order processOrderRequest(CustomerCheckoutItems customerCheckoutItems) {
+    public Order processOrderRequest(CustomerOrderDTO customerCheckoutItems) {
         //List<CustomerCartItems> customerCartItems = new Gson().fromJson(customerCheckoutItems.getCustomerCartItems(), CustomerCartItems.class);
         //CustomerInfoDTO customerInfoDTO=new Gson().fromJson(customerCheckoutItems.getCustomerInfoDTO(),CustomerInfoDTO.class);
         Reservation accordingReservation = reservationRepository.getByCustomerId(new Gson().toJson(customerCheckoutItems.getCustomer()));
