@@ -31,9 +31,8 @@ public class ReservationController {
     RestaurantUserRepository userRepo;
 
     @PostMapping("/{restaurantId}/check-reservation")
-    public ResponseEntity<?> checkReserve(@PathVariable("restaurantId") Long restId,@RequestBody CustomerInfoDTO custInfo){
-        Integer res = reservationManagerImpl.isTableAssigned(custInfo,restId);
-        return new ResponseEntity<>(res, HttpStatus.ACCEPTED);
+    public ResponseEntity<?> checkReserve(@PathVariable("restaurantId") Long restId, @RequestBody CustomerInfoDTO custInfo){
+        return new ResponseEntity<>(reservationManagerImpl.isTableAssigned(custInfo,restId), HttpStatus.ACCEPTED);
     }
 
     @PostMapping("/{restaurantId}/reserve")

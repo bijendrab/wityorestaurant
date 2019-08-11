@@ -1,16 +1,16 @@
 package com.wityorestaurant.modules.reservation.repository;
 
 
-import com.wityorestaurant.modules.menu.model.Product;
-import com.wityorestaurant.modules.reservation.model.Reservation;
+import java.util.List;
+
+import javax.transaction.Transactional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import javax.transaction.Transactional;
-import java.sql.Date;
-import java.util.List;
+import com.wityorestaurant.modules.reservation.model.Reservation;
 
 @Repository
 @Transactional

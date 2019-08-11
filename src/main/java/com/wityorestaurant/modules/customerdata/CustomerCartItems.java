@@ -1,8 +1,6 @@
 package com.wityorestaurant.modules.customerdata;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import javax.persistence.*;
+import javax.persistence.Lob;
 
 public class CustomerCartItems {
     private Long cartItemId;

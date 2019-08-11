@@ -1,13 +1,13 @@
 package com.wityorestaurant.modules.config.repository;
 
 
-import com.wityorestaurant.modules.config.model.RestTable;
-import com.wityorestaurant.modules.menu.model.Product;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import com.wityorestaurant.modules.config.model.RestTable;
 
 @Repository
 public interface RestTableRepository extends JpaRepository<RestTable, Long> {

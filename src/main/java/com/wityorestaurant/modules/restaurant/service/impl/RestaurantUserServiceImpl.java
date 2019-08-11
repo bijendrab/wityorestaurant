@@ -1,5 +1,15 @@
 package com.wityorestaurant.modules.restaurant.service.impl;
 
+import static java.lang.Boolean.TRUE;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+
 import com.wityorestaurant.modules.restaurant.dto.RegistrationDTO;
 import com.wityorestaurant.modules.restaurant.dto.RestaurantIdNameDto;
 import com.wityorestaurant.modules.restaurant.dto.RestaurantListDto;
@@ -12,17 +22,6 @@ import com.wityorestaurant.modules.restaurant.repository.RestaurantRepository;
 import com.wityorestaurant.modules.restaurant.repository.RestaurantUserRepository;
 import com.wityorestaurant.modules.restaurant.repository.RoleRepository;
 import com.wityorestaurant.modules.restaurant.service.RestaurantUserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static java.lang.Boolean.TRUE;
 @Service(value = "RestaurantUserService")
 public class RestaurantUserServiceImpl implements RestaurantUserService {
     @Autowired

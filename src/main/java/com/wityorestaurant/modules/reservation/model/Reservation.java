@@ -1,13 +1,23 @@
 package com.wityorestaurant.modules.reservation.model;
 
-import com.wityorestaurant.modules.config.model.RestTable;
+import java.io.Serializable;
+import java.time.LocalDate;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.io.Serializable;
-import java.sql.Date;
-import java.time.LocalDate;
+
+import com.wityorestaurant.modules.config.model.RestTable;
 
 @Entity
 @Table(name = "reservation")
