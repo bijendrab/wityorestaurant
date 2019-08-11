@@ -8,6 +8,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.sql.Date;
+import java.time.LocalDate;
 
 /*@Entity
 @Table(name = "checkRequest")*/
@@ -18,7 +19,7 @@ public class ReservationDetailsDto implements Serializable {
     private int id;*/
 
     @NotNull
-    private Date date;
+    private LocalDate date;
 
     @NotNull
     @Column(name = "numberOfSeats")
@@ -47,11 +48,11 @@ public class ReservationDetailsDto implements Serializable {
         this.id = id;
     }*/
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 

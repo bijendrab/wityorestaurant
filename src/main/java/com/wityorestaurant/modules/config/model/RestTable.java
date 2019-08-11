@@ -38,6 +38,7 @@ public class RestTable implements Serializable {
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "relatedTable",orphanRemoval = true, cascade = CascadeType.ALL)
     @Fetch(value = FetchMode.SUBSELECT)
+    @JsonIgnore
     private List<Reservation> reservationList;
 
     public Long getId() {

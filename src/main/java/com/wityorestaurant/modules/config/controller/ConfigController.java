@@ -76,6 +76,12 @@ public class ConfigController {
         return new ResponseEntity<>(restTableRepository.findByRestaurantId(restUser.getRestDetails().getRestId()),HttpStatus.ACCEPTED);
     }
 
+
+    @GetMapping("/{restaurantId}/getTables")
+    public ResponseEntity<?> getTables(@PathVariable("restaurantId") Long restId) {
+        return new ResponseEntity<>(restTableRepository.findByRestaurantId(restId),HttpStatus.ACCEPTED);
+    }
+
     @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/staff/add/{restaurantId}")
     public ResponseEntity<?> addStaff(@RequestBody Staff staff, @PathVariable Long restaurantId) {

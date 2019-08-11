@@ -22,10 +22,10 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private OrderRepository orderRepository;
 
-    public Order processOrderRequest(CustomerOrderDTO customerCheckoutItems) {
+    public Order processOrderRequest(CustomerOrderDTO customerCheckoutItems,Long restId) {
         //List<CustomerCartItems> customerCartItems = new Gson().fromJson(customerCheckoutItems.getCustomerCartItems(), CustomerCartItems.class);
         //CustomerInfoDTO customerInfoDTO=new Gson().fromJson(customerCheckoutItems.getCustomerInfoDTO(),CustomerInfoDTO.class);
-        Reservation accordingReservation = reservationRepository.getByCustomerId(new Gson().toJson(customerCheckoutItems.getCustomer()));
+        Reservation accordingReservation = reservationRepository.getByCustomerId(new Gson().toJson(customerCheckoutItems.getCustomer()),restId);
 
         if (accordingReservation == null) {
             // TODO: throw not valid reservation

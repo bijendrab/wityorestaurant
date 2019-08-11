@@ -7,6 +7,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.sql.Date;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "reservation")
@@ -17,10 +18,10 @@ public class Reservation implements Serializable {
 
     @NotNull
     @Column(name = "submissionDate")
-    private Date submissionDate;
+    private LocalDate submissionDate;
 
     @NotNull
-    private Date reservationDate;
+    private LocalDate reservationDate;
 
     @NotNull
     @Embedded
@@ -47,19 +48,19 @@ public class Reservation implements Serializable {
         this.id = id;
     }
 
-    public Date getSubmissionDate() {
+    public LocalDate getSubmissionDate() {
         return submissionDate;
     }
 
-    public void setSubmissionDate(Date submissionDate) {
+    public void setSubmissionDate(LocalDate submissionDate) {
         this.submissionDate = submissionDate;
     }
 
-    public Date getReservationDate() {
+    public LocalDate getReservationDate() {
         return reservationDate;
     }
 
-    public void setReservationDate(Date reservationDate) {
+    public void setReservationDate(LocalDate reservationDate) {
         this.reservationDate = reservationDate;
     }
 

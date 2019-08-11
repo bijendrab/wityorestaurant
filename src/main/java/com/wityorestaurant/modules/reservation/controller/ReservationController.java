@@ -32,12 +32,12 @@ public class ReservationController {
 
     @PostMapping("/{restaurantId}/check-reservation")
     public ResponseEntity<?> checkReserve(@PathVariable("restaurantId") Long restId,@RequestBody CustomerInfoDTO custInfo){
-        Integer res = reservationManagerImpl.isTableAssigned(custInfo);
+        Integer res = reservationManagerImpl.isTableAssigned(custInfo,restId);
         return new ResponseEntity<>(res, HttpStatus.ACCEPTED);
     }
 
     @PostMapping("/{restaurantId}/reserve")
     public ResponseEntity<?> reserve(@PathVariable("restaurantId") Long restId,@RequestBody ReservationDetailsDto checkRequestDTO){
-        return new ResponseEntity<>(reservationManagerImpl.reserveResult(checkRequestDTO), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(reservationManagerImpl.reserveResult(checkRequestDTO,restId), HttpStatus.ACCEPTED);
     }
 }

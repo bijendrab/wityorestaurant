@@ -28,9 +28,9 @@ public class ReservationManagerImpl implements ReservationManager {
     private RestTableRepository tableDao;
 
     public Reservation reserveResult
-            (ReservationDetailsDto r) {
+            (ReservationDetailsDto r,Long restId) {
 
-        Reservation resResult = processRequest(r);
+        Reservation resResult = processRequest(r,restId);
 
         if (resResult != null) {
             System.out.println("reserved !!!");
@@ -42,12 +42,12 @@ public class ReservationManagerImpl implements ReservationManager {
     }
 
     public Reservation processRequest
-            (ReservationDetailsDto r) {
+            (ReservationDetailsDto r,Long restId) {
 
         List<RestTable> fittingTables = tableDao.findAll();
 
         // check if they are available for the given time
-        RestTable availableTable = isAvailable(r.getDate(), fittingTables, r.getTs(),r.getTableNumber());
+        RestTable availableTable = isAvailable(r.getDate(), fittingTables, r.getTs(),r.getTableNumber(),restId);
 
         if (availableTable != null) {        // reserve it if you can
              /*
@@ -55,7 +55,7 @@ public class ReservationManagerImpl implements ReservationManager {
                     2- update the table state
                     3- return true
              */
-            Date now = Date.valueOf(LocalDate.now());
+            LocalDate now = LocalDate.now();
             return reservationService.saveReserve(
                     availableTable,
                     r.getCustomerInfo(),
@@ -70,9 +70,9 @@ public class ReservationManagerImpl implements ReservationManager {
 
 
     public RestTable isAvailable
-            (Date date,
+            (LocalDate date,
              List<RestTable> fittingTables,
-             TimeSpan reqTimeSpan, int tableNumber) {
+             TimeSpan reqTimeSpan, int tableNumber,Long restId) {
          /*
             check for each table whether it is available or not:
                 return the first one that is not even booked for the given date.
@@ -86,7 +86,7 @@ public class ReservationManagerImpl implements ReservationManager {
 
         for (RestTable table : fittingTables) {
             /* fetch all the reservation for this table */
-            List<Reservation> allResForThisTable = reservationRepository.getByTableId(table.getTableNumber());
+            List<Reservation> allResForThisTable = reservationRepository.getByTableId(table.getTableNumber(),restId);
 
             if (allResForThisTable == null || allResForThisTable.size() == 0) {    // if not reserved before
                 if(table.getTableNumber()==tableNumber)
@@ -104,9 +104,9 @@ public class ReservationManagerImpl implements ReservationManager {
         return null;
     }
 
-    public Integer isTableAssigned(CustomerInfoDTO custInfo) {
+    public Integer isTableAssigned(CustomerInfoDTO custInfo,Long restId) {
 
-        Reservation allResForThisTable = reservationRepository.getByCustomerId(new Gson().toJson(custInfo));
+        Reservation allResForThisTable = reservationRepository.getByCustomerId(new Gson().toJson(custInfo),restId);
 
         if (allResForThisTable == null ) {    // if not reserved before
             return 0;

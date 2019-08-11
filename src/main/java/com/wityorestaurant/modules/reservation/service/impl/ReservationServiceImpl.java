@@ -11,6 +11,7 @@ import com.wityorestaurant.modules.restaurant.repository.RestaurantUserRepositor
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.sql.Date;
+import java.time.LocalDate;
 
 
 @Service(value = "ReservationService")
@@ -24,8 +25,8 @@ public class ReservationServiceImpl implements ReservationService {
             (RestTable table,
              CustomerInfoDTO customer,
              TimeSpan ts,
-             Date submissionDate,
-             Date reservationDate,
+             LocalDate submissionDate,
+             LocalDate reservationDate,
              String otherReq) {
 
 

@@ -5,5 +5,5 @@ import com.wityorestaurant.modules.orderservice.model.Order;
 import com.wityorestaurant.modules.reservation.model.Reservation;
 
 public interface OrderService {
-    Order processOrderRequest(CustomerOrderDTO customerCheckoutItems);
+    Order processOrderRequest(CustomerOrderDTO customerCheckoutItems,Long restId);
 }

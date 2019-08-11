@@ -7,18 +7,19 @@ import com.wityorestaurant.modules.reservation.model.Reservation;
 import com.wityorestaurant.modules.reservation.model.TimeSpan;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 public interface ReservationManager {
-    Reservation reserveResult(ReservationDetailsDto r);
+    Reservation reserveResult(ReservationDetailsDto r,Long restId);
 
 
-    Reservation processRequest(ReservationDetailsDto r);
+    Reservation processRequest(ReservationDetailsDto r,Long restId);
 
     RestTable isAvailable
-            (Date date,
+            (LocalDate date,
              List<RestTable> fittingTables,
-             TimeSpan reqTimeSpan, int tableNumber);
+             TimeSpan reqTimeSpan, int tableNumber, Long restId);
 
-    Integer isTableAssigned(CustomerInfoDTO custInfo);
+    Integer isTableAssigned(CustomerInfoDTO custInfo,Long restId);
 }

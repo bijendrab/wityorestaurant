@@ -15,9 +15,9 @@ import java.util.List;
 @Repository
 @Transactional
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
-    @Query("SELECT a from Reservation a where a.customerInfo=:customerInfo")
-    public Reservation getByCustomerId(@Param("customerInfo") String customerInfo);
+    @Query(value = "SELECT * from reservation r inner join resttable c on c.id=r.table_Id where r.customer_Info=:customerInfo and c.rest_id=:restId", nativeQuery = true)
+    public Reservation getByCustomerId(@Param("customerInfo") String customerInfo,@Param("restId") Long restId);
 
-    @Query(value = "SELECT * from reservation r inner join resttable c on c.id=r.table_Id where c.table_Number=:tableId", nativeQuery = true)
-    public List<Reservation> getByTableId(@Param("tableId") Long tableId);
+    @Query(value = "SELECT * from reservation r inner join resttable c on c.id=r.table_Id where c.table_Number=:tableId and c.rest_id=:restId", nativeQuery = true)
+    public List<Reservation> getByTableId(@Param("tableId") Long tableId,@Param("restId") Long restId);
 }

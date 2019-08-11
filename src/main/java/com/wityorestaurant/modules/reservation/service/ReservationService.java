@@ -6,13 +6,14 @@ import com.wityorestaurant.modules.reservation.model.Reservation;
 import com.wityorestaurant.modules.reservation.model.TimeSpan;
 
 import java.sql.Date;
+import java.time.LocalDate;
 
 public interface ReservationService {
     Reservation saveReserve(RestTable table,
                             CustomerInfoDTO customer,
                             TimeSpan ts,
-                            Date submissionDate,
-                            Date reservationDate,
+                            LocalDate submissionDate,
+                            LocalDate reservationDate,
                             String otherReq);
 
 }

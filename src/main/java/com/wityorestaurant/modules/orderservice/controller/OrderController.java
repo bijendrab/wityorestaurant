@@ -15,7 +15,7 @@ public class OrderController {
     OrderService orderService;
 
     @PostMapping("/checkout/{restaurantId}")
-    public ResponseEntity<?> reserve(@PathVariable("restaurantId") Long restId, @RequestBody CustomerOrderDTO customerCheckoutItems){
-        return new ResponseEntity<>(orderService.processOrderRequest(customerCheckoutItems), HttpStatus.ACCEPTED);
+    public ResponseEntity<?> createOrder(@PathVariable("restaurantId") Long restId, @RequestBody CustomerOrderDTO customerCheckoutItems){
+        return new ResponseEntity<>(orderService.processOrderRequest(customerCheckoutItems,restId), HttpStatus.ACCEPTED);
     }
 }
