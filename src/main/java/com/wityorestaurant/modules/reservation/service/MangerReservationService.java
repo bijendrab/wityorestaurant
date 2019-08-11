@@ -12,6 +12,8 @@ import java.util.List;
 
 public interface ReservationManager {
     Reservation reserveResult(ReservationDetailsDto r,Long restId);
+public interface MangerReservationService {
+    Reservation reserveResult(ReservationDetailsDto r);
 
 
     Reservation processRequest(ReservationDetailsDto r,Long restId);
