@@ -10,10 +10,8 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 
-public interface ReservationManager {
-    Reservation reserveResult(ReservationDetailsDto r,Long restId);
 public interface MangerReservationService {
-    Reservation reserveResult(ReservationDetailsDto r);
+    Reservation reserveResult(ReservationDetailsDto r,Long restId);
 
 
     Reservation processRequest(ReservationDetailsDto r,Long restId);
