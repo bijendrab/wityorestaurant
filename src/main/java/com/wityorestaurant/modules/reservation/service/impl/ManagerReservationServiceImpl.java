@@ -8,7 +8,7 @@ import com.wityorestaurant.modules.reservation.dto.ReservationDetailsDto;
 import com.wityorestaurant.modules.reservation.model.Reservation;
 import com.wityorestaurant.modules.reservation.model.TimeSpan;
 import com.wityorestaurant.modules.reservation.repository.ReservationRepository;
-import com.wityorestaurant.modules.reservation.service.ReservationManager;
+import com.wityorestaurant.modules.reservation.service.MangerReservationService;
 import com.wityorestaurant.modules.reservation.service.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service(value = "ReservationManager")
-public class ReservationManagerImpl implements ReservationManager {
+public class ManagerReservationServiceImpl implements MangerReservationService {
     @Autowired
     private ReservationRepository reservationRepository;
     @Autowired

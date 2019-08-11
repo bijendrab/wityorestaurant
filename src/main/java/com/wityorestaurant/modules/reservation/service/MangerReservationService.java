@@ -9,7 +9,7 @@ import com.wityorestaurant.modules.reservation.model.TimeSpan;
 import java.sql.Date;
 import java.util.List;
 
-public interface ReservationManager {
+public interface MangerReservationService {
     Reservation reserveResult(ReservationDetailsDto r);
 
 

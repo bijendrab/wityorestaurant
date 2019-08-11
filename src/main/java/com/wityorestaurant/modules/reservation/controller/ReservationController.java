@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.wityorestaurant.modules.customerdata.CustomerInfoDTO;
 import com.wityorestaurant.modules.reservation.dto.ReservationDetailsDto;
-import com.wityorestaurant.modules.reservation.service.ReservationManager;
+import com.wityorestaurant.modules.reservation.service.MangerReservationService;
 import com.wityorestaurant.modules.reservation.service.ReservationService;
 import com.wityorestaurant.modules.restaurant.repository.RestaurantUserRepository;
 
@@ -24,7 +24,7 @@ public class ReservationController {
     ReservationService reservationServiceImpl;
 
     @Autowired
-    ReservationManager reservationManagerImpl;
+    MangerReservationService reservationManagerImpl;
 
 
     @Autowired
