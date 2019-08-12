@@ -6,12 +6,12 @@ import com.wityorestaurant.modules.config.model.RestTable;
 
 public class CheckReservationResponseDTO {
 	
-	private Integer reservationStatus;
+	private Boolean reservationStatus;
     private List<RestTable> restaurantTable;
-	public Integer getReservationStatus() {
+	public Boolean getReservationStatus() {
 		return reservationStatus;
 	}
-	public void setReservationStatus(Integer reservationStatus) {
+	public void setReservationStatus(Boolean reservationStatus) {
 		this.reservationStatus = reservationStatus;
 	}
 	public List<RestTable> getRestaurantTable() {

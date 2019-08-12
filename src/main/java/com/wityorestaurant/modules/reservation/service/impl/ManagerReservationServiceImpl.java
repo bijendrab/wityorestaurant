@@ -1,6 +1,7 @@
 package com.wityorestaurant.modules.reservation.service.impl;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -91,15 +92,17 @@ public class ManagerReservationServiceImpl implements MangerReservationService {
 
 	public CheckReservationResponseDTO isTableAssigned(CustomerInfoDTO custInfo, Long restId) {
 		Reservation allResForThisTable = reservationRepository.getByCustomerId(new Gson().toJson(custInfo), restId);
+		List<RestTable> list = new ArrayList<>();
 		CheckReservationResponseDTO response = new CheckReservationResponseDTO();
 		if (allResForThisTable == null) { // if not reserved before
 			List<RestTable> tables = tableRepository.findByRestaurantId(restId);
-			response.setReservationStatus(0);
+			response.setReservationStatus(Boolean.FALSE);
 			response.setRestaurantTable(tables);
 			return response;
 		} else {
-			response.setReservationStatus(allResForThisTable.getRelatedTable().getTableNumber().intValue());
-			response.setRestaurantTable(Collections.emptyList());
+			response.setReservationStatus(Boolean.TRUE);
+			list.add(allResForThisTable.getRelatedTable());
+			response.setRestaurantTable(list);
 			return response;
 		}
 	}
