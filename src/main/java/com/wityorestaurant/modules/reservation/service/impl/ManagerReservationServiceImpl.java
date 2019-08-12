@@ -93,7 +93,7 @@ public class ManagerReservationServiceImpl implements MangerReservationService {
 		Reservation allResForThisTable = reservationRepository.getByCustomerId(new Gson().toJson(custInfo), restId);
 		CheckReservationResponseDTO response = new CheckReservationResponseDTO();
 		if (allResForThisTable == null) { // if not reserved before
-			List<RestTable> tables = tableRepository.findAll();
+			List<RestTable> tables = tableRepository.findByRestaurantId(restId);
 			response.setReservationStatus(0);
 			response.setRestaurantTable(tables);
 			return response;
