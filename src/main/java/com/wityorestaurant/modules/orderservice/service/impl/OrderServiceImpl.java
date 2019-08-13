@@ -2,6 +2,7 @@ package com.wityorestaurant.modules.orderservice.service.impl;
 
 import com.google.gson.Gson;
 import com.wityorestaurant.modules.customerdata.CustomerCartItems;
+import com.wityorestaurant.modules.customerdata.CustomerInfoDTO;
 import com.wityorestaurant.modules.customerdata.CustomerOrderDTO;
 import com.wityorestaurant.modules.orderservice.model.Order;
 import com.wityorestaurant.modules.orderservice.model.OrderItem;
@@ -48,18 +49,10 @@ public class OrderServiceImpl implements OrderService {
             menuItem_Order.setItemName(mi.getItemName());
             menuItem_Order.setPrice(mi.getPrice());
             menuItem_Order.setOrderCreationTime(creationDate);
-            menuItem_Order.setStatus("Unprocessed");
+            menuItem_Order.setStatus(OrderStatus.UNPROCESSED.toString());
             menuItem_Order.setQuantityOption(mi.getQuantityOption());
             menuItem_Order.setCustomerCartItems(new Gson().toJson(mi));
-            /*menuItem_Order.set(mi.getProduct());
-            menuItem_Order.setCart(mi.getCart());
-            for (Map<String,Object> x:immediateReq.getCartItems()){
-                if ((Integer)(x.get("cartItemId"))==mi.getCartItemId()){
-                    menuItem_Order.setImmediateStatus((Boolean)x.get("ImmidiateOption"));
-                    break;
-                }
-            }*/
-
+            menuItem_Order.setImmediateStatus(mi.getImmediateStatus());
             newOrder.getMenuItemOrders().add(menuItem_Order);
         }
 
@@ -75,4 +68,12 @@ public class OrderServiceImpl implements OrderService {
             pqo.add(potion);
         }
     }
+    public Order getCustomerOrderDetails(CustomerInfoDTO customerInfoDTO, Long restId){
+        return orderRepository.getOrderByCustomer(new Gson().toJson(customerInfoDTO),restId);
+    }
+    public List<Order> getTableOrderDetails(CustomerInfoDTO customerInfoDTO, Long restId){
+        Reservation accordingReservation = reservationRepository.getByCustomerId(new Gson().toJson(customerInfoDTO),restId);
+        return orderRepository.getOrderByTable(accordingReservation.getRelatedTable().getId(),restId);
+    }
+
 }

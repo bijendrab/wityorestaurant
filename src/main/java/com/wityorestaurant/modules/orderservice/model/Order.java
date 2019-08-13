@@ -1,5 +1,6 @@
 package com.wityorestaurant.modules.orderservice.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.wityorestaurant.modules.reservation.model.Reservation;
 
 import javax.persistence.*;
@@ -24,6 +25,7 @@ public class Order implements Serializable {
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "reservationId")
+    //@JsonIgnore
     private Reservation accordingReservation;
 
 

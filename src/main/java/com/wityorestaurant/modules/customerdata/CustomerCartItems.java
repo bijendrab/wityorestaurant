@@ -8,6 +8,8 @@ public class CustomerCartItems {
     private String quantityOption;
     private int quantity;
     private double price;
+    private Boolean immediateStatus;
+
     @Lob
     private String productJson;
 
@@ -57,5 +59,13 @@ public class CustomerCartItems {
 
     public void setProductJson(String productJson) {
         this.productJson = productJson;
+    }
+
+    public Boolean getImmediateStatus() {
+        return immediateStatus;
+    }
+
+    public void setImmediateStatus(Boolean immediateStatus) {
+        this.immediateStatus = immediateStatus;
     }
 }
