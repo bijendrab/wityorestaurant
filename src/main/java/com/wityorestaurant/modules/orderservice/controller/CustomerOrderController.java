@@ -20,14 +20,9 @@ public class CustomerOrderController {
         return new ResponseEntity<>(orderService.processOrderRequest(customerCheckoutItems,restId), HttpStatus.ACCEPTED);
     }
 
-    @PostMapping("/getCustomerOrder/{restaurantId}")
-    public ResponseEntity<?> getCustomerOrder(@PathVariable("restaurantId") Long restId, @RequestBody CustomerInfoDTO customerInfoDTO){
-        return new ResponseEntity<>(orderService.getCustomerOrderDetails(customerInfoDTO,restId), HttpStatus.OK);
-    }
-
     @PostMapping("/getTableOrder/{restaurantId}")
     public ResponseEntity<?> getTableOrder(@PathVariable("restaurantId") Long restId, @RequestBody CustomerInfoDTO customerInfoDTO){
-        return new ResponseEntity<>(orderService.getTableOrderDetails(customerInfoDTO,restId), HttpStatus.OK);
+        return new ResponseEntity<>(orderService.getTableOrderDetails(customerInfoDTO, restId), HttpStatus.OK);
     }
 
 }

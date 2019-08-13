@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.wityorestaurant.modules.customerdata.CustomerCartItems;
 import com.wityorestaurant.modules.customerdata.CustomerInfoDTO;
 import com.wityorestaurant.modules.customerdata.CustomerOrderDTO;
+import com.wityorestaurant.modules.orderservice.dto.TableOrdersResponse;
 import com.wityorestaurant.modules.orderservice.model.Order;
 import com.wityorestaurant.modules.orderservice.model.OrderItem;
 import com.wityorestaurant.modules.orderservice.model.OrderStatus;
@@ -71,9 +72,11 @@ public class OrderServiceImpl implements OrderService {
     public Order getCustomerOrderDetails(CustomerInfoDTO customerInfoDTO, Long restId){
         return orderRepository.getOrderByCustomer(new Gson().toJson(customerInfoDTO),restId);
     }
-    public List<Order> getTableOrderDetails(CustomerInfoDTO customerInfoDTO, Long restId){
+    public TableOrdersResponse getTableOrderDetails(CustomerInfoDTO customerInfoDTO, Long restId){
         Reservation accordingReservation = reservationRepository.getByCustomerId(new Gson().toJson(customerInfoDTO),restId);
-        return orderRepository.getOrderByTable(accordingReservation.getRelatedTable().getId(),restId);
+        TableOrdersResponse response = new TableOrdersResponse();
+         response.setTableOrders(orderRepository.getOrderByTable(accordingReservation.getRelatedTable().getId(),restId));
+         return response;
     }
     public List<Order> getAllTableOrderDetails(Long restId){
         return orderRepository.getAllOrderByRestaurant(restId);
