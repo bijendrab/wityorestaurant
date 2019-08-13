@@ -75,5 +75,8 @@ public class OrderServiceImpl implements OrderService {
         Reservation accordingReservation = reservationRepository.getByCustomerId(new Gson().toJson(customerInfoDTO),restId);
         return orderRepository.getOrderByTable(accordingReservation.getRelatedTable().getId(),restId);
     }
+    public List<Order> getAllTableOrderDetails(Long restId){
+        return orderRepository.getAllOrderByRestaurant(restId);
+    }
 
 }

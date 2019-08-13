@@ -18,5 +18,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     @Query(value = "SELECT * from foodorder fo inner join reservation r on fo.reservation_id=r.id inner join resttable c on c.id=r.table_Id where r.table_id=:tableId and c.rest_id=:restId", nativeQuery = true)
     public List<Order> getOrderByTable(@Param("tableId") Long tableId, @Param("restId") Long restId);
 
+    @Query(value = "SELECT * from foodorder fo inner join reservation r on fo.reservation_id=r.id inner join resttable c on c.id=r.table_Id where c.rest_id=:restId", nativeQuery = true)
+    public List<Order> getAllOrderByRestaurant( @Param("restId") Long restId);
 
 }

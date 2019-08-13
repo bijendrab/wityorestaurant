@@ -10,4 +10,5 @@ public interface OrderService {
     Order processOrderRequest(CustomerOrderDTO customerCheckoutItems,Long restId);
     Order getCustomerOrderDetails(CustomerInfoDTO customerInfoDTO,Long restId);
     List<Order> getTableOrderDetails(CustomerInfoDTO customerInfoDTO, Long restId);
+    List<Order> getAllTableOrderDetails(Long restId);
 }

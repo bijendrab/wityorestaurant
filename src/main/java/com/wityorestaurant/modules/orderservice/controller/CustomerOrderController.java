@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
-@RequestMapping("/api/order")
-public class OrderController {
+@RequestMapping("/api/customerOrder")
+public class CustomerOrderController {
     @Autowired
     OrderService orderService;
 
@@ -29,4 +29,5 @@ public class OrderController {
     public ResponseEntity<?> getTableOrder(@PathVariable("restaurantId") Long restId, @RequestBody CustomerInfoDTO customerInfoDTO){
         return new ResponseEntity<>(orderService.getTableOrderDetails(customerInfoDTO,restId), HttpStatus.OK);
     }
+
 }
