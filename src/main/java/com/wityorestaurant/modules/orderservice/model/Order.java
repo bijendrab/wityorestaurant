@@ -1,6 +1,7 @@
 package com.wityorestaurant.modules.orderservice.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.wityorestaurant.modules.reservation.model.Reservation;
 
 import javax.persistence.*;
@@ -10,6 +11,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "foodorder")
+@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="orderId")
 public class Order implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +27,6 @@ public class Order implements Serializable {
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "reservationId")
-    //@JsonIgnore
     private Reservation accordingReservation;
 
 

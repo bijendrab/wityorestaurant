@@ -40,7 +40,7 @@ public class OrderItem implements Serializable {
         this.immediateStatus = immediateStatus;
     }
 
-    @JsonIgnore
+
     @Lob
     private String customerCartItems;
 
