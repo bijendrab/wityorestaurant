@@ -12,6 +12,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.wityorestaurant.modules.config.model.Category;
+import com.wityorestaurant.modules.config.repository.CategoryRepository;
 import com.wityorestaurant.modules.menu.dto.RestaurantMenuDto;
 import com.wityorestaurant.modules.menu.model.Product;
 import com.wityorestaurant.modules.menu.model.ProductQuantityOptions;
@@ -26,7 +28,8 @@ public class RestaurantMenuServiceImpl implements RestaurantMenuService {
     private MenuRepository menuRepository;
     @Autowired
     private RestaurantUserRepository userRepository;
-
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     public List<Product> getAllProducts() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -74,10 +77,13 @@ public class RestaurantMenuServiceImpl implements RestaurantMenuService {
     public Product addMenuItem(Product product) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         RestaurantUser tempUser = userRepository.findByUsername(auth.getName());
+        List<Category> categories = categoryRepository.findAll();
         String productUUID = UUID.randomUUID().toString();
         productUUID = productUUID.replaceAll("-", "");
         product.setRestaurantDetails(tempUser.getRestDetails());
         product.setProductId(productUUID);
+        Category categoryObj = categories.stream().filter(category -> category.getCategoryName().equals(product.getCategory())).findFirst().get();
+        product.setSequenceId(categoryObj.getSequence());
         setMenu(product);
         return menuRepository.save(product);
     }

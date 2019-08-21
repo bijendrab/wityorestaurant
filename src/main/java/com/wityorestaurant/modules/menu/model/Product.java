@@ -61,6 +61,7 @@ public class Product implements Serializable {
     @Column(name="selectedQuantity")
     private  String selectedQuantity;
 
+    private int sequenceId;
 
     @ManyToOne()
     @JoinColumn(name="restId")
@@ -182,5 +183,12 @@ public class Product implements Serializable {
         this.restaurantDetails = restaurantDetails;
     }
 
+	public int getSequenceId() {
+		return sequenceId;
+	}
+
+	public void setSequenceId(int sequenceId) {
+		this.sequenceId = sequenceId;
+	}
 
 }
