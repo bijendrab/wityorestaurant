@@ -9,3 +9,5 @@ target/surefire-reports/TEST-com.wityorestaurant.wityorestaurant.Wityorestaurant
 target/surefire-reports/com.wityorestaurant.wityorestaurant.WityorestaurantApplicationTests.txt
 target/wityorestaurant-0.0.1-SNAPSHOT.jar.original
 target/classes/META-INF/maven/com.wityorestaurant/wityorestaurant/pom.xml
+.classpath
+.settings/org.eclipse.jdt.core.prefs
