@@ -77,11 +77,11 @@ public class RestaurantMenuServiceImpl implements RestaurantMenuService {
     public Product addMenuItem(Product product) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         RestaurantUser tempUser = userRepository.findByUsername(auth.getName());
-        List<Category> categories = categoryRepository.findAll();
         String productUUID = UUID.randomUUID().toString();
         productUUID = productUUID.replaceAll("-", "");
         product.setRestaurantDetails(tempUser.getRestDetails());
         product.setProductId(productUUID);
+        List<Category> categories = categoryRepository.getCategoryByRestaurantId(tempUser.getRestDetails().getRestId());
         Category categoryObj = categories.stream().filter(category -> category.getCategoryName().equals(product.getCategory())).findFirst().get();
         product.setSequenceId(categoryObj.getSequence());
         setMenu(product);
