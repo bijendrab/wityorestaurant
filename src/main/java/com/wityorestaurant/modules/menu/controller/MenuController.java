@@ -4,6 +4,9 @@ import com.wityorestaurant.modules.menu.model.Product;
 import com.wityorestaurant.modules.menu.service.RestaurantMenuService;
 import com.wityorestaurant.modules.restaurant.repository.RestaurantUserRepository;
 import com.wityorestaurant.modules.restaurant.service.RestaurantUserService;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -56,7 +59,7 @@ public class MenuController {
     public ResponseEntity<?> deleteMenuItem(@PathVariable(value = "itemId")String itemId) {
         return new ResponseEntity<>(restMenuServiceImpl.deleteMenuItem(itemId),HttpStatus.ACCEPTED);
     }
-
+    
     @PreAuthorize("hasRole('ROLE_USER')")
     @PutMapping("/setMenuItemStatus/{itemId}")
     public ResponseEntity<?> setMenuItemStatus(@PathVariable(value = "itemId")String itemId) {
@@ -66,5 +69,10 @@ public class MenuController {
     @GetMapping("/{restaurantId}")
     public ResponseEntity<?> getMenuItemByRestaurantId(@PathVariable("restaurantId") Long restId){
     	return new ResponseEntity<>(restMenuServiceImpl.getMenuByRestaurantId(restId),HttpStatus.ACCEPTED);
+    }
+    
+    @GetMapping("/get-restaurant-order-menu")
+    public ResponseEntity<?> getMenuItemForRestaurantOrders(){
+    	return new ResponseEntity<List<Product>>(restMenuServiceImpl.getAllProducts(), HttpStatus.OK);
     }
 }

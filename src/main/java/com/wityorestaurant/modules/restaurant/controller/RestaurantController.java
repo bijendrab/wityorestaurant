@@ -62,7 +62,7 @@ public class RestaurantController {
         return ResponseEntity.ok(new JwtSuccessDto(true, jwt));
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody RegistrationDTO customer){
         restUserServiceImpl.saveUser(customer);

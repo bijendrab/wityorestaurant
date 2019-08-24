@@ -3,6 +3,8 @@ package com.wityorestaurant.modules.orderservice.controller;
 import com.wityorestaurant.modules.customerdata.CustomerInfoDTO;
 import com.wityorestaurant.modules.customerdata.CustomerOrderDTO;
 import com.wityorestaurant.modules.orderservice.dto.TableOrdersResponse;
+import com.wityorestaurant.modules.orderservice.dto.UpdateOrderItemDTO;
+import com.wityorestaurant.modules.orderservice.model.Order;
 import com.wityorestaurant.modules.orderservice.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,6 +26,16 @@ public class CustomerOrderController {
     @PostMapping("/getTableOrder/{restaurantId}")
     public ResponseEntity<TableOrdersResponse> getTableOrder(@PathVariable("restaurantId") Long restId, @RequestBody CustomerInfoDTO customerInfoDTO){
         return new ResponseEntity<>(orderService.getTableOrderDetails(customerInfoDTO, restId), HttpStatus.OK);
+    }
+    
+    @PutMapping("/updateUserOrderedItem/{restaurantId}")
+    public ResponseEntity<?> updateOrderItem(@PathVariable Long restaurantId, @RequestBody UpdateOrderItemDTO orderItemDto){
+        return new ResponseEntity<Order>(orderService.editOrder(orderItemDto, restaurantId),HttpStatus.OK);
+    }
+    
+    @PutMapping("/deleteUserOrderedItem/{restaurantId}")
+    public ResponseEntity<?> deleteUserOrderedItem(@PathVariable Long restaurantId, @RequestBody UpdateOrderItemDTO orderItemDto){
+        return new ResponseEntity<Boolean>(orderService.removePlacedOrderItem(orderItemDto, restaurantId),HttpStatus.OK);
     }
 
 }

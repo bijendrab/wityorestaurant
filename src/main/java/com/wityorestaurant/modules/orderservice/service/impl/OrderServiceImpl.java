@@ -1,10 +1,24 @@
 package com.wityorestaurant.modules.orderservice.service.impl;
 
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.google.gson.Gson;
 import com.wityorestaurant.modules.customerdata.CustomerCartItems;
 import com.wityorestaurant.modules.customerdata.CustomerInfoDTO;
 import com.wityorestaurant.modules.customerdata.CustomerOrderDTO;
+import com.wityorestaurant.modules.menu.model.Product;
+import com.wityorestaurant.modules.menu.model.ProductQuantityOptions;
 import com.wityorestaurant.modules.orderservice.dto.TableOrdersResponse;
+import com.wityorestaurant.modules.orderservice.dto.UpdateOrderItemDTO;
 import com.wityorestaurant.modules.orderservice.model.Order;
 import com.wityorestaurant.modules.orderservice.model.OrderItem;
 import com.wityorestaurant.modules.orderservice.model.OrderStatus;
@@ -12,10 +26,8 @@ import com.wityorestaurant.modules.orderservice.repository.OrderRepository;
 import com.wityorestaurant.modules.orderservice.service.OrderService;
 import com.wityorestaurant.modules.reservation.model.Reservation;
 import com.wityorestaurant.modules.reservation.repository.ReservationRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.*;
+import com.wityorestaurant.modules.restaurant.model.RestaurantDetails;
+import com.wityorestaurant.modules.restaurant.repository.RestaurantRepository;
 
 @Service(value = "OrderService")
 public class OrderServiceImpl implements OrderService {
@@ -23,6 +35,10 @@ public class OrderServiceImpl implements OrderService {
     private ReservationRepository reservationRepository;
     @Autowired
     private OrderRepository orderRepository;
+    @Autowired
+    private RestaurantRepository restaurantRepository;
+    
+    Logger logger = LoggerFactory.getLogger(OrderServiceImpl.class);
 
     public Order processOrderRequest(CustomerOrderDTO customerCheckoutItems,Long restId) {
         //List<CustomerCartItems> customerCartItems = new Gson().fromJson(customerCheckoutItems.getCustomerCartItems(), CustomerCartItems.class);
@@ -80,6 +96,70 @@ public class OrderServiceImpl implements OrderService {
     }
     public List<Order> getAllTableOrderDetails(Long restId){
         return orderRepository.getAllOrderByRestaurant(restId);
+    }
+    
+    public Order editOrder(UpdateOrderItemDTO dto, Long restaurantId) {
+    	try {
+    		Order order = orderRepository.getOrderByCustomer(new Gson().toJson(dto.getCustomer()), restaurantId);
+    		OrderItem orderItemToBeUpdated = null;
+    		for(OrderItem item: order.getMenuItemOrders()) {
+    			if(dto.getOrderItemId().equals(item.getOrderItemId())) {
+    				orderItemToBeUpdated = item;
+    				break;
+    			}
+    		}
+    		
+    		order.setTotalCost(order.getTotalCost() - (float)orderItemToBeUpdated.getPrice());
+    		order.getMenuItemOrders().remove(orderItemToBeUpdated);
+    		
+    		if(dto.getQuantityOption().equals(orderItemToBeUpdated.getQuantityOption())) {
+    			double perItemCost = orderItemToBeUpdated.getPrice()/orderItemToBeUpdated.getQuantity();
+    			double updatedOrderItemCost = perItemCost * dto.getQuantity();
+    			orderItemToBeUpdated.setQuantity(dto.getQuantity());
+    			orderItemToBeUpdated.setPrice(updatedOrderItemCost);
+    			order.getMenuItemOrders().add(orderItemToBeUpdated);
+    			order.setTotalCost(order.getTotalCost() + (float)updatedOrderItemCost);
+   				return orderRepository.save(order);
+   			} else {
+   				RestaurantDetails restaurant = restaurantRepository.findById(restaurantId).get();
+   				Product product = null;
+    			for(Product prod: restaurant.getProduct()) {
+    				if(prod.getProductName().equals(orderItemToBeUpdated.getItemName())) {
+    					product = prod;
+    					break;
+    				}
+    			}
+    			orderItemToBeUpdated.setQuantityOption(dto.getQuantityOption());
+    			double updatedOrderItemCost = 0;
+    			for(ProductQuantityOptions pqo: product.getProductQuantityOptions()) {
+    				if(dto.getQuantityOption().equals(pqo.getQuantityOption())) {
+    					updatedOrderItemCost = pqo.getPrice() * dto.getQuantity();
+    					orderItemToBeUpdated.setPrice(updatedOrderItemCost);
+    					order.getMenuItemOrders().add(orderItemToBeUpdated);
+    					order.setTotalCost(order.getTotalCost() + (float)updatedOrderItemCost);
+    	   				return orderRepository.save(order);
+    				}
+    			}
+    		}    		
+		} catch (Exception e) {
+			logger.error("Exception in OrderServiceImpl, method: editOrder --> {}", e.getMessage());
+			logger.debug("Stacktrace===> {}", e);
+		}
+    	return null;
+    }
+    
+    public Boolean removePlacedOrderItem(UpdateOrderItemDTO dto, Long restaurantId) {
+    	try {
+        	Order order = orderRepository.getOrderByCustomer(new Gson().toJson(dto.getCustomer()), restaurantId);
+        	orderRepository.delete(order);
+        	return true;
+		} catch (Exception e) {
+			logger.error("Exception in OrderServiceImpl, method: removePlacedOrderItem --> {}", e.getMessage());
+			logger.debug("Stacktrace===> {}", e);
+		}
+    	return false;
+
+    	
     }
 
 }

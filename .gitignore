@@ -11,3 +11,4 @@ target/wityorestaurant-0.0.1-SNAPSHOT.jar.original
 target/classes/META-INF/maven/com.wityorestaurant/wityorestaurant/pom.xml
 .classpath
 .settings/org.eclipse.jdt.core.prefs
+.classpath
