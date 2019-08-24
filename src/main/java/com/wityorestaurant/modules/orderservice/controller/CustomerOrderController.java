@@ -33,7 +33,7 @@ public class CustomerOrderController {
         return new ResponseEntity<Order>(orderService.editOrder(orderItemDto, restaurantId),HttpStatus.OK);
     }
     
-    @PutMapping("/deleteUserOrderedItem/{restaurantId}")
+    @DeleteMapping("/deleteUserOrderedItem/{restaurantId}")
     public ResponseEntity<?> deleteUserOrderedItem(@PathVariable Long restaurantId, @RequestBody UpdateOrderItemDTO orderItemDto){
         return new ResponseEntity<Boolean>(orderService.removePlacedOrderItem(orderItemDto, restaurantId),HttpStatus.OK);
     }
