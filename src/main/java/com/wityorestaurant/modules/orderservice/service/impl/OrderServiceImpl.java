@@ -151,7 +151,16 @@ public class OrderServiceImpl implements OrderService {
     public Boolean removePlacedOrderItem(UpdateOrderItemDTO dto, Long restaurantId) {
     	try {
         	Order order = orderRepository.getOrderByCustomer(new Gson().toJson(dto.getCustomer()), restaurantId);
-        	orderRepository.delete(order);
+        	OrderItem orderItem = null;
+        	for(OrderItem orderItem2: order.getMenuItemOrders()) {
+        		if(orderItem2.getOrderItemId().equals(dto.getOrderItemId())) {
+        			orderItem = orderItem2;
+        			break;
+        		}
+        	}
+        	order.setTotalCost(order.getTotalCost() - (float)orderItem.getPrice());
+        	order.getMenuItemOrders().remove(orderItem);
+        	orderRepository.save(order);
         	return true;
 		} catch (Exception e) {
 			logger.error("Exception in OrderServiceImpl, method: removePlacedOrderItem --> {}", e.getMessage());
