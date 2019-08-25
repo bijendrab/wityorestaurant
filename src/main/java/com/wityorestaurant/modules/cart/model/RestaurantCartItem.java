@@ -1,6 +1,9 @@
 package com.wityorestaurant.modules.cart.model;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
@@ -15,6 +18,8 @@ import com.wityorestaurant.modules.restaurant.model.RestaurantDetails;
 @Table(name = "restaurant_cart_item")
 public class RestaurantCartItem {
 	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long cartItemId;
 	private String itemName;
 	private String quantityOption;

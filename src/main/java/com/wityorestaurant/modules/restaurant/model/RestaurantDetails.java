@@ -82,7 +82,6 @@ public class RestaurantDetails implements Serializable {
     private List<RestTable> restTables;
     
     @OneToOne(fetch = FetchType.EAGER,orphanRemoval = true, cascade = CascadeType.ALL)
-    @Fetch(value = FetchMode.SUBSELECT)
     @JoinColumn(name = "cart_id")
     private RestaurantCart cart;
 

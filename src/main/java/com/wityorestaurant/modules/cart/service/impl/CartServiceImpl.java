@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import com.wityorestaurant.modules.cart.model.RestaurantCart;
 import com.wityorestaurant.modules.cart.model.RestaurantCartItem;
 import com.wityorestaurant.modules.cart.repository.CartItemRepository;
-import com.wityorestaurant.modules.cart.repository.CartRepository;
+import com.wityorestaurant.modules.cart.service.CartService;
 import com.wityorestaurant.modules.menu.model.Product;
 import com.wityorestaurant.modules.menu.model.ProductQuantityOptions;
 import com.wityorestaurant.modules.restaurant.model.RestaurantDetails;
@@ -19,14 +19,12 @@ import com.wityorestaurant.modules.restaurant.model.RestaurantUser;
 import com.wityorestaurant.modules.restaurant.repository.RestaurantUserRepository;
 
 @Service
-public class CartServiceImpl {
+public class CartServiceImpl implements CartService {
 	
 	@Autowired
 	private CartItemRepository cartItemRepository;
 	@Autowired
     private RestaurantUserRepository userRepository;
-	@Autowired
-	private CartRepository cartRepository;
 	
 	public RestaurantCart getCart() {
 		try {
