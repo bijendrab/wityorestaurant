@@ -6,5 +6,7 @@ public class Constant {
     public static final String HEADER_TOKEN_KEY = "Authorization";
     public static final Long EXPIRY_TIME = 6000_000L;
     public static final String AUTHORITIES_KEY = "scopes";
+    
+    public static final String RESTAURANT_CART_API = "/api/rest-cart";
 }
 
