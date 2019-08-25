@@ -14,19 +14,27 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import com.wityorestaurant.modules.config.model.*;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.wityorestaurant.modules.cart.model.RestaurantCart;
+import com.wityorestaurant.modules.config.model.Category;
+import com.wityorestaurant.modules.config.model.Cuisine;
+import com.wityorestaurant.modules.config.model.QuantityOption;
+import com.wityorestaurant.modules.config.model.RestTable;
+import com.wityorestaurant.modules.config.model.SubCategory;
 import com.wityorestaurant.modules.menu.model.Product;
 
 @Entity
 @JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="restId")
 @Table(name = "restDetails")
 public class RestaurantDetails implements Serializable {
-    @Id
+	
+	private static final long serialVersionUID = 2903949587384355232L;
+	
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     /*@GenericGenerator(
             name = "UUID",strategy = "org.hibernate.id.UUIDGenerator")*/
@@ -72,6 +80,11 @@ public class RestaurantDetails implements Serializable {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "restaurantDetails",orphanRemoval = true, cascade = CascadeType.ALL)
     @Fetch(value = FetchMode.SUBSELECT)
     private List<RestTable> restTables;
+    
+    @OneToOne(fetch = FetchType.EAGER,orphanRemoval = true, cascade = CascadeType.ALL)
+    @Fetch(value = FetchMode.SUBSELECT)
+    @JoinColumn(name = "cart_id")
+    private RestaurantCart cart;
 
     public RestaurantDetails() {}
 
@@ -242,4 +255,12 @@ public class RestaurantDetails implements Serializable {
     public void setRestTables(List<RestTable> restTables) {
         this.restTables = restTables;
     }
+
+	public RestaurantCart getCart() {
+		return cart;
+	}
+
+	public void setCart(RestaurantCart cart) {
+		this.cart = cart;
+	}
 }

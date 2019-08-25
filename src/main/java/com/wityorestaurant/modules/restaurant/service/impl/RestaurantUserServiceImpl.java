@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.wityorestaurant.modules.cart.model.RestaurantCart;
 import com.wityorestaurant.modules.restaurant.dto.RegistrationDTO;
 import com.wityorestaurant.modules.restaurant.dto.RestaurantIdNameDto;
 import com.wityorestaurant.modules.restaurant.dto.RestaurantListDto;
@@ -75,6 +76,7 @@ public class RestaurantUserServiceImpl implements RestaurantUserService {
                 user.setRoles(Collections.singleton(userRole));
                 user.setRestDetails(restDetails);
                 restDetails.setUser(user);
+                restDetails.setCart(new RestaurantCart());
                 return userRepository.save(user);
             } else {
                 throw new UsernameAlreadyExistsException("This username already exists, try with some other username");
