@@ -12,7 +12,6 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.wityorestaurant.modules.config.model.RestTable;
 import com.wityorestaurant.modules.menu.model.Product;
-import com.wityorestaurant.modules.restaurant.model.RestaurantDetails;
 
 @Entity
 @Table(name = "restaurant_cart_item")
@@ -32,10 +31,9 @@ public class RestaurantCartItem {
 	@JsonIgnore
 	private RestaurantCart cart;
 	
-	@ManyToOne
-	@JoinColumn(name = "restaurant_id")
-	private RestaurantDetails restaurant;
 	
+	
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "table_id")
 	private RestTable table;
@@ -100,14 +98,6 @@ public class RestaurantCartItem {
 
 	public void setCart(RestaurantCart cart) {
 		this.cart = cart;
-	}
-
-	public RestaurantDetails getRestaurant() {
-		return restaurant;
-	}
-
-	public void setRestaurant(RestaurantDetails restaurant) {
-		this.restaurant = restaurant;
 	}
 
 	public RestTable getTable() {

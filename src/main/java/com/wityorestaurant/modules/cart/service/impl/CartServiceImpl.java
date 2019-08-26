@@ -35,6 +35,7 @@ public class CartServiceImpl implements CartService {
 	        RestaurantUser tempUser = userRepository.findByUsername(auth.getName());
 	        RestaurantDetails restaurant = tempUser.getRestDetails();
 	        RestaurantCart cart = restaurant.getCart();
+	        System.out.println(cart.getCartId());
 	        return cart;
 		} catch (Exception e) {
 		}
