@@ -16,7 +16,7 @@ import com.wityorestaurant.modules.restaurant.model.RestaurantDetails;
 public class Staff {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long staffId;
 	@NotBlank
 	private String staffName;
