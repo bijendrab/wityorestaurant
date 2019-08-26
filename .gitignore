@@ -12,3 +12,4 @@ target/classes/META-INF/maven/com.wityorestaurant/wityorestaurant/pom.xml
 .classpath
 .settings/org.eclipse.jdt.core.prefs
 .classpath
+*.iml
