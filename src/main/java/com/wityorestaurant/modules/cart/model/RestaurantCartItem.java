@@ -43,6 +43,8 @@ public class RestaurantCartItem {
 	@OneToOne
 	@JoinColumn(name = "product_id")
 	private Product product;
+	
+	private String orderTaker;
 
 	public Long getCartItemId() {
 		return cartItemId;
@@ -123,5 +125,12 @@ public class RestaurantCartItem {
 	public void setProduct(Product product) {
 		this.product = product;
 	}
-	
+
+	public String getOrderTaker() {
+		return orderTaker;
+	}
+
+	public void setOrderTaker(String orderTaker) {
+		this.orderTaker = orderTaker;
+	}
 }

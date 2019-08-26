@@ -9,9 +9,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.wityorestaurant.common.Constant;
 import com.wityorestaurant.modules.cart.model.RestaurantCart;
+import com.wityorestaurant.modules.cart.model.RestaurantCartItem;
 import com.wityorestaurant.modules.cart.service.CartService;
 import com.wityorestaurant.modules.menu.model.Product;
 
@@ -27,9 +29,14 @@ public class CartController {
 		return new ResponseEntity<RestaurantCart>(cartServiceImpl.getCart(), HttpStatus.OK);
 	}
 	
-	@PostMapping("/addupdate/{quantityOption}")
-	public ResponseEntity<?> addOrUpdateCartItem(@RequestBody Product product, @PathVariable String quantityOption){
-		return new ResponseEntity<String>(cartServiceImpl.addOrUpdateCart(product, quantityOption), HttpStatus.OK);
+	@PostMapping("/add-update/{quantityOption}")
+	public ResponseEntity<?> addOrUpdateCartItem(@RequestBody Product product,
+			@PathVariable String quantityOption,
+			@RequestParam Long tableId,
+			@RequestParam String immediateStatus,
+			@RequestParam String orderTaker
+			){
+		return new ResponseEntity<RestaurantCartItem>(cartServiceImpl.addOrUpdateCart(product, quantityOption, tableId, orderTaker), HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/delete/{cartItemId}")

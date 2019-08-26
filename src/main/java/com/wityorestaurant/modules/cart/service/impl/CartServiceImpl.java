@@ -12,6 +12,7 @@ import com.wityorestaurant.modules.cart.model.RestaurantCart;
 import com.wityorestaurant.modules.cart.model.RestaurantCartItem;
 import com.wityorestaurant.modules.cart.repository.CartItemRepository;
 import com.wityorestaurant.modules.cart.service.CartService;
+import com.wityorestaurant.modules.config.repository.RestTableRepository;
 import com.wityorestaurant.modules.menu.model.Product;
 import com.wityorestaurant.modules.menu.model.ProductQuantityOptions;
 import com.wityorestaurant.modules.restaurant.model.RestaurantDetails;
@@ -25,6 +26,8 @@ public class CartServiceImpl implements CartService {
 	private CartItemRepository cartItemRepository;
 	@Autowired
     private RestaurantUserRepository userRepository;
+	@Autowired
+	private RestTableRepository tableRepository;
 	
 	public RestaurantCart getCart() {
 		try {
@@ -38,7 +41,7 @@ public class CartServiceImpl implements CartService {
 		return null;
 	}
 
-	public String addOrUpdateCart(Product product, String quantityOption) {
+	public RestaurantCartItem addOrUpdateCart(Product product, String quantityOption, Long tableId, String orderTaker) {
 		try {
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 	        RestaurantUser tempUser = userRepository.findByUsername(auth.getName());
@@ -64,36 +67,34 @@ public class CartServiceImpl implements CartService {
 							&& tempCartItem.getQuantityOption().equalsIgnoreCase(quantityOption)) {
 						tempCartItem.setQuantity(tempCartItem.getQuantity() + 1);
 						tempCartItem.setPrice(tempCartItem.getQuantity() * qOption.getPrice());
-						cartItemRepository.save(tempCartItem);
-						break;
 					}
 					if (qOption.getQuantityOption().equalsIgnoreCase(quantityOption)
 							&& !tempCartItem.getQuantityOption().equalsIgnoreCase(quantityOption)) {
 						tempCartItem.setPrice(tempCartItem.getQuantity() * qOption.getPrice());
 						tempCartItem.setQuantityOption(qOption.getQuantityOption());
-						cartItemRepository.save(tempCartItem);
 						break;
 					}
 				}
-				return "updated";
+				return cartItemRepository.save(tempCartItem);
 			}
 			RestaurantCartItem newCartItem = new RestaurantCartItem();
 			newCartItem.setCart(cart);
 			newCartItem.setItemName(product.getProductName());
-			newCartItem.setQuantity(1);
+			newCartItem.setQuantity(Integer.parseInt(product.getSelectedQuantity()));
 			newCartItem.setProduct(product);
+			newCartItem.setOrderTaker(orderTaker);
+			newCartItem.setTable(tableRepository.findById(tableId).get());
 			product.getProductQuantityOptions().forEach(qOption -> {
 				if (qOption.getQuantityOption().equalsIgnoreCase(quantityOption)) {
 					newCartItem.setPrice(qOption.getPrice() * 1);
 					newCartItem.setQuantityOption(quantityOption);
 				}
 			});
-			cartItemRepository.save(newCartItem);
-			return "added";
+			return cartItemRepository.save(newCartItem);
 		} catch (Exception e) {
 			
 		}
-		return "error";    
+		return null;    
 	}
 
 	public String deleteCartItemById(Long cartItemId) {
