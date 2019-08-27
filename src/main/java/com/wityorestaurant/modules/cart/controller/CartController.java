@@ -26,9 +26,9 @@ public class CartController {
 	@Autowired
 	private CartService cartServiceImpl;
 	
-	@GetMapping("/get-cart")
-	public ResponseEntity<?> getCart(){
-		return new ResponseEntity<RestaurantCart>(cartServiceImpl.getCart(), HttpStatus.OK);
+	@GetMapping("/get-cart/{tableId}")
+	public ResponseEntity<?> getCart(@PathVariable Long tableId){
+		return new ResponseEntity<RestaurantCart>(cartServiceImpl.getCart(tableId), HttpStatus.OK);
 	}
 	
 	@PostMapping("/add-update/{quantityOption}")

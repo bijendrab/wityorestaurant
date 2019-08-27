@@ -2,6 +2,7 @@ package com.wityorestaurant.modules.cart.service.impl;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -29,13 +30,13 @@ public class CartServiceImpl implements CartService {
 	@Autowired
 	private RestTableRepository tableRepository;
 	
-	public RestaurantCart getCart() {
+	public RestaurantCart getCart(Long tableId) {
 		try {
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 	        RestaurantUser tempUser = userRepository.findByUsername(auth.getName());
 	        RestaurantDetails restaurant = tempUser.getRestDetails();
 	        RestaurantCart cart = restaurant.getCart();
-	        System.out.println(cart.getCartId());
+	        cart.setCartItems(cart.getCartItems().stream().filter(item -> item.getTable().getId() == tableId).collect(Collectors.toList()));
 	        return cart;
 		} catch (Exception e) {
 		}
