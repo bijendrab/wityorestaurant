@@ -15,4 +15,5 @@ public interface OrderService {
     List<Order> getAllTableOrderDetails(Long restId);
     public Order editOrder(UpdateOrderItemDTO dto, Long restaurantId);
     public Boolean removePlacedOrderItem(UpdateOrderItemDTO dto, Long restaurantId);
+    public TableOrdersResponse getRestaurantTableOrders(Long tableId, Long restaurantId);
 }

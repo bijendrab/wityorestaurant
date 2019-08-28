@@ -94,6 +94,13 @@ public class OrderServiceImpl implements OrderService {
          response.setTableOrders(orderRepository.getOrderByTable(accordingReservation.getRelatedTable().getId(),restId));
          return response;
     }
+    
+    public TableOrdersResponse getRestaurantTableOrders(Long tableId, Long restaurantId) {
+    	TableOrdersResponse response = new TableOrdersResponse();
+        response.setTableOrders(orderRepository.getOrderByTable(tableId,restaurantId));
+        return response;
+    }
+    
     public List<Order> getAllTableOrderDetails(Long restId){
         return orderRepository.getAllOrderByRestaurant(restId);
     }

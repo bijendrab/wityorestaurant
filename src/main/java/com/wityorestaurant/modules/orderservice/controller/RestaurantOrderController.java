@@ -28,4 +28,13 @@ public class RestaurantOrderController {
         RestaurantUser restaurantUser = restaurantUserRepository.findByUsername(auth.getName());
         return new ResponseEntity<>(orderService.getAllTableOrderDetails(restaurantUser.getRestDetails().getRestId()), HttpStatus.OK);
     }
+    
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping("/order-by-table/{tableId}")
+    public ResponseEntity<?> getOrderByTable(@PathVariable Long tableId){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        RestaurantUser restaurantUser = restaurantUserRepository.findByUsername(auth.getName());
+        return new ResponseEntity<>(orderService.getRestaurantTableOrders(tableId, restaurantUser.getRestDetails().getRestId()), HttpStatus.OK);
+    }
+    
 }
