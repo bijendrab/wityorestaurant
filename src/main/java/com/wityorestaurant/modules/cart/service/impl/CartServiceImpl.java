@@ -66,14 +66,12 @@ public class CartServiceImpl implements CartService {
 				Set<ProductQuantityOptions> productQuantityOptions = tempProduct.getProductQuantityOptions();
 				for (ProductQuantityOptions qOption : productQuantityOptions) {
 					if (qOption.getQuantityOption().equalsIgnoreCase(quantityOption)
-							&& tempCartItem.getQuantityOption().equalsIgnoreCase(quantityOption)) {
-						tempCartItem.setQuantity(tempCartItem.getQuantity() + 1);
-						tempCartItem.setPrice(tempCartItem.getQuantity() * qOption.getPrice());
-					}
-					if (qOption.getQuantityOption().equalsIgnoreCase(quantityOption)
 							&& !tempCartItem.getQuantityOption().equalsIgnoreCase(quantityOption)) {
+						cart.setTotalPrice(cart.getTotalPrice() - tempCartItem.getPrice());
+						tempCartItem.setQuantity(Integer.parseInt(product.getSelectedQuantity()));
 						tempCartItem.setPrice(tempCartItem.getQuantity() * qOption.getPrice());
 						tempCartItem.setQuantityOption(qOption.getQuantityOption());
+						cart.setTotalPrice(cart.getTotalPrice() + tempCartItem.getPrice());
 						break;
 					}
 				}
@@ -88,7 +86,7 @@ public class CartServiceImpl implements CartService {
 			newCartItem.setTable(tableRepository.findById(tableId).get());
 			product.getProductQuantityOptions().forEach(qOption -> {
 				if (qOption.getQuantityOption().equalsIgnoreCase(quantityOption)) {
-					newCartItem.setPrice(qOption.getPrice() * 1);
+					newCartItem.setPrice(qOption.getPrice() * newCartItem.getQuantity());
 					newCartItem.setQuantityOption(quantityOption);
 				}
 			});
