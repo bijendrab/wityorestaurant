@@ -9,12 +9,15 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.wityorestaurant.modules.config.model.RestTable;
 import com.wityorestaurant.modules.menu.model.Product;
 
 @Entity
 @Table(name = "restaurant_cart_item")
+@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="cartItemId")
 public class RestaurantCartItem {
 	
 	@Id
@@ -30,9 +33,7 @@ public class RestaurantCartItem {
 	@JoinColumn(name = "cart_id")
 	@JsonIgnore
 	private RestaurantCart cart;
-	
-	
-	
+
 	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "table_id")

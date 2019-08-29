@@ -52,7 +52,7 @@ public class RestaurantOrderController {
     }
     
     @PreAuthorize("hasRole('ROLE_USER')")
-    @PostMapping("/place-order/table/{tableNumber}")
+    @PostMapping("/place-order/table/{tableID}")
     public ResponseEntity<?> placeOrder(@PathVariable Long tableID, @RequestBody CustomerOrderDTO orderDTO){
     	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         RestaurantUser restaurantUser = restaurantUserRepository.findByUsername(auth.getName());

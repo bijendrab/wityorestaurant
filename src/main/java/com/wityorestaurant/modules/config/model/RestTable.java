@@ -13,6 +13,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "resttable")
+@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
 public class RestTable implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
