@@ -31,6 +31,8 @@ public class OrderItem implements Serializable {
 
 
     private Boolean immediateStatus;
+    
+    private String orderedBy;
 
     public Boolean getImmediateStatus() {
         return immediateStatus;
@@ -129,4 +131,12 @@ public class OrderItem implements Serializable {
     public void setOrder(Order order) {
         this.order = order;
     }
+
+	public String getOrderedBy() {
+		return orderedBy;
+	}
+
+	public void setOrderedBy(String orderedBy) {
+		this.orderedBy = orderedBy;
+	}
 }

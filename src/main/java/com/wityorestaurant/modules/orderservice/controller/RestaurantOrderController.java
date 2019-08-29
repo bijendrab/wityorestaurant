@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.wityorestaurant.modules.customerdata.CustomerInfoDTO;
-import com.wityorestaurant.modules.customerdata.CustomerOrderDTO;
+import com.wityorestaurant.modules.orderservice.dto.RestaurantOrderDTO;
 import com.wityorestaurant.modules.orderservice.service.OrderService;
 import com.wityorestaurant.modules.orderservice.service.RestaurantOrderService;
 import com.wityorestaurant.modules.restaurant.model.RestaurantDetails;
@@ -52,8 +52,8 @@ public class RestaurantOrderController {
     }
     
     @PreAuthorize("hasRole('ROLE_USER')")
-    @PostMapping("/place-order/table/{tableNumber}")
-    public ResponseEntity<?> placeOrder(@PathVariable Long tableID, @RequestBody CustomerOrderDTO orderDTO){
+    @PostMapping("/place-order/table/{tableId}")
+    public ResponseEntity<?> placeOrder(@PathVariable Long tableId, @RequestBody RestaurantOrderDTO orderDTO){
     	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         RestaurantUser restaurantUser = restaurantUserRepository.findByUsername(auth.getName());
         RestaurantDetails restaurant = restaurantUser.getRestDetails();
@@ -64,8 +64,7 @@ public class RestaurantOrderController {
         customer.setLastName(restaurant.getOwnerName().split("\\s+")[1]);
         customer.setPhoneNumber(restaurant.getPhone());
         orderDTO.setCustomer(customer);
-        
-        return new ResponseEntity<>(restOrderService.placeOrder(orderDTO, tableID), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(restOrderService.placeOrder(orderDTO, tableId), HttpStatus.ACCEPTED);
     }
     
 }
