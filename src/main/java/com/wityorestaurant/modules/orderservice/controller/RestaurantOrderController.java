@@ -1,8 +1,5 @@
 package com.wityorestaurant.modules.orderservice.controller;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,10 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.wityorestaurant.modules.customerdata.CustomerInfoDTO;
+import com.wityorestaurant.modules.customerdata.CustomerOrderDTO;
 import com.wityorestaurant.modules.orderservice.service.OrderService;
 import com.wityorestaurant.modules.orderservice.service.RestaurantOrderService;
-import com.wityorestaurant.modules.reservation.dto.ReservationDetailsDto;
-import com.wityorestaurant.modules.reservation.model.TimeSpan;
 import com.wityorestaurant.modules.restaurant.model.RestaurantDetails;
 import com.wityorestaurant.modules.restaurant.model.RestaurantUser;
 import com.wityorestaurant.modules.restaurant.repository.RestaurantUserRepository;
@@ -57,28 +53,19 @@ public class RestaurantOrderController {
     
     @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/place-order/table/{tableNumber}")
-    public ResponseEntity<?> placeOrder(@RequestBody Integer tableNumber){
+    public ResponseEntity<?> placeOrder(@PathVariable Long tableID, @RequestBody CustomerOrderDTO orderDTO){
     	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         RestaurantUser restaurantUser = restaurantUserRepository.findByUsername(auth.getName());
         RestaurantDetails restaurant = restaurantUser.getRestDetails();
-        Long restaurantId = restaurant.getRestId();
         CustomerInfoDTO customer = new CustomerInfoDTO();
-        customer.setCustomerId(restaurantId);
+        customer.setCustomerId(restaurant.getRestId());
         customer.setEmailId(restaurant.getEmail());
         customer.setFirstName(restaurant.getOwnerName().split("\\s+")[0]);
         customer.setLastName(restaurant.getOwnerName().split("\\s+")[1]);
         customer.setPhoneNumber(restaurant.getPhone());
+        orderDTO.setCustomer(customer);
         
-        ReservationDetailsDto reservation = new ReservationDetailsDto();
-        reservation.setCustomerInfo(customer);
-        reservation.setDate(LocalDate.now());
-        reservation.setNumberOfSeats(1);
-        reservation.setTableNumber(tableNumber);
-        String startTime = String.valueOf(LocalDateTime.now()).substring(11,16);
-        String endTime = String.valueOf(LocalDateTime.now().plusHours(2)).substring(11,16);
-        reservation.setTs(new TimeSpan(startTime, endTime));
-        
-        return new ResponseEntity<>(restOrderService.placeOrder(reservation), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(restOrderService.placeOrder(orderDTO, tableID), HttpStatus.ACCEPTED);
     }
     
 }

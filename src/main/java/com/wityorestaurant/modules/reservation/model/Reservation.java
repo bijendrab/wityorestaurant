@@ -22,7 +22,10 @@ import com.wityorestaurant.modules.config.model.RestTable;
 @Entity
 @Table(name = "reservation")
 public class Reservation implements Serializable {
-    @Id
+
+	private static final long serialVersionUID = 1176593857442371821L;
+
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
