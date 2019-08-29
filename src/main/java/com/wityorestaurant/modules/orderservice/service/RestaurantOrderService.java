@@ -1,10 +1,10 @@
 package com.wityorestaurant.modules.orderservice.service;
 
-import com.wityorestaurant.modules.orderservice.dto.RestaurantOrderDTO;
+import com.wityorestaurant.modules.customerdata.CustomerOrderDTO;
 import com.wityorestaurant.modules.orderservice.model.Order;
 
 public interface RestaurantOrderService {
 
-	public Order placeOrder(RestaurantOrderDTO orderDTO, Long tableId);
+	Order placeOrder(CustomerOrderDTO orderDTO, Long tableId);
 	
 }
