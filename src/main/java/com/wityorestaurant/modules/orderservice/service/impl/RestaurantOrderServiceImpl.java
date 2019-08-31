@@ -15,6 +15,8 @@ import com.google.gson.Gson;
 import com.wityorestaurant.modules.cart.model.RestaurantCartItem;
 import com.wityorestaurant.modules.config.model.RestTable;
 import com.wityorestaurant.modules.config.repository.RestTableRepository;
+import com.wityorestaurant.modules.menu.model.Product;
+import com.wityorestaurant.modules.menu.model.ProductQuantityOptions;
 import com.wityorestaurant.modules.orderservice.dto.RestaurantOrderDTO;
 import com.wityorestaurant.modules.orderservice.dto.UpdateOrderItemDTO;
 import com.wityorestaurant.modules.orderservice.model.Order;
@@ -25,6 +27,8 @@ import com.wityorestaurant.modules.orderservice.service.RestaurantOrderService;
 import com.wityorestaurant.modules.reservation.model.Reservation;
 import com.wityorestaurant.modules.reservation.model.TimeSpan;
 import com.wityorestaurant.modules.reservation.repository.ReservationRepository;
+import com.wityorestaurant.modules.restaurant.model.RestaurantDetails;
+import com.wityorestaurant.modules.restaurant.repository.RestaurantRepository;
 
 @Service
 public class RestaurantOrderServiceImpl implements RestaurantOrderService{
@@ -37,6 +41,9 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService{
 
 	@Autowired
 	private OrderRepository orderRepository;
+	
+	@Autowired
+    private RestaurantRepository restaurantRepository;
 
 	Logger logger = LoggerFactory.getLogger(RestaurantOrderServiceImpl.class);
 	
@@ -109,5 +116,55 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService{
 			logger.debug("Stacktrace===> {}", e);
 		}
     	return false;
+    }
+	
+	public Order updateOrderedItem(UpdateOrderItemDTO dto, Long restaurantId, Long orderId) {
+    	try {
+    		Order order = orderRepository.findById(orderId).get();
+    		OrderItem orderItemToBeUpdated = null;
+    		for(OrderItem item: order.getMenuItemOrders()) {
+    			if(dto.getOrderItemId().equals(item.getOrderItemId())) {
+    				orderItemToBeUpdated = item;
+    				break;
+    			}
+    		}
+    		
+    		order.setTotalCost(order.getTotalCost() - (float)orderItemToBeUpdated.getPrice());
+    		order.getMenuItemOrders().remove(orderItemToBeUpdated);
+    		
+    		if(dto.getQuantityOption().equals(orderItemToBeUpdated.getQuantityOption())) {
+    			double perItemCost = orderItemToBeUpdated.getPrice()/orderItemToBeUpdated.getQuantity();
+    			double updatedOrderItemCost = perItemCost * dto.getQuantity();
+    			orderItemToBeUpdated.setQuantity(dto.getQuantity());
+    			orderItemToBeUpdated.setPrice(updatedOrderItemCost);
+    			order.getMenuItemOrders().add(orderItemToBeUpdated);
+    			order.setTotalCost(order.getTotalCost() + (float)updatedOrderItemCost);
+   				return orderRepository.save(order);
+   			} else {
+   				RestaurantDetails restaurant = restaurantRepository.findById(restaurantId).get();
+   				Product product = null;
+    			for(Product prod: restaurant.getProduct()) {
+    				if(prod.getProductName().equals(orderItemToBeUpdated.getItemName())) {
+    					product = prod;
+    					break;
+    				}
+    			}
+    			orderItemToBeUpdated.setQuantityOption(dto.getQuantityOption());
+    			double updatedOrderItemCost = 0;
+    			for(ProductQuantityOptions pqo: product.getProductQuantityOptions()) {
+    				if(dto.getQuantityOption().equals(pqo.getQuantityOption())) {
+    					updatedOrderItemCost = pqo.getPrice() * dto.getQuantity();
+    					orderItemToBeUpdated.setPrice(updatedOrderItemCost);
+    					order.getMenuItemOrders().add(orderItemToBeUpdated);
+    					order.setTotalCost(order.getTotalCost() + (float)updatedOrderItemCost);
+    	   				return orderRepository.save(order);
+    				}
+    			}
+    		}    		
+		} catch (Exception e) {
+			logger.error("Exception in OrderServiceImpl, method: editOrder --> {}", e.getMessage());
+			logger.debug("Stacktrace===> {}", e);
+		}
+    	return null;
     }
 }

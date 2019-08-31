@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.wityorestaurant.modules.customerdata.CustomerInfoDTO;
 import com.wityorestaurant.modules.orderservice.dto.RestaurantOrderDTO;
 import com.wityorestaurant.modules.orderservice.dto.UpdateOrderItemDTO;
+import com.wityorestaurant.modules.orderservice.model.Order;
 import com.wityorestaurant.modules.orderservice.service.OrderService;
 import com.wityorestaurant.modules.orderservice.service.RestaurantOrderService;
 import com.wityorestaurant.modules.restaurant.model.RestaurantDetails;
@@ -74,6 +75,13 @@ public class RestaurantOrderController {
     	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         RestaurantUser restaurantUser = restaurantUserRepository.findByUsername(auth.getName());
     	return new ResponseEntity<Boolean>(restOrderService.removePlacedOrderItem(dto, restaurantUser.getRestDetails().getRestId(), orderId), HttpStatus.OK);
+    }
+    
+    @PutMapping("/update-ordered-item/{orderId}")
+    public ResponseEntity<?> updateOrderItemFromOrder(@RequestBody UpdateOrderItemDTO dto, @PathVariable Long orderId){
+    	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        RestaurantUser restaurantUser = restaurantUserRepository.findByUsername(auth.getName());
+    	return new ResponseEntity<Order>(restOrderService.updateOrderedItem(dto, restaurantUser.getRestDetails().getRestId(), orderId), HttpStatus.OK);
     }
     
 }

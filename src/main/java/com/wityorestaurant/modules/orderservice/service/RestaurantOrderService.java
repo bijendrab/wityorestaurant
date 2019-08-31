@@ -8,5 +8,6 @@ public interface RestaurantOrderService {
 
 	public Order placeOrder(RestaurantOrderDTO orderDTO, Long tableId);
 	public Boolean removePlacedOrderItem(UpdateOrderItemDTO dto, Long restaurantId, Long orderId);
+	public Order updateOrderedItem(UpdateOrderItemDTO dto, Long restaurantId, Long orderId);
 	
 }
