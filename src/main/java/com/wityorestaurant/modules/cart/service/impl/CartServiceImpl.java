@@ -70,8 +70,7 @@ public class CartServiceImpl implements CartService {
 				Product tempProduct = new Gson().fromJson(tempCartItem.getProductJson(), Product.class);
 				Set<ProductQuantityOptions> productQuantityOptions = tempProduct.getProductQuantityOptions();
 				for (ProductQuantityOptions qOption : productQuantityOptions) {
-					if (qOption.getQuantityOption().equalsIgnoreCase(quantityOption)
-							&& !tempCartItem.getQuantityOption().equalsIgnoreCase(quantityOption)) {
+					if (qOption.getQuantityOption().equalsIgnoreCase(quantityOption)) {
 						cart.setTotalPrice(cart.getTotalPrice() - tempCartItem.getPrice());
 						tempCartItem.setQuantity(Integer.parseInt(product.getSelectedQuantity()));
 						tempCartItem.setPrice(tempCartItem.getQuantity() * qOption.getPrice());
