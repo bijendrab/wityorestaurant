@@ -10,12 +10,14 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.wityorestaurant.modules.customerdata.CustomerInfoDTO;
-import com.wityorestaurant.modules.customerdata.CustomerOrderDTO;
+import com.wityorestaurant.modules.orderservice.dto.RestaurantOrderDTO;
+import com.wityorestaurant.modules.orderservice.dto.UpdateOrderItemDTO;
 import com.wityorestaurant.modules.orderservice.service.OrderService;
 import com.wityorestaurant.modules.orderservice.service.RestaurantOrderService;
 import com.wityorestaurant.modules.restaurant.model.RestaurantDetails;
@@ -52,20 +54,26 @@ public class RestaurantOrderController {
     }
     
     @PreAuthorize("hasRole('ROLE_USER')")
-    @PostMapping("/place-order/table/{tableID}")
-    public ResponseEntity<?> placeOrder(@PathVariable Long tableID, @RequestBody CustomerOrderDTO orderDTO){
+    @PostMapping("/place-order/table/{tableId}")
+    public ResponseEntity<?> placeOrder(@PathVariable Long tableId, @RequestBody RestaurantOrderDTO orderDTO){
     	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         RestaurantUser restaurantUser = restaurantUserRepository.findByUsername(auth.getName());
         RestaurantDetails restaurant = restaurantUser.getRestDetails();
         CustomerInfoDTO customer = new CustomerInfoDTO();
         customer.setCustomerId(restaurant.getRestId());
         customer.setEmailId(restaurant.getEmail());
-        customer.setFirstName(restaurant.getOwnerName().split("\\s+")[0]);
-        customer.setLastName(restaurant.getOwnerName().split("\\s+")[1]);
+        customer.setFirstName("Restaurant");
+        customer.setLastName("Manager");
         customer.setPhoneNumber(restaurant.getPhone());
         orderDTO.setCustomer(customer);
-        
-        return new ResponseEntity<>(restOrderService.placeOrder(orderDTO, tableID), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(restOrderService.placeOrder(orderDTO, tableId), HttpStatus.ACCEPTED);
+    }
+    
+    @PutMapping("/delete-ordered-item/{orderId}")
+    public ResponseEntity<?> deleteOrderItemFromOrder(@RequestBody UpdateOrderItemDTO dto, @PathVariable Long orderId){
+    	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        RestaurantUser restaurantUser = restaurantUserRepository.findByUsername(auth.getName());
+    	return new ResponseEntity<Boolean>(restOrderService.removePlacedOrderItem(dto, restaurantUser.getRestDetails().getRestId(), orderId), HttpStatus.OK);
     }
     
 }

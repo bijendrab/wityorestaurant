@@ -4,11 +4,14 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.google.gson.Gson;
 import com.wityorestaurant.modules.cart.model.RestaurantCart;
 import com.wityorestaurant.modules.cart.model.RestaurantCartItem;
 import com.wityorestaurant.modules.cart.repository.CartItemRepository;
@@ -29,6 +32,8 @@ public class CartServiceImpl implements CartService {
     private RestaurantUserRepository userRepository;
 	@Autowired
 	private RestTableRepository tableRepository;
+	
+	Logger logger = LoggerFactory.getLogger(CartServiceImpl.class);
 	
 	public RestaurantCart getCart(Long tableId) {
 		try {
@@ -54,7 +59,7 @@ public class CartServiceImpl implements CartService {
 			String productId = product.getProductId();
 			RestaurantCartItem tempCartItem = null;
 			for(RestaurantCartItem cartItem : userCartItems) {
-				Product p = cartItem.getProduct();
+				Product p = new Gson().fromJson(cartItem.getProductJson(), Product.class);
 				if(productId.equalsIgnoreCase(p.getProductId())) {
 					tempCartItem = cartItem;
 					break;
@@ -62,7 +67,7 @@ public class CartServiceImpl implements CartService {
 			}
 			
 			if (tempCartItem != null) {
-				Product tempProduct = tempCartItem.getProduct();
+				Product tempProduct = new Gson().fromJson(tempCartItem.getProductJson(), Product.class);
 				Set<ProductQuantityOptions> productQuantityOptions = tempProduct.getProductQuantityOptions();
 				for (ProductQuantityOptions qOption : productQuantityOptions) {
 					if (qOption.getQuantityOption().equalsIgnoreCase(quantityOption)
@@ -81,7 +86,7 @@ public class CartServiceImpl implements CartService {
 			newCartItem.setCart(cart);
 			newCartItem.setItemName(product.getProductName());
 			newCartItem.setQuantity(Integer.parseInt(product.getSelectedQuantity()));
-			newCartItem.setProduct(product);
+			newCartItem.setProductJson(new Gson().toJson(product));
 			newCartItem.setOrderTaker(orderTaker);
 			newCartItem.setTable(tableRepository.findById(tableId).get());
 			product.getProductQuantityOptions().forEach(qOption -> {
@@ -92,7 +97,7 @@ public class CartServiceImpl implements CartService {
 			});
 			return cartItemRepository.save(newCartItem);
 		} catch (Exception e) {
-			
+			logger.debug("Error in add to cart {}",e);
 		}
 		return null;    
 	}
@@ -115,7 +120,7 @@ public class CartServiceImpl implements CartService {
 	        RestaurantCart cart = restaurant.getCart();
 			
 			for(RestaurantCartItem cartItem : cart.getCartItems()) {
-				Product product = cartItem.getProduct();
+				Product product = new Gson().fromJson(cartItem.getProductJson(), Product.class);
 				if(productId.equals(product.getProductId())) {
 					int updatedQuantity = cartItem.getQuantity() - 1;
 					if(updatedQuantity == 0) {

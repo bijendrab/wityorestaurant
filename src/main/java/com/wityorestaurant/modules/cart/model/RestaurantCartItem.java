@@ -5,15 +5,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.wityorestaurant.modules.config.model.RestTable;
-import com.wityorestaurant.modules.menu.model.Product;
 
 @Entity
 @Table(name = "restaurant_cart_item")
@@ -38,10 +37,9 @@ public class RestaurantCartItem {
 	@ManyToOne
 	@JoinColumn(name = "table_id")
 	private RestTable table;
-	
-	@OneToOne
-	@JoinColumn(name = "product_id")
-	private Product product;
+
+	@Lob
+	private String productJson;
 	
 	private String orderTaker;
 
@@ -109,14 +107,6 @@ public class RestaurantCartItem {
 		this.table = table;
 	}
 
-	public Product getProduct() {
-		return product;
-	}
-
-	public void setProduct(Product product) {
-		this.product = product;
-	}
-
 	public String getOrderTaker() {
 		return orderTaker;
 	}
@@ -124,4 +114,14 @@ public class RestaurantCartItem {
 	public void setOrderTaker(String orderTaker) {
 		this.orderTaker = orderTaker;
 	}
+
+	public String getProductJson() {
+		return productJson;
+	}
+
+	public void setProductJson(String productJson) {
+		this.productJson = productJson;
+	}
+	
+	
 }

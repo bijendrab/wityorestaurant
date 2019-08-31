@@ -6,14 +6,17 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
+import com.wityorestaurant.modules.cart.model.RestaurantCartItem;
 import com.wityorestaurant.modules.config.model.RestTable;
 import com.wityorestaurant.modules.config.repository.RestTableRepository;
-import com.wityorestaurant.modules.customerdata.CustomerCartItems;
-import com.wityorestaurant.modules.customerdata.CustomerOrderDTO;
+import com.wityorestaurant.modules.orderservice.dto.RestaurantOrderDTO;
+import com.wityorestaurant.modules.orderservice.dto.UpdateOrderItemDTO;
 import com.wityorestaurant.modules.orderservice.model.Order;
 import com.wityorestaurant.modules.orderservice.model.OrderItem;
 import com.wityorestaurant.modules.orderservice.model.OrderStatus;
@@ -35,8 +38,10 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService{
 	@Autowired
 	private OrderRepository orderRepository;
 
+	Logger logger = LoggerFactory.getLogger(RestaurantOrderServiceImpl.class);
+	
 	@Override
-	public Order placeOrder(CustomerOrderDTO orderDTO, Long tableId) {
+	public Order placeOrder(RestaurantOrderDTO orderDTO, Long tableId) {
 		List<RestTable> tables = tableRepository.findByRestaurantId(orderDTO.getCustomer().getCustomerId());
 		RestTable selectedTable = null; 
 		for(RestTable tbl : tables) {
@@ -44,7 +49,9 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService{
 				selectedTable = tbl;
 			}
 		}
+		System.out.println(selectedTable.getTableNumber()+" TABLE NUM");
 		Reservation reservation = new Reservation();
+		System.out.println(reservation.getId()+" reservation NUM");
 		reservation.setCustomerInfo(new Gson().toJson(orderDTO.getCustomer()).toString());
 		reservation.setRelatedTable(selectedTable);
 		reservation.setReservationDate(LocalDate.now());
@@ -59,7 +66,7 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService{
         newOrder.setStatus(OrderStatus.ON_HOLD);
         float totalPrice = 0;
         Date creationDate = new Date();
-        for (CustomerCartItems mi : orderDTO.getCartItems()) {
+        for (RestaurantCartItem mi : orderDTO.getCartItems()) {
             String orderItemUUID = UUID.randomUUID().toString();
             orderItemUUID = orderItemUUID.replaceAll("-", "");
             totalPrice += mi.getPrice();
@@ -73,16 +80,34 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService{
             menuItem_Order.setQuantityOption(mi.getQuantityOption());
             menuItem_Order.setCustomerCartItems(new Gson().toJson(mi));
             menuItem_Order.setImmediateStatus(mi.getImmediateStatus());
-            newOrder.getMenuItemOrders().add(menuItem_Order);
             menuItem_Order.setOrder(newOrder);
+            newOrder.getMenuItemOrders().add(menuItem_Order);
         }
-
         newOrder.setTotalCost(totalPrice);
+        newOrder.setOrderedBy("restaurant");
         orderRepository.save(newOrder);
         return newOrder;
         
 	}
-
 	
-
+	public Boolean removePlacedOrderItem(UpdateOrderItemDTO dto, Long restaurantId, Long orderId) {
+    	try {
+        	Order order = orderRepository.findById(orderId).get();
+        	OrderItem orderItem = null;
+        	for(OrderItem orderItem2: order.getMenuItemOrders()) {
+        		if(orderItem2.getOrderItemId().equals(dto.getOrderItemId())) {
+        			orderItem = orderItem2;
+        			break;
+        		}
+        	}
+        	order.setTotalCost(order.getTotalCost() - (float)orderItem.getPrice());
+        	order.getMenuItemOrders().remove(orderItem);
+        	orderRepository.save(order);
+        	return true;
+		} catch (Exception e) {
+			logger.error("Exception in OrderServiceImpl, method: removePlacedOrderItem --> {}", e.getMessage());
+			logger.debug("Stacktrace===> {}", e);
+		}
+    	return false;
+    }
 }

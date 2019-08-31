@@ -74,6 +74,7 @@ public class OrderServiceImpl implements OrderService {
         }
 
         newOrder.setTotalCost(totalPrice);
+        newOrder.setOrderedBy("customer");
         setOrder(newOrder);
         orderRepository.save(newOrder);
         return newOrder;

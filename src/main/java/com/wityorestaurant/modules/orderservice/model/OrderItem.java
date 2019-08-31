@@ -1,15 +1,26 @@
 package com.wityorestaurant.modules.orderservice.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "orderitem")
 public class OrderItem implements Serializable {
 
-    @Id
+	private static final long serialVersionUID = -5213196255613404458L;
+
+	@Id
     private String orderItemId;
 
     @Temporal(value = TemporalType.TIMESTAMP)
@@ -31,6 +42,7 @@ public class OrderItem implements Serializable {
 
 
     private Boolean immediateStatus;
+    
 
     public Boolean getImmediateStatus() {
         return immediateStatus;
