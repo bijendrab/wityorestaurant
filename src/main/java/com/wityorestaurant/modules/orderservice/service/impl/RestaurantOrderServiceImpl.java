@@ -12,9 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
+import com.wityorestaurant.modules.cart.model.RestaurantCart;
 import com.wityorestaurant.modules.cart.model.RestaurantCartItem;
+import com.wityorestaurant.modules.cart.repository.CartRepository;
 import com.wityorestaurant.modules.config.model.RestTable;
 import com.wityorestaurant.modules.config.repository.RestTableRepository;
+import com.wityorestaurant.modules.customerdata.CustomerInfoDTO;
 import com.wityorestaurant.modules.menu.model.Product;
 import com.wityorestaurant.modules.menu.model.ProductQuantityOptions;
 import com.wityorestaurant.modules.orderservice.dto.RestaurantOrderDTO;
@@ -43,12 +46,23 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService{
 	private OrderRepository orderRepository;
 	
 	@Autowired
+	private CartRepository cartRepository;
+	
+	@Autowired
     private RestaurantRepository restaurantRepository;
 
 	Logger logger = LoggerFactory.getLogger(RestaurantOrderServiceImpl.class);
 	
 	@Override
-	public Order placeOrder(RestaurantOrderDTO orderDTO, Long tableId) {
+	public Order placeOrder(RestaurantOrderDTO orderDTO, Long tableId, RestaurantDetails restaurant) {
+		CustomerInfoDTO customer = new CustomerInfoDTO();
+        customer.setCustomerId(restaurant.getRestId());
+        customer.setEmailId(restaurant.getEmail());
+        customer.setFirstName("Restaurant");
+        customer.setLastName("Manager");
+        customer.setPhoneNumber(restaurant.getPhone());
+        orderDTO.setCustomer(customer);
+        
 		List<RestTable> tables = tableRepository.findByRestaurantId(orderDTO.getCustomer().getCustomerId());
 		RestTable selectedTable = null; 
 		for(RestTable tbl : tables) {
@@ -56,9 +70,7 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService{
 				selectedTable = tbl;
 			}
 		}
-		System.out.println(selectedTable.getTableNumber()+" TABLE NUM");
 		Reservation reservation = new Reservation();
-		System.out.println(reservation.getId()+" reservation NUM");
 		reservation.setCustomerInfo(new Gson().toJson(orderDTO.getCustomer()).toString());
 		reservation.setRelatedTable(selectedTable);
 		reservation.setReservationDate(LocalDate.now());
@@ -92,6 +104,19 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService{
         }
         newOrder.setTotalCost(totalPrice);
         newOrder.setOrderedBy("restaurant");
+        
+        RestaurantCart cart = restaurant.getCart();
+        for(RestaurantCartItem cartItem : cart.getCartItems()) {
+        	for(RestaurantCartItem dtoCartItem : orderDTO.getCartItems()) {
+        		if(cartItem.getCartItemId() == dtoCartItem.getCartItemId()) {
+        			cart.getCartItems().remove(cartItem);
+        			cart.setTotalPrice(cart.getTotalPrice() - cartItem.getPrice());
+        			break;
+        		}
+        	}
+        }
+        
+        cartRepository.save(cart);
         orderRepository.save(newOrder);
         return newOrder;
         
@@ -149,12 +174,13 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService{
     					break;
     				}
     			}
-    			orderItemToBeUpdated.setQuantityOption(dto.getQuantityOption());
     			double updatedOrderItemCost = 0;
     			for(ProductQuantityOptions pqo: product.getProductQuantityOptions()) {
     				if(dto.getQuantityOption().equals(pqo.getQuantityOption())) {
     					updatedOrderItemCost = pqo.getPrice() * dto.getQuantity();
     					orderItemToBeUpdated.setPrice(updatedOrderItemCost);
+    					orderItemToBeUpdated.setQuantityOption(dto.getQuantityOption());
+    					orderItemToBeUpdated.setQuantity(dto.getQuantity());
     					order.getMenuItemOrders().add(orderItemToBeUpdated);
     					order.setTotalCost(order.getTotalCost() + (float)updatedOrderItemCost);
     	   				return orderRepository.save(order);
@@ -162,7 +188,7 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService{
     			}
     		}    		
 		} catch (Exception e) {
-			logger.error("Exception in OrderServiceImpl, method: editOrder --> {}", e.getMessage());
+			logger.error("Exception in RestaurantOrderServiceImpl, method: updateOrderedItem --> {}", e.getMessage());
 			logger.debug("Stacktrace===> {}", e);
 		}
     	return null;

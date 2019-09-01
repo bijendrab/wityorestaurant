@@ -30,7 +30,7 @@ public class RestaurantCart {
 	@JoinColumn(name = "restaurant_id")
 	private RestaurantDetails restaurant;
 	
-	@OneToMany(mappedBy = "cart", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "cart", fetch = FetchType.EAGER, orphanRemoval = true)
 	private List<RestaurantCartItem> cartItems;
 
 	public Long getCartId() {

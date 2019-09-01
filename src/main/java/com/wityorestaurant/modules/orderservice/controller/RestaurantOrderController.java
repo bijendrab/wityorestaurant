@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.wityorestaurant.modules.customerdata.CustomerInfoDTO;
 import com.wityorestaurant.modules.orderservice.dto.RestaurantOrderDTO;
 import com.wityorestaurant.modules.orderservice.dto.UpdateOrderItemDTO;
 import com.wityorestaurant.modules.orderservice.model.Order;
@@ -60,14 +59,7 @@ public class RestaurantOrderController {
     	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         RestaurantUser restaurantUser = restaurantUserRepository.findByUsername(auth.getName());
         RestaurantDetails restaurant = restaurantUser.getRestDetails();
-        CustomerInfoDTO customer = new CustomerInfoDTO();
-        customer.setCustomerId(restaurant.getRestId());
-        customer.setEmailId(restaurant.getEmail());
-        customer.setFirstName("Restaurant");
-        customer.setLastName("Manager");
-        customer.setPhoneNumber(restaurant.getPhone());
-        orderDTO.setCustomer(customer);
-        return new ResponseEntity<>(restOrderService.placeOrder(orderDTO, tableId), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(restOrderService.placeOrder(orderDTO, tableId, restaurant), HttpStatus.ACCEPTED);
     }
     
     @PutMapping("/delete-ordered-item/{orderId}")
