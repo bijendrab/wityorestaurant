@@ -58,7 +58,7 @@ public class RestTable implements Serializable {
     private List<Reservation> reservationList;
     private boolean serviceChargeEnabled = false;
     private boolean packagingChargeEnabled = false;
-    private boolean overAllDiscount = false;
+    private boolean overAllDiscountEnabled = false;
     private float serviceCharge = 0.0F;
     private float packagingCharge = 0.0F;
     private float overallDiscount = 0.0F;
@@ -152,10 +152,10 @@ public class RestTable implements Serializable {
 	}
 
 	public boolean isOverAllDiscount() {
-		return overAllDiscount;
+		return overAllDiscountEnabled;
 	}
 
 	public void setOverAllDiscount(boolean overAllDiscount) {
-		this.overAllDiscount = overAllDiscount;
+		this.overAllDiscountEnabled = overAllDiscount;
 	}
 }
