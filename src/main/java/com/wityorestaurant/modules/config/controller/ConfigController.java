@@ -1,12 +1,6 @@
 package com.wityorestaurant.modules.config.controller;
-import com.wityorestaurant.modules.config.dto.RestTableDTO;
-import com.wityorestaurant.modules.config.model.Staff;
-
 import java.util.List;
 
-import com.wityorestaurant.modules.config.repository.RestTableRepository;
-import com.wityorestaurant.modules.restaurant.model.RestaurantDetails;
-import com.wityorestaurant.modules.restaurant.model.RestaurantUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,11 +16,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.wityorestaurant.modules.config.dto.ConfigurationDTO;
+import com.wityorestaurant.modules.config.dto.RestTableDTO;
+import com.wityorestaurant.modules.config.model.RestTable;
+import com.wityorestaurant.modules.config.model.Staff;
+import com.wityorestaurant.modules.config.repository.RestTableRepository;
 import com.wityorestaurant.modules.config.service.RestaurantConfigurationService;
+import com.wityorestaurant.modules.restaurant.model.RestaurantDetails;
+import com.wityorestaurant.modules.restaurant.model.RestaurantUser;
 import com.wityorestaurant.modules.restaurant.repository.RestaurantUserRepository;
 import com.wityorestaurant.modules.restaurant.service.RestaurantUserService;
 
@@ -121,5 +120,14 @@ public class ConfigController {
     @GetMapping("/staff/get-custom-staffs")
     public ResponseEntity<?> getCustomStaffs() {
         return new ResponseEntity<List<Staff>>(restConfigServiceImpl.getCustomStaffs(), HttpStatus.OK);
+    }
+    
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @PutMapping("/table/update-table-charges")
+    public ResponseEntity<?> updateTableCharges(@RequestBody RestTable table){
+    	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        RestaurantUser restUser = userRepo.findByUsername(auth.getName());
+        RestaurantDetails restaurant = restUser.getRestDetails();
+        return new ResponseEntity<RestTable>(restConfigServiceImpl.updateTableCharges(table, restaurant.getRestId()), HttpStatus.OK);
     }
 }

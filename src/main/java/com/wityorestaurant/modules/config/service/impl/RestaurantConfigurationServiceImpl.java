@@ -225,6 +225,34 @@ public class RestaurantConfigurationServiceImpl implements RestaurantConfigurati
     	return Collections.emptyList();
     }
     
+    public RestTable updateTableCharges(RestTable dtoTable, Long restId) {
+    	RestTable table = restTableRepository.findByRestaurantIdAndTableId(dtoTable.getId(), restId);
+    	if(table.isServiceChargeEnabled() == true && dtoTable.isServiceChargeEnabled() == false){
+    		table.setServiceChargeEnabled(false);
+    		table.setServiceCharge(0.0F);
+    	} else if(table.isServiceChargeEnabled() == false && dtoTable.isServiceChargeEnabled() == true) {
+    		table.setServiceChargeEnabled(true);
+    		table.setServiceCharge(dtoTable.getServiceCharge());
+    	}
+    	
+    	if(table.isPackagingChargeEnabled() == true && dtoTable.isPackagingChargeEnabled() == false){
+    		table.setPackagingChargeEnabled(false);
+    		table.setPackagingCharge(0.0F);
+    	} else if(table.isPackagingChargeEnabled() == false && dtoTable.isPackagingChargeEnabled() == true) {
+    		table.setPackagingChargeEnabled(true);
+    		table.setPackagingCharge(dtoTable.getServiceCharge());
+    	}
+    	
+    	if(table.isOverAllDiscount() == true && dtoTable.isOverAllDiscount() == false) {
+    		table.setOverAllDiscount(false);
+    		table.setOverallDiscount(0.0F);
+    	} else if(table.isOverAllDiscount() == false && dtoTable.isOverAllDiscount() == true) {
+    		table.setOverAllDiscount(true);
+    		table.setOverallDiscount(dtoTable.getOverallDiscount());
+    	}
+    	return restTableRepository.save(table);
+    }
+    
     
     
     /*=========================STAFF RELATED CODING: ENDS=============================*/

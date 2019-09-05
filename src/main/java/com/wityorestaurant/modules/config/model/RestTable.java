@@ -1,15 +1,31 @@
 package com.wityorestaurant.modules.config.model;
 
-import com.fasterxml.jackson.annotation.*;
-import com.wityorestaurant.modules.reservation.model.Reservation;
-import com.wityorestaurant.modules.restaurant.model.RestaurantDetails;
+import java.io.Serializable;
+import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.validation.constraints.Min;
+
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
-import javax.persistence.*;
-import javax.validation.constraints.Min;
-import java.io.Serializable;
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.wityorestaurant.modules.reservation.model.Reservation;
+import com.wityorestaurant.modules.restaurant.model.RestaurantDetails;
 
 @Entity
 @Table(name = "resttable")
@@ -40,6 +56,9 @@ public class RestTable implements Serializable {
     @Fetch(value = FetchMode.SUBSELECT)
     @JsonIgnore
     private List<Reservation> reservationList;
+    private boolean serviceChargeEnabled = false;
+    private boolean packagingChargeEnabled = false;
+    private boolean overAllDiscount = false;
     private float serviceCharge = 0.0F;
     private float packagingCharge = 0.0F;
     private float overallDiscount = 0.0F;
@@ -114,5 +133,29 @@ public class RestTable implements Serializable {
 
 	public void setOverallDiscount(float overallDiscount) {
 		this.overallDiscount = overallDiscount;
+	}
+
+	public boolean isServiceChargeEnabled() {
+		return serviceChargeEnabled;
+	}
+
+	public void setServiceChargeEnabled(boolean serviceChargeEnabled) {
+		this.serviceChargeEnabled = serviceChargeEnabled;
+	}
+
+	public boolean isPackagingChargeEnabled() {
+		return packagingChargeEnabled;
+	}
+
+	public void setPackagingChargeEnabled(boolean packagingChargeEnabled) {
+		this.packagingChargeEnabled = packagingChargeEnabled;
+	}
+
+	public boolean isOverAllDiscount() {
+		return overAllDiscount;
+	}
+
+	public void setOverAllDiscount(boolean overAllDiscount) {
+		this.overAllDiscount = overAllDiscount;
 	}
 }

@@ -26,4 +26,6 @@ public interface RestaurantConfigurationService {
     public Staff updateStaff(Staff updatedStaff);
     
     public Staff addNewStaff(Staff staff, Long restaurantId);
+    
+    public RestTable updateTableCharges(RestTable dtoTable, Long restId);
 }
