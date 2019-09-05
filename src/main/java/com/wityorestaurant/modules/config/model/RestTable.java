@@ -62,100 +62,77 @@ public class RestTable implements Serializable {
     private float serviceCharge = 0.0F;
     private float packagingCharge = 0.0F;
     private float overallDiscount = 0.0F;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getTableNumber() {
-        return tableNumber;
-    }
-
-    public void setTableNumber(Long tableNumber) {
-        this.tableNumber = tableNumber;
-    }
-
-    public Integer getTableSize() {
-        return tableSize;
-    }
-
-    public void setTableSize(Integer tableSize) {
-        this.tableSize = tableSize;
-    }
-
-    public Integer getQrCode() {
-        return qrCode;
-    }
-
-    public void setQrCode(Integer qrCode) {
-        this.qrCode = qrCode;
-    }
-
-    public RestaurantDetails getRestaurantDetails() {
-        return restaurantDetails;
-    }
-
-    public void setRestaurantDetails(RestaurantDetails restaurantDetails) {
-        this.restaurantDetails = restaurantDetails;
-    }
-
-    public List<Reservation> getReservationList() {
-        return reservationList;
-    }
-
-    public void setReservationList(List<Reservation> reservationList) {
-        this.reservationList = reservationList;
-    }
-
-	public float getServiceCharge() {
-		return serviceCharge;
+	public Long getId() {
+		return id;
 	}
-
-	public void setServiceCharge(float serviceCharge) {
-		this.serviceCharge = serviceCharge;
+	public void setId(Long id) {
+		this.id = id;
 	}
-
-	public float getPackagingCharge() {
-		return packagingCharge;
+	public Long getTableNumber() {
+		return tableNumber;
 	}
-
-	public void setPackagingCharge(float packagingCharge) {
-		this.packagingCharge = packagingCharge;
+	public void setTableNumber(Long tableNumber) {
+		this.tableNumber = tableNumber;
 	}
-
-	public float getOverallDiscount() {
-		return overallDiscount;
+	public Integer getTableSize() {
+		return tableSize;
 	}
-
-	public void setOverallDiscount(float overallDiscount) {
-		this.overallDiscount = overallDiscount;
+	public void setTableSize(Integer tableSize) {
+		this.tableSize = tableSize;
 	}
-
+	public Integer getQrCode() {
+		return qrCode;
+	}
+	public void setQrCode(Integer qrCode) {
+		this.qrCode = qrCode;
+	}
+	public RestaurantDetails getRestaurantDetails() {
+		return restaurantDetails;
+	}
+	public void setRestaurantDetails(RestaurantDetails restaurantDetails) {
+		this.restaurantDetails = restaurantDetails;
+	}
+	public List<Reservation> getReservationList() {
+		return reservationList;
+	}
+	public void setReservationList(List<Reservation> reservationList) {
+		this.reservationList = reservationList;
+	}
 	public boolean isServiceChargeEnabled() {
 		return serviceChargeEnabled;
 	}
-
 	public void setServiceChargeEnabled(boolean serviceChargeEnabled) {
 		this.serviceChargeEnabled = serviceChargeEnabled;
 	}
-
 	public boolean isPackagingChargeEnabled() {
 		return packagingChargeEnabled;
 	}
-
 	public void setPackagingChargeEnabled(boolean packagingChargeEnabled) {
 		this.packagingChargeEnabled = packagingChargeEnabled;
 	}
-
-	public boolean isOverAllDiscount() {
+	public boolean isOverAllDiscountEnabled() {
 		return overAllDiscountEnabled;
 	}
-
-	public void setOverAllDiscount(boolean overAllDiscount) {
-		this.overAllDiscountEnabled = overAllDiscount;
+	public void setOverAllDiscountEnabled(boolean overAllDiscountEnabled) {
+		this.overAllDiscountEnabled = overAllDiscountEnabled;
 	}
+	public float getServiceCharge() {
+		return serviceCharge;
+	}
+	public void setServiceCharge(float serviceCharge) {
+		this.serviceCharge = serviceCharge;
+	}
+	public float getPackagingCharge() {
+		return packagingCharge;
+	}
+	public void setPackagingCharge(float packagingCharge) {
+		this.packagingCharge = packagingCharge;
+	}
+	public float getOverallDiscount() {
+		return overallDiscount;
+	}
+	public void setOverallDiscount(float overallDiscount) {
+		this.overallDiscount = overallDiscount;
+	}
+  
 }

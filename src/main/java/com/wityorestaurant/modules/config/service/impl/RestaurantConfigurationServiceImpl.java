@@ -243,11 +243,11 @@ public class RestaurantConfigurationServiceImpl implements RestaurantConfigurati
     		table.setPackagingCharge(dtoTable.getServiceCharge());
     	}
     	
-    	if(table.isOverAllDiscount() == true && dtoTable.isOverAllDiscount() == false) {
-    		table.setOverAllDiscount(false);
+    	if(table.isOverAllDiscountEnabled() == true && dtoTable.isOverAllDiscountEnabled() == false) {
+    		table.setOverAllDiscountEnabled(false);
     		table.setOverallDiscount(0.0F);
-    	} else if(table.isOverAllDiscount() == false && dtoTable.isOverAllDiscount() == true) {
-    		table.setOverAllDiscount(true);
+    	} else if(table.isOverAllDiscountEnabled() == false && dtoTable.isOverAllDiscountEnabled() == true) {
+    		table.setOverAllDiscountEnabled(true);
     		table.setOverallDiscount(dtoTable.getOverallDiscount());
     	}
     	return restTableRepository.save(table);
