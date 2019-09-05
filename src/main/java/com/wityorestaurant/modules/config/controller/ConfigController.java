@@ -5,6 +5,7 @@ import com.wityorestaurant.modules.config.model.Staff;
 import java.util.List;
 
 import com.wityorestaurant.modules.config.repository.RestTableRepository;
+import com.wityorestaurant.modules.restaurant.model.RestaurantDetails;
 import com.wityorestaurant.modules.restaurant.model.RestaurantUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.wityorestaurant.modules.config.dto.ConfigurationDTO;
@@ -80,6 +82,14 @@ public class ConfigController {
     @GetMapping("/{restaurantId}/getTables")
     public ResponseEntity<?> getTables(@PathVariable("restaurantId") Long restId) {
         return new ResponseEntity<>(restTableRepository.findByRestaurantId(restId),HttpStatus.ACCEPTED);
+    }
+    
+    @GetMapping("/get-table/{tableId}")
+    public ResponseEntity<?> getTable(@PathVariable Long tableId) {
+    	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        RestaurantUser restUser = userRepo.findByUsername(auth.getName());
+        RestaurantDetails restaurant = restUser.getRestDetails();
+        return new ResponseEntity<>(restTableRepository.findByRestaurantIdAndTableId(tableId, restaurant.getRestId()),HttpStatus.ACCEPTED);
     }
 
     @PreAuthorize("hasRole('ROLE_USER')")

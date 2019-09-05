@@ -40,6 +40,9 @@ public class RestTable implements Serializable {
     @Fetch(value = FetchMode.SUBSELECT)
     @JsonIgnore
     private List<Reservation> reservationList;
+    private float serviceCharge = 0.0F;
+    private float packagingCharge = 0.0F;
+    private float overallDiscount = 0.0F;
 
     public Long getId() {
         return id;
@@ -88,4 +91,28 @@ public class RestTable implements Serializable {
     public void setReservationList(List<Reservation> reservationList) {
         this.reservationList = reservationList;
     }
+
+	public float getServiceCharge() {
+		return serviceCharge;
+	}
+
+	public void setServiceCharge(float serviceCharge) {
+		this.serviceCharge = serviceCharge;
+	}
+
+	public float getPackagingCharge() {
+		return packagingCharge;
+	}
+
+	public void setPackagingCharge(float packagingCharge) {
+		this.packagingCharge = packagingCharge;
+	}
+
+	public float getOverallDiscount() {
+		return overallDiscount;
+	}
+
+	public void setOverallDiscount(float overallDiscount) {
+		this.overallDiscount = overallDiscount;
+	}
 }

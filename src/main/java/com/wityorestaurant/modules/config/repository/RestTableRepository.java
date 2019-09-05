@@ -13,4 +13,7 @@ import com.wityorestaurant.modules.config.model.RestTable;
 public interface RestTableRepository extends JpaRepository<RestTable, Long> {
     @Query(value = "SELECT * from resttable where rest_id=?1", nativeQuery = true)
     public List<RestTable> findByRestaurantId(Long restId);
+    
+    @Query(value = "SELECT * from resttable where id=?1 AND rest_id=?2", nativeQuery = true)
+    public RestTable findByRestaurantIdAndTableId(Long id, Long restId);
 }

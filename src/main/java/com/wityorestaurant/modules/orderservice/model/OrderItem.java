@@ -60,6 +60,9 @@ public class OrderItem implements Serializable {
     @JoinColumn(name = "orderId")
     @JsonIgnore
     private Order order;
+    
+    private Boolean specialDiscount = false;
+    private float specialDiscountValue = 0F;
 
 
     public String getOrderItemId() {
@@ -141,4 +144,20 @@ public class OrderItem implements Serializable {
     public void setOrder(Order order) {
         this.order = order;
     }
+
+	public Boolean getSpecialDiscount() {
+		return specialDiscount;
+	}
+
+	public void setSpecialDiscount(Boolean specialDiscount) {
+		this.specialDiscount = specialDiscount;
+	}
+
+	public float getSpecialDiscountValue() {
+		return specialDiscountValue;
+	}
+
+	public void setSpecialDiscountValue(float specialDiscountValue) {
+		this.specialDiscountValue = specialDiscountValue;
+	}
 }

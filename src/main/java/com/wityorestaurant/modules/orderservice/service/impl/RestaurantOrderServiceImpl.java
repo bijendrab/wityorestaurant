@@ -193,4 +193,44 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService{
 		}
     	return null;
     }
+	
+	public OrderItem updateOrderItemSpecialDiscount(OrderItem orderItem, Long orderId) {
+		Order order = orderRepository.findById(orderId).get();
+		OrderItem orderItemToBeUpdated = null;
+		for(OrderItem temp: order.getMenuItemOrders()) {
+			if(temp.getOrderItemId() == orderItem.getOrderItemId()) {
+				orderItemToBeUpdated = temp;
+				break;
+			}
+		}
+		if(orderItemToBeUpdated == null) {
+			return null;
+		} else {
+			if(orderItem.getSpecialDiscount() == true) {
+				order.getMenuItemOrders().remove(orderItemToBeUpdated);
+				if(orderItemToBeUpdated.getSpecialDiscount() == true) {
+					order.setTotalCost(order.getTotalCost() - ((float)orderItemToBeUpdated.getPrice() * (orderItemToBeUpdated.getSpecialDiscountValue()/100)));
+					orderItemToBeUpdated.setSpecialDiscountValue(orderItem.getSpecialDiscountValue());
+					order.getMenuItemOrders().add(orderItemToBeUpdated);
+					order.setTotalCost(order.getTotalCost() + ((float)orderItemToBeUpdated.getPrice() * (orderItemToBeUpdated.getSpecialDiscountValue()/100)));
+				} else {
+					order.setTotalCost(order.getTotalCost() - (float)orderItem.getPrice());
+					orderItemToBeUpdated.setSpecialDiscount(true);
+					orderItemToBeUpdated.setSpecialDiscountValue(orderItem.getSpecialDiscountValue());
+					order.getMenuItemOrders().add(orderItemToBeUpdated);
+					order.setTotalCost(order.getTotalCost() + ((float)orderItemToBeUpdated.getPrice() * (orderItemToBeUpdated.getSpecialDiscountValue()/100)));
+				}
+			} else {
+				order.getMenuItemOrders().remove(orderItemToBeUpdated);
+				order.setTotalCost(order.getTotalCost() - ((float)orderItemToBeUpdated.getPrice() * (orderItemToBeUpdated.getSpecialDiscountValue()/100)));
+				orderItemToBeUpdated.setSpecialDiscount(false);
+				orderItemToBeUpdated.setSpecialDiscountValue(0F);
+				order.getMenuItemOrders().add(orderItemToBeUpdated);
+				order.setTotalCost(order.getTotalCost() + (float)orderItemToBeUpdated.getPrice());
+			}
+			orderRepository.save(order);
+			return orderItemToBeUpdated;
+		}
+	}
+	
 }
