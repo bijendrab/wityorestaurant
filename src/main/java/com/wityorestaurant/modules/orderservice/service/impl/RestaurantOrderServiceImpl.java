@@ -209,10 +209,10 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService{
 			if(orderItem.getSpecialDiscount() == true) {
 				order.getMenuItemOrders().remove(orderItemToBeUpdated);
 				if(orderItemToBeUpdated.getSpecialDiscount() == true) {
-					order.setTotalCost(order.getTotalCost() - ((float)orderItemToBeUpdated.getPrice() * (orderItemToBeUpdated.getSpecialDiscountValue()/100)));
+					order.setTotalCost(order.getTotalCost() - ((float)orderItemToBeUpdated.getPrice() * ((100-orderItemToBeUpdated.getSpecialDiscountValue())/100)));
 					orderItemToBeUpdated.setSpecialDiscountValue(orderItem.getSpecialDiscountValue());
 					order.getMenuItemOrders().add(orderItemToBeUpdated);
-					order.setTotalCost(order.getTotalCost() + ((float)orderItemToBeUpdated.getPrice() * (orderItemToBeUpdated.getSpecialDiscountValue()/100)));
+					order.setTotalCost(order.getTotalCost() + ((float)orderItemToBeUpdated.getPrice() * (100-(orderItemToBeUpdated.getSpecialDiscountValue()/100))));
 				} else {
 					order.setTotalCost(order.getTotalCost() - (float)orderItem.getPrice());
 					orderItemToBeUpdated.setSpecialDiscount(true);
