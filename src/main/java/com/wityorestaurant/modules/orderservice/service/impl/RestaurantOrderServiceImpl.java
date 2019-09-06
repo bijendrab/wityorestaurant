@@ -25,6 +25,7 @@ import com.wityorestaurant.modules.orderservice.dto.UpdateOrderItemDTO;
 import com.wityorestaurant.modules.orderservice.model.Order;
 import com.wityorestaurant.modules.orderservice.model.OrderItem;
 import com.wityorestaurant.modules.orderservice.model.OrderStatus;
+import com.wityorestaurant.modules.orderservice.repository.OrderItemRepository;
 import com.wityorestaurant.modules.orderservice.repository.OrderRepository;
 import com.wityorestaurant.modules.orderservice.service.RestaurantOrderService;
 import com.wityorestaurant.modules.reservation.model.Reservation;
@@ -50,6 +51,9 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService{
 	
 	@Autowired
     private RestaurantRepository restaurantRepository;
+	
+	@Autowired
+	private OrderItemRepository orderItemRepository;
 
 	Logger logger = LoggerFactory.getLogger(RestaurantOrderServiceImpl.class);
 	
@@ -209,27 +213,31 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService{
 			if(orderItem.getSpecialDiscount() == true) {
 				order.getMenuItemOrders().remove(orderItemToBeUpdated);
 				if(orderItemToBeUpdated.getSpecialDiscount() == true) {
-					order.setTotalCost(order.getTotalCost() - ((float)orderItemToBeUpdated.getPrice() * ((100-orderItemToBeUpdated.getSpecialDiscountValue())/100)));
+					float currentCost = ((float)orderItemToBeUpdated.getPrice() * ((100-orderItemToBeUpdated.getSpecialDiscountValue())/100));
+					order.setTotalCost(order.getTotalCost() - currentCost);
 					orderItemToBeUpdated.setSpecialDiscountValue(orderItem.getSpecialDiscountValue());
 					order.getMenuItemOrders().add(orderItemToBeUpdated);
-					order.setTotalCost(order.getTotalCost() + ((float)orderItemToBeUpdated.getPrice() * (100-(orderItemToBeUpdated.getSpecialDiscountValue()/100))));
+					currentCost = ((float)orderItemToBeUpdated.getPrice() * ((100-orderItemToBeUpdated.getSpecialDiscountValue())/100));
+					order.setTotalCost(order.getTotalCost() + currentCost);
 				} else {
 					order.setTotalCost(order.getTotalCost() - (float)orderItem.getPrice());
 					orderItemToBeUpdated.setSpecialDiscount(true);
 					orderItemToBeUpdated.setSpecialDiscountValue(orderItem.getSpecialDiscountValue());
 					order.getMenuItemOrders().add(orderItemToBeUpdated);
-					order.setTotalCost(order.getTotalCost() + ((float)orderItemToBeUpdated.getPrice() * (orderItemToBeUpdated.getSpecialDiscountValue()/100)));
+					float latestPrice = ((float)orderItemToBeUpdated.getPrice() * ((100-orderItemToBeUpdated.getSpecialDiscountValue())/100));
+					order.setTotalCost(order.getTotalCost() + latestPrice);
 				}
 			} else {
 				order.getMenuItemOrders().remove(orderItemToBeUpdated);
 				order.setTotalCost(order.getTotalCost() - ((float)orderItemToBeUpdated.getPrice() * (orderItemToBeUpdated.getSpecialDiscountValue()/100)));
-				orderItemToBeUpdated.setSpecialDiscount(false);
+				orderItemToBeUpdated.setSpecialDiscount(Boolean.FALSE);
 				orderItemToBeUpdated.setSpecialDiscountValue(0F);
 				order.getMenuItemOrders().add(orderItemToBeUpdated);
 				order.setTotalCost(order.getTotalCost() + (float)orderItemToBeUpdated.getPrice());
 			}
+			logger.debug("Order ITEM UPDATED");
 			orderRepository.save(order);
-			return orderItemToBeUpdated;
+			return orderItemRepository.save(orderItemToBeUpdated);
 		}
 	}
 	
