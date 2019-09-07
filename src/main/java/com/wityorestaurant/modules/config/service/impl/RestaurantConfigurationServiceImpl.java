@@ -241,7 +241,11 @@ public class RestaurantConfigurationServiceImpl implements RestaurantConfigurati
     	} else if(table.isPackagingChargeEnabled() == false && dtoTable.isPackagingChargeEnabled() == true) {
     		table.setPackagingChargeEnabled(true);
     		table.setPackagingCharge(dtoTable.getPackagingCharge());
-    	}
+    	} else if (table.isPackagingChargeEnabled() && dtoTable.isPackagingChargeEnabled()){
+    	    if(table.getPackagingCharge() != dtoTable.getPackagingCharge()){
+    	        table.setPackagingCharge(dtoTable.getPackagingCharge());
+            }
+        }
     	
     	if(table.isOverAllDiscountEnabled() == true && dtoTable.isOverAllDiscountEnabled() == false) {
     		table.setOverAllDiscountEnabled(false);
@@ -249,7 +253,11 @@ public class RestaurantConfigurationServiceImpl implements RestaurantConfigurati
     	} else if(table.isOverAllDiscountEnabled() == false && dtoTable.isOverAllDiscountEnabled() == true) {
     		table.setOverAllDiscountEnabled(true);
     		table.setOverallDiscount(dtoTable.getOverallDiscount());
-    	}
+    	}else if (table.isOverAllDiscountEnabled() && dtoTable.isOverAllDiscountEnabled()) {
+            if (table.getOverallDiscount() != dtoTable.getOverallDiscount()) {
+                table.setOverallDiscount(dtoTable.getOverallDiscount());
+            }
+        }
     	return restTableRepository.save(table);
     }
     
