@@ -14,17 +14,13 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.wityorestaurant.modules.config.model.*;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.wityorestaurant.modules.cart.model.RestaurantCart;
-import com.wityorestaurant.modules.config.model.Category;
-import com.wityorestaurant.modules.config.model.Cuisine;
-import com.wityorestaurant.modules.config.model.QuantityOption;
-import com.wityorestaurant.modules.config.model.RestTable;
-import com.wityorestaurant.modules.config.model.SubCategory;
 import com.wityorestaurant.modules.menu.model.Product;
 
 @Entity
@@ -84,6 +80,10 @@ public class RestaurantDetails implements Serializable {
     @OneToOne(fetch = FetchType.EAGER,orphanRemoval = true, cascade = CascadeType.ALL)
     @JoinColumn(name = "cart_id")
     private RestaurantCart cart;
+
+    @OneToOne(fetch = FetchType.EAGER,mappedBy ="restaurantDetails",cascade = CascadeType.ALL)
+    private Staff staff;
+
 
     public RestaurantDetails() {}
 
@@ -262,4 +262,13 @@ public class RestaurantDetails implements Serializable {
 	public void setCart(RestaurantCart cart) {
 		this.cart = cart;
 	}
+
+
+    public Staff getStaff() {
+        return staff;
+    }
+
+    public void setStaff(Staff staff) {
+        this.staff = staff;
+    }
 }

@@ -167,7 +167,7 @@ public class RestaurantConfigurationServiceImpl implements RestaurantConfigurati
     public Staff addNewStaff(Staff staff, Long restaurantId) {
     	try {
     		Optional<RestaurantDetails> oRestaurant = restaurantRepository.findById(restaurantId);
-    		staff.setRetaurant(oRestaurant.get());
+    		staff.setRestaurantDetails(oRestaurant.get());
 			return staffRepository.save(staff);
 		} catch (Exception e) {
 			logger.error("UnableToAddStaffException: {}", e.getMessage());

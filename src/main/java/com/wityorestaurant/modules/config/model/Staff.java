@@ -12,8 +12,10 @@ import javax.validation.constraints.NotBlank;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.wityorestaurant.modules.restaurant.model.RestaurantDetails;
 
+import java.io.Serializable;
+
 @Entity
-public class Staff {
+public class Staff  implements Serializable {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,18 +30,18 @@ public class Staff {
 	@OneToOne
 	@JoinColumn(name = "restaurant_id", nullable = false)
 	@JsonIgnore
-	private RestaurantDetails retaurant;
+	private RestaurantDetails restaurantDetails;
 
 	public Staff() {
 	}
 
 	public Staff(Long staffId, @NotBlank String staffName, @NotBlank String staffRole, @NotBlank String phoneNumber,
-			RestaurantDetails retaurant) {
+			RestaurantDetails restaurantDetails) {
 		this.staffId = staffId;
 		this.staffName = staffName;
 		this.staffRole = staffRole;
 		this.phoneNumber = phoneNumber;
-		this.retaurant = retaurant;
+		this.restaurantDetails = restaurantDetails;
 	}
 
 	public Long getStaffId() {
@@ -74,11 +76,11 @@ public class Staff {
 		this.phoneNumber = phoneNumber;
 	}
 
-	public RestaurantDetails getRetaurant() {
-		return retaurant;
+	public RestaurantDetails getRestaurantDetails() {
+		return restaurantDetails;
 	}
 
-	public void setRetaurant(RestaurantDetails retaurant) {
-		this.retaurant = retaurant;
+	public void setRestaurantDetails(RestaurantDetails restaurantDetails) {
+		this.restaurantDetails = restaurantDetails;
 	}
 }

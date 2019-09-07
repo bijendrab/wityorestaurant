@@ -29,14 +29,14 @@ import com.wityorestaurant.modules.restaurant.model.RestaurantDetails;
 
 @Entity
 @Table(name = "resttable")
-@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
+//@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
 public class RestTable implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "tableNumber")
-    private Long tableNumber;
+    private Integer tableNumber;
 
     @Column(name = "tableSize")
     @Min(2)
@@ -68,10 +68,10 @@ public class RestTable implements Serializable {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public Long getTableNumber() {
+	public Integer getTableNumber() {
 		return tableNumber;
 	}
-	public void setTableNumber(Long tableNumber) {
+	public void setTableNumber(Integer tableNumber) {
 		this.tableNumber = tableNumber;
 	}
 	public Integer getTableSize() {
