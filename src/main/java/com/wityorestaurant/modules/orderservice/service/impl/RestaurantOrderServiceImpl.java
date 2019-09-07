@@ -202,7 +202,7 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService{
 		Order order = orderRepository.findById(orderId).get();
 		OrderItem orderItemToBeUpdated = null;
 		for(OrderItem temp: order.getMenuItemOrders()) {
-			if(temp.getOrderItemId() == orderItem.getOrderItemId()) {
+			if(temp.getOrderItemId().equals(orderItem.getOrderItemId())) {
 				orderItemToBeUpdated = temp;
 				break;
 			}
