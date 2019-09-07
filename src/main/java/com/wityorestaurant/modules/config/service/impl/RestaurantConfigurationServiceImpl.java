@@ -240,7 +240,7 @@ public class RestaurantConfigurationServiceImpl implements RestaurantConfigurati
     		table.setPackagingCharge(0.0F);
     	} else if(table.isPackagingChargeEnabled() == false && dtoTable.isPackagingChargeEnabled() == true) {
     		table.setPackagingChargeEnabled(true);
-    		table.setPackagingCharge(dtoTable.getServiceCharge());
+    		table.setPackagingCharge(dtoTable.getPackagingCharge());
     	}
     	
     	if(table.isOverAllDiscountEnabled() == true && dtoTable.isOverAllDiscountEnabled() == false) {
