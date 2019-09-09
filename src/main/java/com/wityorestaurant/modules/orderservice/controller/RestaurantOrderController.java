@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.wityorestaurant.modules.orderservice.dto.RestaurantOrderDTO;
@@ -64,10 +65,12 @@ public class RestaurantOrderController {
     }
     
     @PutMapping("/delete-ordered-item/{orderId}")
-    public ResponseEntity<?> deleteOrderItemFromOrder(@RequestBody UpdateOrderItemDTO dto, @PathVariable Long orderId){
+    public ResponseEntity<?> deleteOrderItemFromOrder(@RequestBody UpdateOrderItemDTO dto,
+    		@PathVariable Long orderId,
+    		@RequestParam Long tableId){
     	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         RestaurantUser restaurantUser = restaurantUserRepository.findByUsername(auth.getName());
-    	return new ResponseEntity<Boolean>(restOrderService.removePlacedOrderItem(dto, restaurantUser.getRestDetails().getRestId(), orderId), HttpStatus.OK);
+    	return new ResponseEntity<Boolean>(restOrderService.removePlacedOrderItem(dto, restaurantUser.getRestDetails().getRestId(), orderId, tableId), HttpStatus.OK);
     }
     
     @PutMapping("/update-ordered-item/{orderId}")

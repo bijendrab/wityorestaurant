@@ -22,9 +22,11 @@ import com.wityorestaurant.modules.menu.model.Product;
 import com.wityorestaurant.modules.menu.model.ProductQuantityOptions;
 import com.wityorestaurant.modules.orderservice.dto.RestaurantOrderDTO;
 import com.wityorestaurant.modules.orderservice.dto.UpdateOrderItemDTO;
+import com.wityorestaurant.modules.orderservice.model.CancelledOrderItem;
 import com.wityorestaurant.modules.orderservice.model.Order;
 import com.wityorestaurant.modules.orderservice.model.OrderItem;
 import com.wityorestaurant.modules.orderservice.model.OrderStatus;
+import com.wityorestaurant.modules.orderservice.repository.CancelledOrderRepository;
 import com.wityorestaurant.modules.orderservice.repository.OrderItemRepository;
 import com.wityorestaurant.modules.orderservice.repository.OrderRepository;
 import com.wityorestaurant.modules.orderservice.service.RestaurantOrderService;
@@ -54,6 +56,9 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService{
 	
 	@Autowired
 	private OrderItemRepository orderItemRepository;
+	
+	@Autowired
+	private CancelledOrderRepository cancelItemRepository;
 
 	Logger logger = LoggerFactory.getLogger(RestaurantOrderServiceImpl.class);
 	
@@ -126,7 +131,39 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService{
         
 	}
 	
-	public Boolean removePlacedOrderItem(UpdateOrderItemDTO dto, Long restaurantId, Long orderId) {
+	private boolean cancelledOrderItemLogger(Order order,
+			UpdateOrderItemDTO dto,
+			Long restaurantId,
+			Long tableId,
+			OrderItem oI) {
+		try {
+			CancelledOrderItem orderItem = new CancelledOrderItem();
+			CustomerInfoDTO customer = dto.getCustomer();
+			if(customer.getFirstName().equalsIgnoreCase("restaurant") && customer.getLastName().equalsIgnoreCase("manager")) {
+				orderItem.setIsCustomerOrder(Boolean.FALSE);
+				orderItem.setCustomerId(null);
+				orderItem.setRestaurantId(customer.getCustomerId());
+				orderItem.setIsRestaurantOrder(Boolean.TRUE);
+			}else {
+				orderItem.setIsCustomerOrder(Boolean.TRUE);
+				orderItem.setCustomerId(customer.getCustomerId());
+				orderItem.setRestaurantId(null);
+				orderItem.setIsRestaurantOrder(Boolean.FALSE);
+			}
+			orderItem.setRestaurantId(restaurantId);
+			orderItem.setOrderId(order.getOrderId());
+			orderItem.setCancelledOrderItem(oI);
+			orderItem.setCancellationTime(LocalDateTime.now());
+			cancelItemRepository.save(orderItem);
+			return true;
+		} catch (Exception e) {
+			logger.debug("Unable to save in cancelled order items");
+			logger.error("Exception in cancelledOrderLogger==>{}", e);
+		}
+		return false;
+	}
+	
+	public Boolean removePlacedOrderItem(UpdateOrderItemDTO dto, Long restaurantId, Long orderId, Long tableId) {
     	try {
         	Order order = orderRepository.findById(orderId).get();
         	OrderItem orderItem = null;
@@ -139,6 +176,7 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService{
         	order.setTotalCost(order.getTotalCost() - (float)orderItem.getPrice());
         	order.getMenuItemOrders().remove(orderItem);
         	orderRepository.save(order);
+        	cancelledOrderItemLogger(order, dto, restaurantId, tableId, orderItem);
         	return true;
 		} catch (Exception e) {
 			logger.error("Exception in OrderServiceImpl, method: removePlacedOrderItem --> {}", e.getMessage());
