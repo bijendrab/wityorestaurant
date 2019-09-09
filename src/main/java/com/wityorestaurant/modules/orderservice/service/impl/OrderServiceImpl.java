@@ -6,6 +6,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import com.wityorestaurant.modules.orderservice.model.*;
+import com.wityorestaurant.modules.orderservice.repository.OrderProcessingRepository;
+import com.wityorestaurant.modules.orderservice.repository.OrderQueueRepository;
+import com.wityorestaurant.modules.orderservice.service.OrderQueueService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +23,6 @@ import com.wityorestaurant.modules.menu.model.Product;
 import com.wityorestaurant.modules.menu.model.ProductQuantityOptions;
 import com.wityorestaurant.modules.orderservice.dto.TableOrdersResponse;
 import com.wityorestaurant.modules.orderservice.dto.UpdateOrderItemDTO;
-import com.wityorestaurant.modules.orderservice.model.Order;
-import com.wityorestaurant.modules.orderservice.model.OrderItem;
-import com.wityorestaurant.modules.orderservice.model.OrderStatus;
 import com.wityorestaurant.modules.orderservice.repository.OrderRepository;
 import com.wityorestaurant.modules.orderservice.service.OrderService;
 import com.wityorestaurant.modules.reservation.model.Reservation;
@@ -35,8 +36,11 @@ public class OrderServiceImpl implements OrderService {
     private ReservationRepository reservationRepository;
     @Autowired
     private OrderRepository orderRepository;
+
     @Autowired
     private RestaurantRepository restaurantRepository;
+    @Autowired
+    private OrderQueueService orderQueueService;
     
     Logger logger = LoggerFactory.getLogger(OrderServiceImpl.class);
 
@@ -77,6 +81,7 @@ public class OrderServiceImpl implements OrderService {
         newOrder.setOrderedBy("customer");
         setOrder(newOrder);
         orderRepository.save(newOrder);
+        orderQueueService.processingOrderToQueue(newOrder,restId);
         return newOrder;
     }
     public void setOrder(Order order) {
@@ -86,6 +91,7 @@ public class OrderServiceImpl implements OrderService {
             pqo.add(potion);
         }
     }
+
     public Order getCustomerOrderDetails(CustomerInfoDTO customerInfoDTO, Long restId){
         return orderRepository.getOrderByCustomer(new Gson().toJson(customerInfoDTO),restId);
     }
@@ -169,6 +175,7 @@ public class OrderServiceImpl implements OrderService {
         	order.setTotalCost(order.getTotalCost() - (float)orderItem.getPrice());
         	order.getMenuItemOrders().remove(orderItem);
         	orderRepository.save(order);
+            orderQueueService.updatingOrderToQueue(orderItem,restaurantId);
         	return true;
 		} catch (Exception e) {
 			logger.error("Exception in OrderServiceImpl, method: removePlacedOrderItem --> {}", e.getMessage());

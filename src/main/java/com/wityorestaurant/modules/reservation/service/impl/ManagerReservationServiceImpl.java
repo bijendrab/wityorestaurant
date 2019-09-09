@@ -73,14 +73,14 @@ public class ManagerReservationServiceImpl implements MangerReservationService {
 
 		for (RestTable table : fittingTables) {
 			/* fetch all the reservation for this table */
-			List<Reservation> allResForThisTable = reservationRepository.getByTableId(table.getTableNumber(), restId);
+			List<Reservation> allResForThisTable = reservationRepository.getByTableId(table.getId(), restId);
 			if (allResForThisTable == null || allResForThisTable.size() == 0) { // if not reserved before
 				if (table.getId() == tableNumber)
 					return table;
 			} else { // if reserved already check for TS intersection
 				for (Reservation resv : allResForThisTable) {
 					if (resv.getRelatedTable().getId() == tableNumber) {
-						return table;
+						return resv.getRelatedTable();
 					}
 				}
 			}

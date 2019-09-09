@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import com.wityorestaurant.modules.cart.repository.CartItemRepository;
+import com.wityorestaurant.modules.orderservice.service.OrderQueueService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,15 +52,21 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService{
 	
 	@Autowired
 	private CartRepository cartRepository;
-	
+
+    @Autowired
+    private CartItemRepository cartItemRepository;
+
 	@Autowired
     private RestaurantRepository restaurantRepository;
 	
 	@Autowired
 	private OrderItemRepository orderItemRepository;
-	
+
 	@Autowired
 	private CancelledOrderRepository cancelItemRepository;
+
+	@Autowired
+	private OrderQueueService orderQueueService;
 
 	Logger logger = LoggerFactory.getLogger(RestaurantOrderServiceImpl.class);
 	
@@ -115,6 +123,9 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService{
         newOrder.setOrderedBy("restaurant");
         
         RestaurantCart cart = restaurant.getCart();
+
+        cartItemRepository.deleteAll(orderDTO.getCartItems());
+
         for(RestaurantCartItem cartItem : cart.getCartItems()) {
         	for(RestaurantCartItem dtoCartItem : orderDTO.getCartItems()) {
         		if(cartItem.getCartItemId() == dtoCartItem.getCartItemId()) {
@@ -123,10 +134,14 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService{
         			break;
         		}
         	}
+        	if(cart.getCartItems().size()==0){
+        		break;
+			}
         }
         
         cartRepository.save(cart);
         orderRepository.save(newOrder);
+		orderQueueService.processingOrderToQueue(newOrder,restaurant.getRestId());
         return newOrder;
         
 	}
@@ -134,7 +149,6 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService{
 	private boolean cancelledOrderItemLogger(Order order,
 			UpdateOrderItemDTO dto,
 			Long restaurantId,
-			Long tableId,
 			String orderItemId) {
 		try {
 			CancelledOrderItem orderItem = new CancelledOrderItem();
@@ -162,8 +176,8 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService{
 		}
 		return false;
 	}
-	
-	public Boolean removePlacedOrderItem(UpdateOrderItemDTO dto, Long restaurantId, Long orderId, Long tableId) {
+
+	public Boolean removePlacedOrderItem(UpdateOrderItemDTO dto, Long restaurantId, Long orderId) {
     	try {
         	Order order = orderRepository.findById(orderId).get();
         	OrderItem orderItem = null;
@@ -175,8 +189,9 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService{
         	}
         	order.setTotalCost(order.getTotalCost() - (float)orderItem.getPrice());
         	order.getMenuItemOrders().remove(orderItem);
-        	cancelledOrderItemLogger(order, dto, restaurantId, tableId, orderItem.getOrderItemId());
         	orderRepository.save(order);
+			orderQueueService.updatingOrderToQueue(orderItem,restaurantId);
+        	cancelledOrderItemLogger(order, dto, restaurantId, orderItem.getOrderItemId());
         	return true;
 		} catch (Exception e) {
 			logger.error("Exception in OrderServiceImpl, method: removePlacedOrderItem --> {}", e.getMessage());

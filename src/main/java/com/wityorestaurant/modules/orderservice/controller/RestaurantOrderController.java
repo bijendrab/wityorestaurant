@@ -66,11 +66,10 @@ public class RestaurantOrderController {
     
     @PutMapping("/delete-ordered-item/{orderId}")
     public ResponseEntity<?> deleteOrderItemFromOrder(@RequestBody UpdateOrderItemDTO dto,
-    		@PathVariable Long orderId,
-    		@RequestParam Long tableId){
+    		@PathVariable Long orderId){
     	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         RestaurantUser restaurantUser = restaurantUserRepository.findByUsername(auth.getName());
-    	return new ResponseEntity<Boolean>(restOrderService.removePlacedOrderItem(dto, restaurantUser.getRestDetails().getRestId(), orderId, tableId), HttpStatus.OK);
+    	return new ResponseEntity<Boolean>(restOrderService.removePlacedOrderItem(dto, restaurantUser.getRestDetails().getRestId(), orderId), HttpStatus.OK);
     }
     
     @PutMapping("/update-ordered-item/{orderId}")
