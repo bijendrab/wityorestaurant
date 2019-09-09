@@ -6,8 +6,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 
 @Entity
 public class CancelledOrderItem {
@@ -20,9 +18,7 @@ public class CancelledOrderItem {
 	private Long restaurantId;
 	private Long orderId;
 	private LocalDateTime cancellationTime;
-	@ManyToOne
-	@JoinColumn(name = "ordered_item_id")
-	private OrderItem cancelledOrderItem;
+	private String orderItemId;
 	public Long getCancelledOrderItemId() {
 		return cancelledOrderItemId;
 	}
@@ -65,10 +61,10 @@ public class CancelledOrderItem {
 	public void setCancellationTime(LocalDateTime cancellationTime) {
 		this.cancellationTime = cancellationTime;
 	}
-	public OrderItem getCancelledOrderItem() {
-		return cancelledOrderItem;
+	public String getOrderItemId() {
+		return orderItemId;
 	}
-	public void setCancelledOrderItem(OrderItem cancelledOrderItem) {
-		this.cancelledOrderItem = cancelledOrderItem;
+	public void setOrderItemId(String orderItemId) {
+		this.orderItemId = orderItemId;
 	}
 }

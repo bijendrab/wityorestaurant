@@ -135,7 +135,7 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService{
 			UpdateOrderItemDTO dto,
 			Long restaurantId,
 			Long tableId,
-			OrderItem oI) {
+			String orderItemId) {
 		try {
 			CancelledOrderItem orderItem = new CancelledOrderItem();
 			CustomerInfoDTO customer = dto.getCustomer();
@@ -152,7 +152,7 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService{
 			}
 			orderItem.setRestaurantId(restaurantId);
 			orderItem.setOrderId(order.getOrderId());
-			orderItem.setCancelledOrderItem(oI);
+			orderItem.setOrderItemId(orderItemId);
 			orderItem.setCancellationTime(LocalDateTime.now());
 			cancelItemRepository.save(orderItem);
 			return true;
@@ -175,8 +175,8 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService{
         	}
         	order.setTotalCost(order.getTotalCost() - (float)orderItem.getPrice());
         	order.getMenuItemOrders().remove(orderItem);
+        	cancelledOrderItemLogger(order, dto, restaurantId, tableId, orderItem.getOrderItemId());
         	orderRepository.save(order);
-        	cancelledOrderItemLogger(order, dto, restaurantId, tableId, orderItem);
         	return true;
 		} catch (Exception e) {
 			logger.error("Exception in OrderServiceImpl, method: removePlacedOrderItem --> {}", e.getMessage());
