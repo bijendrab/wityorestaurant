@@ -13,7 +13,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="userId")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "userId")
 @Table(name = "restUser")
 public class RestaurantUser implements UserDetails, Serializable {
 
@@ -27,7 +27,7 @@ public class RestaurantUser implements UserDetails, Serializable {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    @OneToOne(mappedBy = "restaurantuser",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToOne(mappedBy = "restaurantuser", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private RestaurantDetails restDetails;
 
 

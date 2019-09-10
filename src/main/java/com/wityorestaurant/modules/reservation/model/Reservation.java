@@ -1,31 +1,20 @@
 package com.wityorestaurant.modules.reservation.model;
 
-import java.io.Serializable;
-import java.time.LocalDate;
+import com.wityorestaurant.modules.config.model.RestTable;
 
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import com.wityorestaurant.modules.config.model.RestTable;
+import java.io.Serializable;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "reservation")
 public class Reservation implements Serializable {
 
-	private static final long serialVersionUID = 1176593857442371821L;
+    private static final long serialVersionUID = 1176593857442371821L;
 
-	@Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -50,7 +39,6 @@ public class Reservation implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "tableId")
     private RestTable relatedTable;
-
 
 
     public Long getId() {
@@ -108,6 +96,7 @@ public class Reservation implements Serializable {
     public void setRelatedTable(RestTable relatedTable) {
         this.relatedTable = relatedTable;
     }
+
     public boolean doesTimeSpanConflicts(TimeSpan ts) {
         int myTimeSpanEnd = Integer.parseInt(this.reservationTime.getEnd());
         int myTimeSpanStart = Integer.parseInt(this.reservationTime.getStart());

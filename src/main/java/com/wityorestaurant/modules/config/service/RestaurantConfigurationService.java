@@ -9,23 +9,23 @@ import java.util.HashMap;
 import java.util.List;
 
 public interface RestaurantConfigurationService {
-    HashMap<String,Object> getConfig();
+    HashMap<String, Object> getConfig();
 
     Object add(ConfigurationDTO config);
 
     Object addTable(RestTableDTO tableConfig);
 
     List<RestTable> getAllTables();
-    
-    public List<Staff> getAllStaffs();
-    
-    public List<Staff> getCustomStaffs();
-    
-    public boolean deleteStaffById(Long staffId);
-    
-    public Staff updateStaff(Staff updatedStaff);
-    
-    public Staff addNewStaff(Staff staff, Long restaurantId);
-    
-    public RestTable updateTableCharges(RestTable dtoTable, Long restId);
+
+    List<Staff> getAllStaffs();
+
+    List<Staff> getCustomStaffs();
+
+    boolean deleteStaffById(Long staffId);
+
+    Staff updateStaff(Staff updatedStaff);
+
+    Staff addNewStaff(Staff staff, Long restaurantId);
+
+    RestTable updateTableCharges(RestTable dtoTable, Long restId);
 }

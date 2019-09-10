@@ -1,34 +1,26 @@
 package com.wityorestaurant.modules.menu.model;
 
-import java.io.Serializable;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "itemQuantity")
 public class ProductQuantityOptions implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="qoid")
+    @Column(name = "qoid")
     private int productQuantityOptionId;
 
-    @Column(name="qoption")
+    @Column(name = "qoption")
     private String quantityOption;
 
     @Column(name = "quantity")
     private String quantity;
 
-    @NotNull(message="Please provide some price")
+    @NotNull(message = "Please provide some price")
     //@Min(value = 50, message = "Minimum value should be greater than 50")
     @Column(name = "price")
     private double price;

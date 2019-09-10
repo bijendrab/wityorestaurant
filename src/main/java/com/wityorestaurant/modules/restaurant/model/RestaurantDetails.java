@@ -1,36 +1,25 @@
 package com.wityorestaurant.modules.restaurant.model;
 
-import java.io.Serializable;
-import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-
-import com.wityorestaurant.modules.config.model.*;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.wityorestaurant.modules.cart.model.RestaurantCart;
+import com.wityorestaurant.modules.config.model.*;
 import com.wityorestaurant.modules.menu.model.Product;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.List;
 
 @Entity
-@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="restId")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "restId")
 @Table(name = "restDetails")
 public class RestaurantDetails implements Serializable {
-	
-	private static final long serialVersionUID = 2903949587384355232L;
-	
-	@Id
+
+    private static final long serialVersionUID = 2903949587384355232L;
+
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     /*@GenericGenerator(
             name = "UUID",strategy = "org.hibernate.id.UUIDGenerator")*/
@@ -50,42 +39,43 @@ public class RestaurantDetails implements Serializable {
 
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name="userId")
+    @JoinColumn(name = "userId")
     private RestaurantUser restaurantuser;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "restaurantDetails",orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "restaurantDetails", orphanRemoval = true, cascade = CascadeType.ALL)
     @Fetch(value = FetchMode.SUBSELECT)
     private List<Category> categories;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "restaurantDetails",orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "restaurantDetails", orphanRemoval = true, cascade = CascadeType.ALL)
     @Fetch(value = FetchMode.SUBSELECT)
     private List<SubCategory> subCategories;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "restaurantDetails",orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "restaurantDetails", orphanRemoval = true, cascade = CascadeType.ALL)
     @Fetch(value = FetchMode.SUBSELECT)
     private List<Cuisine> cuisines;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "restaurantDetails",orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "restaurantDetails", orphanRemoval = true, cascade = CascadeType.ALL)
     @Fetch(value = FetchMode.SUBSELECT)
     private List<QuantityOption> quantityOptions;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "restaurantDetails",orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "restaurantDetails", orphanRemoval = true)
     @Fetch(value = FetchMode.SUBSELECT)
     private List<Product> product;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "restaurantDetails",orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "restaurantDetails", orphanRemoval = true, cascade = CascadeType.ALL)
     @Fetch(value = FetchMode.SUBSELECT)
     private List<RestTable> restTables;
-    
-    @OneToOne(fetch = FetchType.EAGER,orphanRemoval = true, cascade = CascadeType.ALL)
+
+    @OneToOne(fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL)
     @JoinColumn(name = "cart_id")
     private RestaurantCart cart;
 
-    @OneToOne(fetch = FetchType.EAGER,mappedBy ="restaurantDetails",cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER, mappedBy = "restaurantDetails", cascade = CascadeType.ALL)
     private Staff staff;
 
 
-    public RestaurantDetails() {}
+    public RestaurantDetails() {
+    }
 
     public Long getRestId() {
         return restId;
@@ -255,13 +245,13 @@ public class RestaurantDetails implements Serializable {
         this.restTables = restTables;
     }
 
-	public RestaurantCart getCart() {
-		return cart;
-	}
+    public RestaurantCart getCart() {
+        return cart;
+    }
 
-	public void setCart(RestaurantCart cart) {
-		this.cart = cart;
-	}
+    public void setCart(RestaurantCart cart) {
+        this.cart = cart;
+    }
 
 
     public Staff getStaff() {

@@ -8,9 +8,12 @@ import com.wityorestaurant.modules.restaurant.model.RestaurantDetails;
 
 public interface RestaurantOrderService {
 
-	public Order placeOrder(RestaurantOrderDTO orderDTO, Long tableId, RestaurantDetails restaurant);
-	public Boolean removePlacedOrderItem(UpdateOrderItemDTO dto, Long restaurantId, Long orderId);
-	public Order updateOrderedItem(UpdateOrderItemDTO dto, Long restaurantId, Long orderId);
-	public OrderItem updateOrderItemSpecialDiscount(OrderItem orderItem, Long orderId);
-	
+    Order placeOrder(RestaurantOrderDTO orderDTO, Long tableId, RestaurantDetails restaurant);
+
+    Boolean removePlacedOrderItem(UpdateOrderItemDTO dto, Long restaurantId, Long orderId);
+
+    Order updateOrderedItem(UpdateOrderItemDTO dto, Long restaurantId, Long orderId);
+
+    OrderItem updateOrderItemSpecialDiscount(OrderItem orderItem, Long orderId);
+
 }

@@ -8,5 +8,6 @@ import org.springframework.stereotype.Repository;
 public interface RestaurantUserRepository extends CrudRepository<RestaurantUser, Long> {
 
     RestaurantUser findByUsername(String username);
+
     RestaurantUser findByUserId(Long userId);
 }

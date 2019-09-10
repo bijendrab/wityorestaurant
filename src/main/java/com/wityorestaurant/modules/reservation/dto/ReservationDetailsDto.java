@@ -1,15 +1,14 @@
 package com.wityorestaurant.modules.reservation.dto;
 
 
-import java.io.Serializable;
-import java.time.LocalDate;
+import com.wityorestaurant.modules.customerdata.CustomerInfoDTO;
+import com.wityorestaurant.modules.reservation.model.TimeSpan;
 
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.validation.constraints.NotNull;
-
-import com.wityorestaurant.modules.customerdata.CustomerInfoDTO;
-import com.wityorestaurant.modules.reservation.model.TimeSpan;
+import java.io.Serializable;
+import java.time.LocalDate;
 
 /*@Entity
 @Table(name = "checkRequest")*/

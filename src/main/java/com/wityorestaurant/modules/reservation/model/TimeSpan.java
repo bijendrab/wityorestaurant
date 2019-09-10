@@ -14,7 +14,8 @@ public class TimeSpan implements Serializable {
     @Pattern(regexp = "([01]?[0-9]|2[0-3])[0-5][0-9]")
     private String end;     //e.g. "1630" -> 16:30
 
-    public TimeSpan(){}
+    public TimeSpan() {
+    }
 
     public TimeSpan(String start, String end) {
         this.start = start;

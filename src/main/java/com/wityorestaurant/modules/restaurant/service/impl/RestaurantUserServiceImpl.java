@@ -1,15 +1,5 @@
 package com.wityorestaurant.modules.restaurant.service.impl;
 
-import static java.lang.Boolean.TRUE;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Service;
-
 import com.wityorestaurant.modules.cart.model.RestaurantCart;
 import com.wityorestaurant.modules.restaurant.dto.RegistrationDTO;
 import com.wityorestaurant.modules.restaurant.dto.RestaurantIdNameDto;
@@ -23,11 +13,21 @@ import com.wityorestaurant.modules.restaurant.repository.RestaurantRepository;
 import com.wityorestaurant.modules.restaurant.repository.RestaurantUserRepository;
 import com.wityorestaurant.modules.restaurant.repository.RoleRepository;
 import com.wityorestaurant.modules.restaurant.service.RestaurantUserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import static java.lang.Boolean.TRUE;
+
 @Service(value = "RestaurantUserService")
 public class RestaurantUserServiceImpl implements RestaurantUserService {
     @Autowired
     private RestaurantUserRepository userRepository;
-    
+
     @Autowired
     private RestaurantRepository restaurantRepository;
 
@@ -57,7 +57,7 @@ public class RestaurantUserServiceImpl implements RestaurantUserService {
 
             RestaurantUser tempUser = userRepository.findByUsername(user.getUsername());
 
-            if(tempUser == null) {
+            if (tempUser == null) {
                 restDetails.setRestName(newUser.getRestName());
                 restDetails.setOwnerName(newUser.getOwnerName());
                 restDetails.setPhone(newUser.getPhone());
@@ -81,33 +81,33 @@ public class RestaurantUserServiceImpl implements RestaurantUserService {
             } else {
                 throw new UsernameAlreadyExistsException("This username already exists, try with some other username");
             }
-        }catch (Exception e) {
-            if(e.getClass().equals(UsernameAlreadyExistsException.class)) {
+        } catch (Exception e) {
+            if (e.getClass().equals(UsernameAlreadyExistsException.class)) {
                 throw new UsernameAlreadyExistsException(e.getMessage());
             } else {
                 throw new RuntimeException("Server not responding, please try again later");
             }
         }
     }
-    
+
     public RestaurantListDto getAllRestaurantIdsAndName() {
-    	try {
-    		RestaurantListDto dto = new RestaurantListDto();
-    		List<RestaurantIdNameDto> responseList = new ArrayList<RestaurantIdNameDto>();
-			List<RestaurantDetails> restaurantList = restaurantRepository.findAll();
-			if(restaurantList.size() != 0) {
-				for(RestaurantDetails restaurant : restaurantList) {
-					RestaurantIdNameDto idName = new RestaurantIdNameDto();
-					idName.setRestaurantId(restaurant.getRestId());
-					idName.setRestaurantName(restaurant.getRestName());
-					responseList.add(idName);
-				}
-				dto.setRestaurantDetails(responseList);
-				return dto;
-			}
-		} catch (Exception e) {
-		}
-    	return null;
+        try {
+            RestaurantListDto dto = new RestaurantListDto();
+            List<RestaurantIdNameDto> responseList = new ArrayList<RestaurantIdNameDto>();
+            List<RestaurantDetails> restaurantList = restaurantRepository.findAll();
+            if (restaurantList.size() != 0) {
+                for (RestaurantDetails restaurant : restaurantList) {
+                    RestaurantIdNameDto idName = new RestaurantIdNameDto();
+                    idName.setRestaurantId(restaurant.getRestId());
+                    idName.setRestaurantName(restaurant.getRestName());
+                    responseList.add(idName);
+                }
+                dto.setRestaurantDetails(responseList);
+                return dto;
+            }
+        } catch (Exception e) {
+        }
+        return null;
     }
 
     //@Override

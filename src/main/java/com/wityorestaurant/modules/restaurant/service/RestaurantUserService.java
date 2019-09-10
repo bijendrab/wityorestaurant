@@ -7,9 +7,13 @@ import com.wityorestaurant.modules.restaurant.model.RestaurantUser;
 import java.util.List;
 
 public interface RestaurantUserService {
-	public List<RestaurantUser> fetchAllUsers();
-    public RestaurantUser saveUser(RegistrationDTO newUser);
-    public void removeUser(String username);
-    public RestaurantUser getUserByUsername(String username);
-    public RestaurantListDto getAllRestaurantIdsAndName();
+    List<RestaurantUser> fetchAllUsers();
+
+    RestaurantUser saveUser(RegistrationDTO newUser);
+
+    void removeUser(String username);
+
+    RestaurantUser getUserByUsername(String username);
+
+    RestaurantListDto getAllRestaurantIdsAndName();
 }

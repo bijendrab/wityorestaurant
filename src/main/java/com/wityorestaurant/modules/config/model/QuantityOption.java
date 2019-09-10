@@ -8,7 +8,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Table(name = "quantityoption")
 public class QuantityOption implements Serializable {
     @Id
@@ -20,7 +20,7 @@ public class QuantityOption implements Serializable {
     private int sequence;
 
     @ManyToOne
-    @JoinColumn(name="restId")
+    @JoinColumn(name = "restId")
     private RestaurantDetails restaurantDetails;
 
     public Long getId() {

@@ -19,23 +19,23 @@ public class CustomerOrderController {
     OrderService orderService;
 
     @PostMapping("/checkout/{restaurantId}")
-    public ResponseEntity<?> createOrder(@PathVariable("restaurantId") Long restId, @RequestBody CustomerOrderDTO customerCheckoutItems){
-        return new ResponseEntity<>(orderService.processOrderRequest(customerCheckoutItems,restId), HttpStatus.ACCEPTED);
+    public ResponseEntity<?> createOrder(@PathVariable("restaurantId") Long restId, @RequestBody CustomerOrderDTO customerCheckoutItems) {
+        return new ResponseEntity<>(orderService.processOrderRequest(customerCheckoutItems, restId), HttpStatus.ACCEPTED);
     }
 
     @PostMapping("/getTableOrder/{restaurantId}")
-    public ResponseEntity<TableOrdersResponse> getTableOrder(@PathVariable("restaurantId") Long restId, @RequestBody CustomerInfoDTO customerInfoDTO){
+    public ResponseEntity<TableOrdersResponse> getTableOrder(@PathVariable("restaurantId") Long restId, @RequestBody CustomerInfoDTO customerInfoDTO) {
         return new ResponseEntity<>(orderService.getTableOrderDetails(customerInfoDTO, restId), HttpStatus.OK);
     }
-    
+
     @PutMapping("/updateUserOrderedItem/{restaurantId}")
-    public ResponseEntity<?> updateOrderItem(@PathVariable Long restaurantId, @RequestBody UpdateOrderItemDTO orderItemDto){
-        return new ResponseEntity<Order>(orderService.editOrder(orderItemDto, restaurantId),HttpStatus.OK);
+    public ResponseEntity<?> updateOrderItem(@PathVariable Long restaurantId, @RequestBody UpdateOrderItemDTO orderItemDto) {
+        return new ResponseEntity<Order>(orderService.editOrder(orderItemDto, restaurantId), HttpStatus.OK);
     }
-    
+
     @DeleteMapping("/deleteUserOrderedItem/{restaurantId}")
-    public ResponseEntity<?> deleteUserOrderedItem(@PathVariable Long restaurantId, @RequestBody UpdateOrderItemDTO orderItemDto){
-        return new ResponseEntity<Boolean>(orderService.removePlacedOrderItem(orderItemDto, restaurantId),HttpStatus.OK);
+    public ResponseEntity<?> deleteUserOrderedItem(@PathVariable Long restaurantId, @RequestBody UpdateOrderItemDTO orderItemDto) {
+        return new ResponseEntity<Boolean>(orderService.removePlacedOrderItem(orderItemDto, restaurantId), HttpStatus.OK);
     }
 
 }

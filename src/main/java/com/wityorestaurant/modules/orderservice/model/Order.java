@@ -11,12 +11,12 @@ import java.util.Set;
 
 @Entity
 @Table(name = "foodorder")
-@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="orderId")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "orderId")
 public class Order implements Serializable {
-	
-	private static final long serialVersionUID = 8311754468336492518L;
 
-	@Id
+    private static final long serialVersionUID = 8311754468336492518L;
+
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "orderId")
     private Long orderId;
@@ -35,7 +35,7 @@ public class Order implements Serializable {
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "order", orphanRemoval = true, cascade = CascadeType.ALL)
     private Set<OrderItem> menuItemOrders = new HashSet<OrderItem>(0);
-    
+
     private String orderedBy;
 
     public Order() {
@@ -81,11 +81,11 @@ public class Order implements Serializable {
         this.menuItemOrders = menuItemOrders;
     }
 
-	public String getOrderedBy() {
-		return orderedBy;
-	}
+    public String getOrderedBy() {
+        return orderedBy;
+    }
 
-	public void setOrderedBy(String orderedBy) {
-		this.orderedBy = orderedBy;
-	}
+    public void setOrderedBy(String orderedBy) {
+        this.orderedBy = orderedBy;
+    }
 }

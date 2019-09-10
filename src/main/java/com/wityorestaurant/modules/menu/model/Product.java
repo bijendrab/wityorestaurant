@@ -1,40 +1,31 @@
 package com.wityorestaurant.modules.menu.model;
 
-import java.io.Serializable;
-import java.util.Set;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.wityorestaurant.modules.restaurant.model.RestaurantDetails;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.util.Set;
+
 @Entity
 @Table(name = "item")
-@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="productId")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "productId")
 public class Product implements Serializable {
     @Id
     @Column(name = "productId")
     private String productId;
 
-    @Column(name="category")
+    @Column(name = "category")
     private String category;
 
-    @Column(name="subCategory")
+    @Column(name = "subCategory")
     private String subCategory;
 
-    @Column(name="cuisine")
+    @Column(name = "cuisine")
     private String cuisine;
 
     @Column(name = "description")
@@ -58,23 +49,24 @@ public class Product implements Serializable {
     @Column(name = "prepTime")
     private int preparationTime;
 
-    @Column(name="selectedQuantity")
-    private  String selectedQuantity;
+    @Column(name = "selectedQuantity")
+    private String selectedQuantity;
 
     private int sequenceId;
 
     @ManyToOne()
-    @JoinColumn(name="restId")
-    @JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="restId")
-    @JsonIdentityReference(alwaysAsId=true)
+    @JoinColumn(name = "restId")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "restId")
+    @JsonIdentityReference(alwaysAsId = true)
     @JsonProperty("restId")
     private RestaurantDetails restaurantDetails;
 
-    @OneToMany(mappedBy = "product",orphanRemoval = true,cascade = CascadeType.ALL,fetch=FetchType.EAGER)
+    @OneToMany(mappedBy = "product", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<ProductQuantityOptions> productQuantityOptions;
 
 
-    public Product() { }
+    public Product() {
+    }
 
     public String getProductId() {
         return productId;
@@ -183,12 +175,12 @@ public class Product implements Serializable {
         this.restaurantDetails = restaurantDetails;
     }
 
-	public int getSequenceId() {
-		return sequenceId;
-	}
+    public int getSequenceId() {
+        return sequenceId;
+    }
 
-	public void setSequenceId(int sequenceId) {
-		this.sequenceId = sequenceId;
-	}
+    public void setSequenceId(int sequenceId) {
+        this.sequenceId = sequenceId;
+    }
 
 }

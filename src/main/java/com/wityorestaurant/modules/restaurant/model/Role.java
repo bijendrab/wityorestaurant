@@ -1,12 +1,10 @@
 package com.wityorestaurant.modules.restaurant.model;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
 import java.io.Serializable;
+
 @Entity
 
 @Table(name = "roles")

@@ -1,7 +1,6 @@
 package com.wityorestaurant.modules.orderservice.model;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -19,7 +18,6 @@ public class OrderQueue {
     private String cuisine;
     private Date orderCreationTime;
     private String quantityOption;
-
 
 
     public Long getQueueId() {

@@ -1,9 +1,9 @@
 package com.wityorestaurant.modules.menu.service;
 
-import java.util.List;
-
 import com.wityorestaurant.modules.menu.dto.RestaurantMenuDto;
 import com.wityorestaurant.modules.menu.model.Product;
+
+import java.util.List;
 
 public interface RestaurantMenuService {
     List<Product> getAllProducts();
@@ -17,7 +17,7 @@ public interface RestaurantMenuService {
     Product editMenuItem(Product product);
 
     String setMenuItemStatus(String productId);
-    
+
     RestaurantMenuDto getMenuByRestaurantId(Long restId);
 }
 

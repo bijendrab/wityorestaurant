@@ -6,8 +6,11 @@ import com.wityorestaurant.modules.menu.model.Product;
 
 public interface CartService {
 
-	public RestaurantCartItem addOrUpdateCart(Product product, String quantityOption, Long tableId, String orderTaker);
-	public String deleteCartItemById(Long cartItemId);
-	public String reduceCartItem(String productId, String quantityOption);
-	public RestaurantCart getCart(Long tableId);
+    RestaurantCartItem addOrUpdateCart(Product product, String quantityOption, Long tableId, String orderTaker);
+
+    String deleteCartItemById(Long cartItemId);
+
+    String reduceCartItem(String productId, String quantityOption);
+
+    RestaurantCart getCart(Long tableId);
 }

@@ -1,22 +1,4 @@
 package com.wityorestaurant.modules.config.controller;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.wityorestaurant.modules.config.dto.ConfigurationDTO;
 import com.wityorestaurant.modules.config.dto.RestTableDTO;
@@ -28,6 +10,16 @@ import com.wityorestaurant.modules.restaurant.model.RestaurantDetails;
 import com.wityorestaurant.modules.restaurant.model.RestaurantUser;
 import com.wityorestaurant.modules.restaurant.repository.RestaurantUserRepository;
 import com.wityorestaurant.modules.restaurant.service.RestaurantUserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RestController
@@ -53,19 +45,21 @@ public class ConfigController {
     @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/addconfig")
     public ResponseEntity<?> addConfig(@RequestBody ConfigurationDTO config) {
-        return new ResponseEntity<>(restConfigServiceImpl.add(config),HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(restConfigServiceImpl.add(config), HttpStatus.ACCEPTED);
 
     }
+
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/getconfig")
     public ResponseEntity<?> getConfig() {
-        return new ResponseEntity<Object>(restConfigServiceImpl.getConfig(),HttpStatus.ACCEPTED);
+        return new ResponseEntity<Object>(restConfigServiceImpl.getConfig(), HttpStatus.ACCEPTED);
 
     }
+
     @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/addTable")
     public ResponseEntity<?> addTable(@RequestBody RestTableDTO restTableConfig) {
-        return new ResponseEntity<>(restConfigServiceImpl.addTable(restTableConfig),HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(restConfigServiceImpl.addTable(restTableConfig), HttpStatus.ACCEPTED);
 
     }
 
@@ -74,21 +68,21 @@ public class ConfigController {
     public ResponseEntity<?> getTables() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         RestaurantUser restUser = userRepo.findByUsername(auth.getName());
-        return new ResponseEntity<>(restTableRepository.findByRestaurantId(restUser.getRestDetails().getRestId()),HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(restTableRepository.findByRestaurantId(restUser.getRestDetails().getRestId()), HttpStatus.ACCEPTED);
     }
 
 
     @GetMapping("/{restaurantId}/getTables")
     public ResponseEntity<?> getTables(@PathVariable("restaurantId") Long restId) {
-        return new ResponseEntity<>(restTableRepository.findByRestaurantId(restId),HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(restTableRepository.findByRestaurantId(restId), HttpStatus.ACCEPTED);
     }
-    
+
     @GetMapping("/get-table/{tableId}")
     public ResponseEntity<?> getTable(@PathVariable Long tableId) {
-    	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         RestaurantUser restUser = userRepo.findByUsername(auth.getName());
         RestaurantDetails restaurant = restUser.getRestDetails();
-        return new ResponseEntity<>(restTableRepository.findByRestaurantIdAndTableId(tableId, restaurant.getRestId()),HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(restTableRepository.findByRestaurantIdAndTableId(tableId, restaurant.getRestId()), HttpStatus.ACCEPTED);
     }
 
     @PreAuthorize("hasRole('ROLE_USER')")
@@ -121,11 +115,11 @@ public class ConfigController {
     public ResponseEntity<?> getCustomStaffs() {
         return new ResponseEntity<List<Staff>>(restConfigServiceImpl.getCustomStaffs(), HttpStatus.OK);
     }
-    
+
     @PreAuthorize("hasRole('ROLE_USER')")
     @PutMapping("/table/update-table-charges")
-    public ResponseEntity<?> updateTableCharges(@RequestBody RestTable table){
-    	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    public ResponseEntity<?> updateTableCharges(@RequestBody RestTable table) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         RestaurantUser restUser = userRepo.findByUsername(auth.getName());
         RestaurantDetails restaurant = restUser.getRestDetails();
         return new ResponseEntity<RestTable>(restConfigServiceImpl.updateTableCharges(table, restaurant.getRestId()), HttpStatus.OK);
