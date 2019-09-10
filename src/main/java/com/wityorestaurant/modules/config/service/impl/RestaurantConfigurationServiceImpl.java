@@ -202,7 +202,9 @@ public class RestaurantConfigurationServiceImpl implements RestaurantConfigurati
 
     public List<Staff> getAllStaffs() {
         try {
-            return staffRepository.findAll();
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            RestaurantUser tempUser = userRepository.findByUsername(auth.getName());
+            return tempUser.getRestDetails().getStaff();
         } catch (Exception e) {
             logger.error("UnableToFetchStaffException: {}", e.getMessage());
         }

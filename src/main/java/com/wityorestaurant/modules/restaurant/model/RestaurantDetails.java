@@ -70,8 +70,10 @@ public class RestaurantDetails implements Serializable {
     @JoinColumn(name = "cart_id")
     private RestaurantCart cart;
 
-    @OneToOne(fetch = FetchType.EAGER, mappedBy = "restaurantDetails", cascade = CascadeType.ALL)
-    private Staff staff;
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "restaurantDetails", orphanRemoval = true, cascade = CascadeType.ALL)
+    @Fetch(value = FetchMode.SUBSELECT)
+    private List<Staff> staff;
 
 
     public RestaurantDetails() {
@@ -254,11 +256,11 @@ public class RestaurantDetails implements Serializable {
     }
 
 
-    public Staff getStaff() {
+    public List<Staff> getStaff() {
         return staff;
     }
 
-    public void setStaff(Staff staff) {
+    public void setStaff(List<Staff> staff) {
         this.staff = staff;
     }
 }

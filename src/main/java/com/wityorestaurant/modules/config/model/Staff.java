@@ -1,6 +1,6 @@
 package com.wityorestaurant.modules.config.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.*;
 import com.wityorestaurant.modules.restaurant.model.RestaurantDetails;
 
 import javax.persistence.*;
@@ -20,9 +20,12 @@ public class Staff implements Serializable {
     @NotBlank
     @Column(unique = true, nullable = false)
     private String phoneNumber;
-    @OneToOne
-    @JoinColumn(name = "restaurant_id", nullable = false)
-    @JsonIgnore
+
+    @ManyToOne
+    @JoinColumn(name = "restId")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "restId")
+    @JsonIdentityReference(alwaysAsId = true)
+    @JsonProperty("restId")
     private RestaurantDetails restaurantDetails;
 
     public Staff() {
