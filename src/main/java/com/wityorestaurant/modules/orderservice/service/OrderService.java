@@ -11,7 +11,7 @@ import java.util.List;
 public interface OrderService {
     Order processOrderRequest(CustomerOrderDTO customerCheckoutItems, Long restId);
 
-    Order getCustomerOrderDetails(CustomerInfoDTO customerInfoDTO, Long restId);
+    List<Order> getCustomerOrderDetails(CustomerInfoDTO customerInfoDTO, Long restId);
 
     TableOrdersResponse getTableOrderDetails(CustomerInfoDTO customerInfoDTO, Long restId);
 

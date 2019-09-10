@@ -86,7 +86,7 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
-    public Order getCustomerOrderDetails(CustomerInfoDTO customerInfoDTO, Long restId) {
+    public List<Order> getCustomerOrderDetails(CustomerInfoDTO customerInfoDTO, Long restId) {
         return orderRepository.getOrderByCustomer(new Gson().toJson(customerInfoDTO), restId);
     }
 
@@ -109,26 +109,30 @@ public class OrderServiceImpl implements OrderService {
 
     public Order editOrder(UpdateOrderItemDTO dto, Long restaurantId) {
         try {
-            Order order = orderRepository.getOrderByCustomer(new Gson().toJson(dto.getCustomer()), restaurantId);
+            List<Order> order = orderRepository.getOrderByCustomer(new Gson().toJson(dto.getCustomer()), restaurantId);
             OrderItem orderItemToBeUpdated = null;
-            for (OrderItem item : order.getMenuItemOrders()) {
-                if (dto.getOrderItemId().equals(item.getOrderItemId())) {
-                    orderItemToBeUpdated = item;
-                    break;
+            Order newOrder = null;
+            for(Order orderItr:order) {
+                for (OrderItem item : orderItr.getMenuItemOrders()) {
+                    if (dto.getOrderItemId().equals(item.getOrderItemId())) {
+                        orderItemToBeUpdated = item;
+                        newOrder=orderItr;
+                        break;
+                    }
                 }
             }
 
-            order.setTotalCost(order.getTotalCost() - (float) orderItemToBeUpdated.getPrice());
-            order.getMenuItemOrders().remove(orderItemToBeUpdated);
+            newOrder.setTotalCost(newOrder.getTotalCost() - (float) orderItemToBeUpdated.getPrice());
+            newOrder.getMenuItemOrders().remove(orderItemToBeUpdated);
 
             if (dto.getQuantityOption().equals(orderItemToBeUpdated.getQuantityOption())) {
                 double perItemCost = orderItemToBeUpdated.getPrice() / orderItemToBeUpdated.getQuantity();
                 double updatedOrderItemCost = perItemCost * dto.getQuantity();
                 orderItemToBeUpdated.setQuantity(dto.getQuantity());
                 orderItemToBeUpdated.setPrice(updatedOrderItemCost);
-                order.getMenuItemOrders().add(orderItemToBeUpdated);
-                order.setTotalCost(order.getTotalCost() + (float) updatedOrderItemCost);
-                return orderRepository.save(order);
+                newOrder.getMenuItemOrders().add(orderItemToBeUpdated);
+                newOrder.setTotalCost(newOrder.getTotalCost() + (float) updatedOrderItemCost);
+                return orderRepository.save(newOrder);
             } else {
                 RestaurantDetails restaurant = restaurantRepository.findById(restaurantId).get();
                 Product product = null;
@@ -144,9 +148,9 @@ public class OrderServiceImpl implements OrderService {
                     if (dto.getQuantityOption().equals(pqo.getQuantityOption())) {
                         updatedOrderItemCost = pqo.getPrice() * dto.getQuantity();
                         orderItemToBeUpdated.setPrice(updatedOrderItemCost);
-                        order.getMenuItemOrders().add(orderItemToBeUpdated);
-                        order.setTotalCost(order.getTotalCost() + (float) updatedOrderItemCost);
-                        return orderRepository.save(order);
+                        newOrder.getMenuItemOrders().add(orderItemToBeUpdated);
+                        newOrder.setTotalCost(newOrder.getTotalCost() + (float) updatedOrderItemCost);
+                        return orderRepository.save(newOrder);
                     }
                 }
             }
@@ -159,17 +163,21 @@ public class OrderServiceImpl implements OrderService {
 
     public Boolean removePlacedOrderItem(UpdateOrderItemDTO dto, Long restaurantId) {
         try {
-            Order order = orderRepository.getOrderByCustomer(new Gson().toJson(dto.getCustomer()), restaurantId);
+            List<Order> order = orderRepository.getOrderByCustomer(new Gson().toJson(dto.getCustomer()), restaurantId);
             OrderItem orderItem = null;
-            for (OrderItem orderItem2 : order.getMenuItemOrders()) {
-                if (orderItem2.getOrderItemId().equals(dto.getOrderItemId())) {
-                    orderItem = orderItem2;
-                    break;
+            Order newOrder = null;
+            for(Order orderItr:order) {
+                for (OrderItem orderItem2 : orderItr.getMenuItemOrders()) {
+                    if (orderItem2.getOrderItemId().equals(dto.getOrderItemId())) {
+                        orderItem = orderItem2;
+                        newOrder=orderItr;
+                        break;
+                    }
                 }
             }
-            order.setTotalCost(order.getTotalCost() - (float) orderItem.getPrice());
-            order.getMenuItemOrders().remove(orderItem);
-            orderRepository.save(order);
+            newOrder.setTotalCost(newOrder.getTotalCost() - (float) orderItem.getPrice());
+            newOrder.getMenuItemOrders().remove(orderItem);
+            orderRepository.save(newOrder);
             orderQueueService.updatingOrderToQueue(orderItem, restaurantId);
             return true;
         } catch (Exception e) {
