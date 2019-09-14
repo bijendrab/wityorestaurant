@@ -172,11 +172,13 @@ public class RestaurantConfigurationServiceImpl implements RestaurantConfigurati
 
     public Staff updateStaff(Staff updatedStaff) {
         try {
-            Optional<Staff> oStaff = staffRepository.findById(updatedStaff.getStaffId());
-            if (oStaff.isPresent()) {
-                return staffRepository.save(updatedStaff);
-            }
-
+        	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            RestaurantUser tempUser = userRepository.findByUsername(auth.getName());
+            Long restaurantId = tempUser.getRestDetails().getRestId();
+        	Staff s1 = staffRepository.findStaffByRestaurantId(updatedStaff.getStaffId(), restaurantId);
+        	s1.setPhoneNumber(updatedStaff.getPhoneNumber());
+        	s1.setStaffRole(updatedStaff.getStaffRole());
+            return staffRepository.save(s1);
         } catch (Exception e) {
             logger.error("UnableToUpdateStaffException: {}", e.getMessage());
         }
