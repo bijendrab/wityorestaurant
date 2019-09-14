@@ -124,4 +124,12 @@ public class ConfigController {
         RestaurantDetails restaurant = restUser.getRestDetails();
         return new ResponseEntity<RestTable>(restConfigServiceImpl.updateTableCharges(table, restaurant.getRestId()), HttpStatus.OK);
     }
+    
+    @PutMapping("/table/edit-table")
+    public ResponseEntity<?> updatTable(@RequestBody RestTable table){
+    	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        RestaurantUser restUser = userRepo.findByUsername(auth.getName());
+        RestaurantDetails restaurant = restUser.getRestDetails();
+    	return new ResponseEntity<RestTable>(restConfigServiceImpl.updateTableById(table.getId(), restaurant.getRestId(), table), HttpStatus.OK);
+    }
 }

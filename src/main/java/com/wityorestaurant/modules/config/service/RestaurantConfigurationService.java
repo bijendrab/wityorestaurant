@@ -28,4 +28,6 @@ public interface RestaurantConfigurationService {
     Staff addNewStaff(Staff staff, Long restaurantId);
 
     RestTable updateTableCharges(RestTable dtoTable, Long restId);
+    
+    public RestTable updateTableById(Long tableId, Long restId, RestTable table);
 }

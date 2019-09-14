@@ -91,7 +91,18 @@ public class RestaurantConfigurationServiceImpl implements RestaurantConfigurati
         restTable.setRestaurantDetails(tempUser.getRestDetails());
         return restTableRepository.save(restTable);
     }
-
+    
+    public RestTable updateTableById(Long tableId, Long restId, RestTable table) {
+    	try {
+    		RestTable tbuTable = restTableRepository.findByRestaurantIdAndTableId(tableId, restId);
+        	tbuTable.setQrCode(table.getQrCode());
+        	tbuTable.setTableSize(table.getTableSize());
+        	return restTableRepository.save(tbuTable);
+    	}catch (Exception e) {
+			logger.debug("Exception in updateTableById method => {}", e);
+		}
+    	return null;
+    }
 
     public HashMap<String, Object> getConfig() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -246,7 +257,8 @@ public class RestaurantConfigurationServiceImpl implements RestaurantConfigurati
         }
         return restTableRepository.save(table);
     }
-
+    
+    
 
 
     /*=========================STAFF RELATED CODING: ENDS=============================*/
