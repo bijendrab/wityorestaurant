@@ -91,17 +91,17 @@ public class RestaurantConfigurationServiceImpl implements RestaurantConfigurati
         restTable.setRestaurantDetails(tempUser.getRestDetails());
         return restTableRepository.save(restTable);
     }
-    
+
     public RestTable updateTableById(Long tableId, Long restId, RestTable table) {
-    	try {
-    		RestTable tbuTable = restTableRepository.findByRestaurantIdAndTableId(tableId, restId);
-        	tbuTable.setQrCode(table.getQrCode());
-        	tbuTable.setTableSize(table.getTableSize());
-        	return restTableRepository.save(tbuTable);
-    	}catch (Exception e) {
-			logger.debug("Exception in updateTableById method => {}", e);
-		}
-    	return null;
+        try {
+            RestTable tbuTable = restTableRepository.findByRestaurantIdAndTableId(tableId, restId);
+            tbuTable.setQrCode(table.getQrCode());
+            tbuTable.setTableSize(table.getTableSize());
+            return restTableRepository.save(tbuTable);
+        } catch (Exception e) {
+            logger.debug("Exception in updateTableById method => {}", e);
+        }
+        return null;
     }
 
     public HashMap<String, Object> getConfig() {
@@ -172,12 +172,12 @@ public class RestaurantConfigurationServiceImpl implements RestaurantConfigurati
 
     public Staff updateStaff(Staff updatedStaff) {
         try {
-        	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             RestaurantUser tempUser = userRepository.findByUsername(auth.getName());
             Long restaurantId = tempUser.getRestDetails().getRestId();
-        	Staff s1 = staffRepository.findStaffByRestaurantId(updatedStaff.getStaffId(), restaurantId);
-        	s1.setPhoneNumber(updatedStaff.getPhoneNumber());
-        	s1.setStaffRole(updatedStaff.getStaffRole());
+            Staff s1 = staffRepository.findStaffByRestaurantId(updatedStaff.getStaffId(), restaurantId);
+            s1.setPhoneNumber(updatedStaff.getPhoneNumber());
+            s1.setStaffRole(updatedStaff.getStaffRole());
             return staffRepository.save(s1);
         } catch (Exception e) {
             logger.error("UnableToUpdateStaffException: {}", e.getMessage());
@@ -189,7 +189,8 @@ public class RestaurantConfigurationServiceImpl implements RestaurantConfigurati
         try {
             Optional<Staff> oStaff = staffRepository.findById(staffId);
             if (oStaff.isPresent()) {
-                staffRepository.delete(oStaff.get());
+                staffRepository.deleteStaffByRestaurantId(oStaff.get().getStaffId(),
+                        oStaff.get().getRestaurantDetails().getRestId());
                 return true;
             }
         } catch (Exception e) {
@@ -223,7 +224,8 @@ public class RestaurantConfigurationServiceImpl implements RestaurantConfigurati
         }
         return Collections.emptyList();
     }
- /*=========================STAFF RELATED CODING: ENDS=============================*/
+
+    /*=========================STAFF RELATED CODING: ENDS=============================*/
     public RestTable updateTableCharges(RestTable dtoTable, Long restId) {
         RestTable table = restTableRepository.findByRestaurantIdAndTableId(dtoTable.getId(), restId);
         if (table.isServiceChargeEnabled() == true && dtoTable.isServiceChargeEnabled() == false) {
@@ -259,21 +261,19 @@ public class RestaurantConfigurationServiceImpl implements RestaurantConfigurati
         }
         return restTableRepository.save(table);
     }
-    
+
     public Boolean deleteTableById(Long tableId) {
-    	try {
-    		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             RestaurantUser tempUser = userRepository.findByUsername(auth.getName());
             Long restaurantId = tempUser.getRestDetails().getRestId();
-            RestTable table = restTableRepository.findByRestaurantIdAndTableId(tableId, restaurantId);
-            restTableRepository.delete(table);
+            restTableRepository.deleteByRestaurantIdAndTableId(tableId,restaurantId);
             return Boolean.TRUE;
-		} catch (Exception e) {
-			logger.error("UnableToDeleteTableException: {}", e);
-		}
-    	return Boolean.FALSE;
+        } catch (Exception e) {
+            logger.error("UnableToDeleteTableException: {}", e);
+        }
+        return Boolean.FALSE;
     }
 
 
-    
 }
