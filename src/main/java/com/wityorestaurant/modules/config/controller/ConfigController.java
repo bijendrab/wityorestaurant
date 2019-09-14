@@ -126,10 +126,16 @@ public class ConfigController {
     }
     
     @PutMapping("/table/edit-table")
-    public ResponseEntity<?> updatTable(@RequestBody RestTable table){
+    public ResponseEntity<?> updateTable(@RequestBody RestTable table){
     	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         RestaurantUser restUser = userRepo.findByUsername(auth.getName());
         RestaurantDetails restaurant = restUser.getRestDetails();
     	return new ResponseEntity<RestTable>(restConfigServiceImpl.updateTableById(table.getId(), restaurant.getRestId(), table), HttpStatus.OK);
     }
+    
+    @DeleteMapping("/table/remove-table/{tableId}")
+    public ResponseEntity<?> deleteTable(@PathVariable Long tableId){
+    	return new ResponseEntity<Boolean>(restConfigServiceImpl.deleteTableById(tableId), HttpStatus.OK);
+    }
+    
 }

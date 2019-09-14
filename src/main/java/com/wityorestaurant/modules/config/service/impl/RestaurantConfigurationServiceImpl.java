@@ -223,7 +223,7 @@ public class RestaurantConfigurationServiceImpl implements RestaurantConfigurati
         }
         return Collections.emptyList();
     }
-
+ /*=========================STAFF RELATED CODING: ENDS=============================*/
     public RestTable updateTableCharges(RestTable dtoTable, Long restId) {
         RestTable table = restTableRepository.findByRestaurantIdAndTableId(dtoTable.getId(), restId);
         if (table.isServiceChargeEnabled() == true && dtoTable.isServiceChargeEnabled() == false) {
@@ -260,8 +260,20 @@ public class RestaurantConfigurationServiceImpl implements RestaurantConfigurati
         return restTableRepository.save(table);
     }
     
+    public Boolean deleteTableById(Long tableId) {
+    	try {
+    		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            RestaurantUser tempUser = userRepository.findByUsername(auth.getName());
+            Long restaurantId = tempUser.getRestDetails().getRestId();
+            RestTable table = restTableRepository.findByRestaurantIdAndTableId(tableId, restaurantId);
+            restTableRepository.delete(table);
+            return Boolean.TRUE;
+		} catch (Exception e) {
+			logger.error("UnableToDeleteTableException: {}", e);
+		}
+    	return Boolean.FALSE;
+    }
+
+
     
-
-
-    /*=========================STAFF RELATED CODING: ENDS=============================*/
 }

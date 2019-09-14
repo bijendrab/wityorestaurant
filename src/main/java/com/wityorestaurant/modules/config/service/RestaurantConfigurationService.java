@@ -16,6 +16,8 @@ public interface RestaurantConfigurationService {
     Object addTable(RestTableDTO tableConfig);
 
     List<RestTable> getAllTables();
+    
+    Boolean deleteTableById(Long tableId);
 
     List<Staff> getAllStaffs();
 
