@@ -23,14 +23,15 @@ public class TaxServiceImpl implements TaxService {
 	private TaxRepository taxRepository;
 	
 	@Autowired
-	private RestaurantUserRepository userRepo;
+	private RestaurantUserRepository userRepository;
+	
 	
 	private Logger logger = LoggerFactory.getLogger(TaxServiceImpl.class);
 	
 	public TaxProfile addTaxProfile(TaxProfile profile) {
 		try {
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-	        RestaurantUser restUser = userRepo.findByUsername(auth.getName());
+	        RestaurantUser restUser = userRepository.findByUsername(auth.getName());
 	        profile.setRestaurant(restUser.getRestDetails());
 	        return taxRepository.save(profile);
 		} catch (Exception e) {
