@@ -125,6 +125,7 @@ public class ConfigController {
         return new ResponseEntity<RestTable>(restConfigServiceImpl.updateTableCharges(table, restaurant.getRestId()), HttpStatus.OK);
     }
     
+    @PreAuthorize("hasRole('ROLE_USER')")
     @PutMapping("/table/edit-table")
     public ResponseEntity<?> updateTable(@RequestBody RestTable table){
     	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -133,6 +134,7 @@ public class ConfigController {
     	return new ResponseEntity<RestTable>(restConfigServiceImpl.updateTableById(table.getId(), restaurant.getRestId(), table), HttpStatus.OK);
     }
     
+    @PreAuthorize("hasRole('ROLE_USER')")
     @DeleteMapping("/table/remove-table/{tableId}")
     public ResponseEntity<?> deleteTable(@PathVariable Long tableId){
     	return new ResponseEntity<Boolean>(restConfigServiceImpl.deleteTableById(tableId), HttpStatus.OK);
