@@ -1,11 +1,14 @@
 package com.wityorestaurant.modules.tax.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -23,6 +26,12 @@ public class TaxController {
 	
 	@Autowired
 	private TaxService taxService;
+	
+	@PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping("/get-profiles")
+	public ResponseEntity<?> getTaxProfiles(@RequestBody TaxProfile profile){
+    	return new ResponseEntity<List<TaxProfile>>(taxService.getTaxProfiles(),HttpStatus.OK);
+    }
 	
     @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/add-profile")

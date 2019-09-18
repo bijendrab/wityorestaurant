@@ -1,5 +1,6 @@
 package com.wityorestaurant.modules.tax.service.impl;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -28,11 +29,25 @@ public class TaxServiceImpl implements TaxService {
 	
 	private Logger logger = LoggerFactory.getLogger(TaxServiceImpl.class);
 	
+	public List<TaxProfile> getTaxProfiles(){
+		try {
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	        RestaurantUser restUser = userRepository.findByUsername(auth.getName());
+			return taxRepository.findProfilesByRestId(restUser.getRestDetails().getRestId());
+		} catch (Exception e) {
+			logger.error("Exception in getTaxProfiles => {}", e);
+		}
+		return null;
+	}
+	
 	public TaxProfile addTaxProfile(TaxProfile profile) {
 		try {
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 	        RestaurantUser restUser = userRepository.findByUsername(auth.getName());
 	        profile.setRestaurant(restUser.getRestDetails());
+	        profile.getTaxComponents().forEach(taxComp -> {
+	        	taxComp.setTaxProfile(profile);
+	        });
 	        return taxRepository.save(profile);
 		} catch (Exception e) {
 			logger.error("Exception in addTaxProfile => {}", e);

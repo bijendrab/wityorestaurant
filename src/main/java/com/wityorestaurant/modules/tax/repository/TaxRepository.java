@@ -1,5 +1,7 @@
 package com.wityorestaurant.modules.tax.repository;
 
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,6 +17,10 @@ public interface TaxRepository extends JpaRepository<TaxProfile, Long>{
 	
 	@Query(value = "SELECT * FROM tax_profile WHERE tax_profile_id=?1 AND rest_id=?2", nativeQuery = true)
 	TaxProfile findTaxProfileByRestId(Long taxProfileId, Long restId);
+	
+	@Query(value = "SELECT * FROM tax_profile WHERE rest_id=?1", nativeQuery = true)
+	List<TaxProfile> findProfilesByRestId(Long restId);
+	
 
 	@Transactional
 	@Modifying
