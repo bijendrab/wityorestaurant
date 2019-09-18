@@ -12,10 +12,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.*;
 import com.wityorestaurant.modules.restaurant.model.RestaurantDetails;
 
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "taxProfileId")
 public class TaxProfile {
 
 	@Id
@@ -25,10 +26,12 @@ public class TaxProfile {
 	private String taxType;
 	private float taxPercent;
 	private String appliedOn;
-	
-	@ManyToOne
-	@JsonIgnore
-	@JoinColumn(name="rest_id")
+
+	@ManyToOne()
+	@JoinColumn(name = "rest_id")
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "rest_id")
+	@JsonIdentityReference(alwaysAsId = true)
+	@JsonProperty("rest_id")
 	private RestaurantDetails restaurant;
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "taxProfile", orphanRemoval = true)
