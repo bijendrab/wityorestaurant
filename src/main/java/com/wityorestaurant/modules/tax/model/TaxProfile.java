@@ -29,9 +29,9 @@ public class TaxProfile {
 
 	@ManyToOne()
 	@JoinColumn(name = "rest_id")
-	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "rest_id")
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "restId")
 	@JsonIdentityReference(alwaysAsId = true)
-	@JsonProperty("rest_id")
+	@JsonProperty("restId")
 	private RestaurantDetails restaurant;
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "taxProfile", orphanRemoval = true)
