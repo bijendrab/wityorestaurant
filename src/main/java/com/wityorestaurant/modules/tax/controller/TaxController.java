@@ -29,7 +29,7 @@ public class TaxController {
 	
 	@PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/get-profiles")
-	public ResponseEntity<?> getTaxProfiles(@RequestBody TaxProfile profile){
+	public ResponseEntity<?> getTaxProfiles(){
     	return new ResponseEntity<List<TaxProfile>>(taxService.getTaxProfiles(),HttpStatus.OK);
     }
 	
