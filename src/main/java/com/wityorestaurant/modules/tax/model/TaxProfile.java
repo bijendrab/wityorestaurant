@@ -28,7 +28,7 @@ public class TaxProfile {
 	
 	@ManyToOne
 	@JsonIgnore
-	@JoinColumn(name="restaurant_id")
+	@JoinColumn(name="rest_id")
 	private RestaurantDetails restaurant;
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "taxProfile", orphanRemoval = true)
