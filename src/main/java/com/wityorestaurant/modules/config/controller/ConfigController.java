@@ -86,9 +86,12 @@ public class ConfigController {
     }
 
     @PreAuthorize("hasRole('ROLE_USER')")
-    @PostMapping("/staff/add/{restaurantId}")
-    public ResponseEntity<?> addStaff(@RequestBody Staff staff, @PathVariable Long restaurantId) {
-        return new ResponseEntity<Staff>(restConfigServiceImpl.addNewStaff(staff, restaurantId), HttpStatus.OK);
+    @PostMapping("/staff/add")
+    public ResponseEntity<?> addStaff(@RequestBody Staff staff) {
+    	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        RestaurantUser restUser = userRepo.findByUsername(auth.getName());
+        RestaurantDetails restaurant = restUser.getRestDetails();
+        return new ResponseEntity<Staff>(restConfigServiceImpl.addNewStaff(staff, restaurant.getRestId()), HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('ROLE_USER')")
