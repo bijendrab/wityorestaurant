@@ -9,6 +9,18 @@
 
 ### BUILD image
 
+FROM mysql
+ENV MYSQL_ROOT_PASSWORD=litu
+
+ENV MYSQL_DATA_DIR=/var/lib/mysql \
+    MYSQL_RUN_DIR=/run/mysqld \
+    MYSQL_LOG_DIR=/var/log/mysql
+
+
+RUN /etc/init.d/mysql start
+RUN mysql -u root -p${MYSQL_ROOT_PASSWORD} -e "CREATE DATABASE wityorestaurant"
+
+
 FROM maven:3-jdk-11 as builder
 
 # create app folder for sources
