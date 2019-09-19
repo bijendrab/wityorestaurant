@@ -1,6 +1,5 @@
 .idea
 .class
-*.properties
 *.lst
 *.class
 *.MF

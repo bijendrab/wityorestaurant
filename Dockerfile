@@ -9,18 +9,6 @@
 
 ### BUILD image
 
-FROM mysql
-ENV MYSQL_ROOT_PASSWORD=litu
-
-ENV MYSQL_DATA_DIR=/var/lib/mysql \
-    MYSQL_RUN_DIR=/run/mysqld \
-    MYSQL_LOG_DIR=/var/log/mysql
-
-
-RUN /usr/bin/mysqld_safe start
-RUN mysql -u root -p${MYSQL_ROOT_PASSWORD} -e "CREATE DATABASE wityorestaurant"
-
-
 FROM maven:3-jdk-11 as builder
 
 # create app folder for sources
@@ -77,7 +65,7 @@ WORKDIR $APP_HOME
 
 COPY --from=builder /build/target/*.jar wityorestaurant.jar
 
-ENTRYPOINT [ "sh", "-c", "java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -jar wityorestaurant.jar" ]
+ENTRYPOINT [ "sh", "-c", "java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -Dspring.profiles.active=dev -jar wityorestaurant.jar" ]
 
 #Second option using shell form:
 
