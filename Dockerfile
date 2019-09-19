@@ -17,7 +17,7 @@ ENV MYSQL_DATA_DIR=/var/lib/mysql \
     MYSQL_LOG_DIR=/var/log/mysql
 
 
-RUN /etc/init.d/mysql start
+RUN /usr/bin/mysqld_safe start
 RUN mysql -u root -p${MYSQL_ROOT_PASSWORD} -e "CREATE DATABASE wityorestaurant"
 
 
