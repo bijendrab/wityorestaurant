@@ -1,11 +1,8 @@
 package com.wityorestaurant.modules.menu.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
@@ -14,15 +11,16 @@ import java.io.Serializable;
 public class ProductQuantityOptions implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int QOId;
+    @Column(name = "qoid")
+    private int productQuantityOptionId;
 
-    @Column(name="qoption")
-    private String option;
+    @Column(name = "qoption")
+    private String quantityOption;
 
     @Column(name = "quantity")
     private String quantity;
 
-    @NotNull(message="Please provide some price")
+    @NotNull(message = "Please provide some price")
     //@Min(value = 50, message = "Minimum value should be greater than 50")
     @Column(name = "price")
     private double price;
@@ -35,20 +33,20 @@ public class ProductQuantityOptions implements Serializable {
     public ProductQuantityOptions() {
     }
 
-    public int getQOId() {
-        return QOId;
+    public int getProductQuantityOptionId() {
+        return productQuantityOptionId;
     }
 
-    public void setQOId(int QOId) {
-        this.QOId = QOId;
+    public void setProductQuantityOptionId(int QOId) {
+        this.productQuantityOptionId = QOId;
     }
 
-    public String getOption() {
-        return option;
+    public String getQuantityOption() {
+        return quantityOption;
     }
 
-    public void setOption(String option) {
-        this.option = option;
+    public void setQuantityOption(String option) {
+        this.quantityOption = option;
     }
 
     public String getQuantity() {

@@ -1,7 +1,10 @@
 package com.wityorestaurant.modules.menu.model;
 
-import com.fasterxml.jackson.annotation.*;
-import com.wityorestaurant.modules.user.model.RestaurantDetails;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.wityorestaurant.modules.restaurant.model.RestaurantDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -10,25 +13,19 @@ import java.util.Set;
 
 @Entity
 @Table(name = "item")
-@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="productId")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "productId")
 public class Product implements Serializable {
     @Id
     @Column(name = "productId")
-    /*@GeneratedValue(strategy = GenerationType.AUTO)*/
     private String productId;
 
-    /*@EmbeddedId
-    @JsonIdentityReference(alwaysAsId=true)
-    @JsonProperty("productId")
-    private ProductIdentity pId;*/
-
-    @Column(name="category")
+    @Column(name = "category")
     private String category;
 
-    @Column(name="subCategory")
+    @Column(name = "subCategory")
     private String subCategory;
 
-    @Column(name="cuisine")
+    @Column(name = "cuisine")
     private String cuisine;
 
     @Column(name = "description")
@@ -36,7 +33,7 @@ public class Product implements Serializable {
 
     @NotNull(message = "Product Name is mandatory")
     @Column(name = "name")
-    private String name;
+    private String productName;
 
 
     @Column(name = "isAdd")
@@ -50,25 +47,26 @@ public class Product implements Serializable {
     private Boolean isEnabled;
 
     @Column(name = "prepTime")
-    private int prepTime;
+    private int preparationTime;
 
-    @Column(name="selectedQuantity")
-    private  String selectedQuantity;
+    @Column(name = "selectedQuantity")
+    private String selectedQuantity;
 
+    private int sequenceId;
 
     @ManyToOne()
-    @JoinColumn(name="restId")
-    @JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="restId")
-    @JsonIdentityReference(alwaysAsId=true)
+    @JoinColumn(name = "restId")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "restId")
+    @JsonIdentityReference(alwaysAsId = true)
     @JsonProperty("restId")
-    //@JsonIgnore
     private RestaurantDetails restaurantDetails;
 
-    @OneToMany(mappedBy = "product",orphanRemoval = true,cascade = CascadeType.ALL,fetch=FetchType.EAGER)
-    private Set<ProductQuantityOptions> quantityOption;
+    @OneToMany(mappedBy = "product", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<ProductQuantityOptions> productQuantityOptions;
 
 
-    public Product() { }
+    public Product() {
+    }
 
     public String getProductId() {
         return productId;
@@ -94,17 +92,14 @@ public class Product implements Serializable {
         this.isEnabled = isEnabled;
     }
 
-    public int getPrepTime() {
-        return prepTime;
+    public int getPreparationTime() {
+        return preparationTime;
     }
 
-    public void setPrepTime(int prepTime) {
-        this.prepTime = prepTime;
+    public void setPreparationTime(int preparationTime) {
+        this.preparationTime = preparationTime;
     }
 
-   /* public Long getProductId() {
-        return this.pId;
-    }*/
 
     public String getCategory() {
         return this.category;
@@ -122,8 +117,8 @@ public class Product implements Serializable {
         return this.description;
     }
 
-    public String getName() {
-        return this.name;
+    public String getProductName() {
+        return this.productName;
     }
 
     public Boolean getIsAdd() {
@@ -134,13 +129,10 @@ public class Product implements Serializable {
         return this.selectedQuantity;
     }
 
-    public Set<ProductQuantityOptions> getQuantityOption() {
-        return this.quantityOption;
+    public Set<ProductQuantityOptions> getProductQuantityOptions() {
+        return this.productQuantityOptions;
     }
 
-    /*public void setProductId(Long pId) {
-        this.pId = pId;
-    }*/
 
     public void setCategory(String category) {
         this.category = category;
@@ -158,8 +150,8 @@ public class Product implements Serializable {
         this.description = description;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setProductName(String productName) {
+        this.productName = productName;
     }
 
     public void setIsAdd(Boolean isAdd) {
@@ -170,8 +162,8 @@ public class Product implements Serializable {
         this.selectedQuantity = selectedQuantity;
     }
 
-    public void setQuantityOption(Set<ProductQuantityOptions> quantityOption) {
-        this.quantityOption = quantityOption;
+    public void setProductQuantityOptions(Set<ProductQuantityOptions> quantityOption) {
+        this.productQuantityOptions = quantityOption;
     }
 
 
@@ -183,5 +175,12 @@ public class Product implements Serializable {
         this.restaurantDetails = restaurantDetails;
     }
 
+    public int getSequenceId() {
+        return sequenceId;
+    }
+
+    public void setSequenceId(int sequenceId) {
+        this.sequenceId = sequenceId;
+    }
 
 }

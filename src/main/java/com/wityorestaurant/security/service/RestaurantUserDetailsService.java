@@ -1,7 +1,7 @@
 package com.wityorestaurant.security.service;
 
-import com.wityorestaurant.modules.user.model.RestaurantUser;
-import com.wityorestaurant.modules.user.repository.RestaurantUserRepository;
+import com.wityorestaurant.modules.restaurant.model.RestaurantUser;
+import com.wityorestaurant.modules.restaurant.repository.RestaurantUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
