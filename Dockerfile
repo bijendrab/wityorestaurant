@@ -1,14 +1,3 @@
-#FROM openjdk:8
-#EXPOSE 8081
-#VOLUME /tmp
-#ARG JAR_FILE
-#ENV _JAVA_OPTIONS "-Xms256m -Xmx512m -Djava.awt.headless=true"
-#COPY ${JAR_FILE} /opt/wityorestaurant.jar
-#WORKDIR /opt
-#ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "/opt/wityorestaurant.jar"]
-
-### BUILD image
-
 FROM maven:3-jdk-11 as builder
 
 # create app folder for sources
@@ -65,7 +54,7 @@ WORKDIR $APP_HOME
 
 COPY --from=builder /build/target/*.jar wityorestaurant.jar
 
-ENTRYPOINT [ "sh", "-c", "java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -Dspring.profiles.active=dev -jar wityorestaurant.jar" ]
+ENTRYPOINT [ "sh", "-c", "java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -Dspring.profiles.active=prod -jar wityorestaurant.jar" ]
 
 #Second option using shell form:
 
