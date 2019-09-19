@@ -102,18 +102,24 @@
 	</build>
 	<profiles>
 		<profile>
-			<id>dev</id>
+			<id>build</id>
 			<properties>
-				<activatedProperties>dev</activatedProperties>
+				<activatedProperties>build</activatedProperties>
 			</properties>
 			<activation>
 				<activeByDefault>true</activeByDefault>
 			</activation>
 		</profile>
 		<profile>
+			<id>dev</id>
+			<properties>
+				<activatedProperties>dev</activatedProperties>
+			</properties>
+		</profile>
+		<profile>
 			<id>prod</id>
 			<properties>
-				<activatedProperties>release</activatedProperties>
+				<activatedProperties>prod</activatedProperties>
 			</properties>
 		</profile>
 	</profiles>

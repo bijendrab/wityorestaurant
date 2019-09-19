@@ -48,13 +48,22 @@ public class DBConfiguration {
         this.password = password;
     }
 
+    @Profile("build")
+    @Bean
+    public String buildDatabaseConnection() {
+        System.out.println("DB connection for BUILD - H2");
+        System.out.println(driverClassName);
+        System.out.println(url);
+        return "DB connection for BUILD - H2";
+    }
+
     @Profile("dev")
     @Bean
     public String devDatabaseConnection() {
-        System.out.println("DB connection for DEV - H2");
+        System.out.println("DB connection for DEV - mySQL");
         System.out.println(driverClassName);
         System.out.println(url);
-        return "DB connection for DEV - H2";
+        return "DB connection for DEV - mySQL";
     }
 
 

@@ -54,7 +54,7 @@ WORKDIR $APP_HOME
 
 COPY --from=builder /build/target/*.jar wityorestaurant.jar
 
-ENTRYPOINT [ "sh", "-c", "java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -Dspring.profiles.active=prod -jar wityorestaurant.jar" ]
+ENTRYPOINT [ "sh", "-c", "java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -Dspring.profiles.active=dev -jar wityorestaurant.jar" ]
 
 #Second option using shell form:
 
