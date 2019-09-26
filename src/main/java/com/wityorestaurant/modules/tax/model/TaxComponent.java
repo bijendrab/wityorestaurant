@@ -6,9 +6,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import java.io.Serializable;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-public class TaxComponent {
+public class TaxComponent implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,8 +19,12 @@ public class TaxComponent {
 	private float weightage;
 	
 	@ManyToOne
+	@JsonIgnore
 	@JoinColumn(name="tax_profile_id")
 	private TaxProfile taxProfile;
+
+	public TaxComponent() {
+	}
 
 	public Long getTaxComponentId() {
 		return taxComponentId;

@@ -1,9 +1,12 @@
 package com.wityorestaurant.modules.tax.model;
 
+import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -17,7 +20,7 @@ import com.wityorestaurant.modules.restaurant.model.RestaurantDetails;
 
 @Entity
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "taxProfileId")
-public class TaxProfile {
+public class TaxProfile implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,9 +36,10 @@ public class TaxProfile {
 	@JsonIdentityReference(alwaysAsId = true)
 	@JsonProperty("restId")
 	private RestaurantDetails restaurant;
-	
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "taxProfile", orphanRemoval = true)
-	private List<TaxComponent> taxComponents;
+
+
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "taxProfile", orphanRemoval = true,fetch = FetchType.EAGER)
+	private Set<TaxComponent> taxComponents;
 
 	public Long getTaxProfileId() {
 		return taxProfileId;
@@ -85,12 +89,12 @@ public class TaxProfile {
 		this.restaurant = restaurant;
 	}
 
-	public List<TaxComponent> getTaxComponents() {
+	public Set<TaxComponent> getTaxComponents() {
 		return taxComponents;
 	}
 
-	public void setTaxComponents(List<TaxComponent> taxComponents) {
+	public void setTaxComponents(Set<TaxComponent> taxComponents) {
 		this.taxComponents = taxComponents;
 	}
-	
+
 }

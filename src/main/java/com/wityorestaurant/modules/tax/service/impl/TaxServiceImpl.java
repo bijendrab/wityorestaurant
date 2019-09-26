@@ -64,7 +64,7 @@ public class TaxServiceImpl implements TaxService {
 		return null;
 	}
 	
-	public TaxProfile removeComponentsFromTaxProfile(Long taxProfileId, Long taxComponentId) {
+	/*public TaxProfile removeComponentsFromTaxProfile(Long taxProfileId, Long taxComponentId) {
 		try {
 			TaxProfile profile = taxRepository.findById(taxProfileId).get();
 			TaxComponent component = null;
@@ -87,7 +87,7 @@ public class TaxServiceImpl implements TaxService {
 			logger.error("Exception in removeTaxComponent => {}", e);
 		}
 		return null;
-	}
+	}*/
 
 	public Boolean deleteTaxProfile(Long taxProfileId) {
 		try {
