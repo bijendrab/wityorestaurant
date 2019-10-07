@@ -80,6 +80,7 @@ public class RestaurantMenuServiceImpl implements RestaurantMenuService {
         product.setProductId(productUUID);
         List<Category> categories = categoryRepository.getCategoryByRestaurantId(tempUser.getRestDetails().getRestId());
         Category categoryObj = categories.stream().filter(category -> category.getCategoryName().equals(product.getCategory())).findFirst().get();
+        product.setCategory(categoryObj);
         product.setSequenceId(categoryObj.getSequence());
         setMenu(product);
         return menuRepository.save(product);

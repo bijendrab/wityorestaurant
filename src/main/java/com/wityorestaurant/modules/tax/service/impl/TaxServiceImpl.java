@@ -1,6 +1,7 @@
 package com.wityorestaurant.modules.tax.service.impl;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -57,7 +58,13 @@ public class TaxServiceImpl implements TaxService {
 	
 	public TaxProfile editTaxProfile(TaxProfile taxProfile) {
 		try {
-			return taxRepository.save(taxProfile);
+			TaxProfile tProfile = taxRepository.findById(taxProfile.getTaxProfileId()).get();
+			taxProfile.getTaxComponents().forEach(component -> {
+				component.setTaxProfile(tProfile);
+			});
+			tProfile.setTaxComponents(taxProfile.getTaxComponents());
+			tProfile.setAppliedOn(taxProfile.getAppliedOn());
+			return taxRepository.save(tProfile);
 		} catch (Exception e) {
 			logger.error("Exception in editTaxProfile => {}", e);
 		}

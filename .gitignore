@@ -12,3 +12,10 @@ target/classes/META-INF/maven/com.wityorestaurant/wityorestaurant/pom.xml
 .settings/org.eclipse.jdt.core.prefs
 .classpath
 *.iml
+target/classes/application-build.properties
+target/classes/application-dev.properties
+target/classes/application-prod.properties
+target/classes/application.properties
+target/classes/META-INF/maven/com.wityorestaurant/wityorestaurant/pom.properties
+target/maven-archiver/pom.properties
+.settings/org.springframework.ide.eclipse.boot.prefs

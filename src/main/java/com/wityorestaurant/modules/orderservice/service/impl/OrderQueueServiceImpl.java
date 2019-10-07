@@ -43,9 +43,9 @@ public class OrderQueueServiceImpl implements OrderQueueService {
             orderQueue.setStatus(orderItem.getStatus());
             orderQueue.setOrderCreationTime(orderItem.getOrderCreationTime());
             orderQueue.setQuantityOption(orderItem.getQuantityOption());
-            orderQueue.setCategory(p.getCategory());
-            orderQueue.setSubCategory(p.getSubCategory());
-            orderQueue.setCuisine(p.getCuisine());
+            orderQueue.setCategory(p.getCategory().getCategoryName());
+            orderQueue.setSubCategory(p.getSubCategory().getSubCategoryName());
+            orderQueue.setCuisine(p.getCuisine().getCuisineName());
             if (orderQueueRepository.getLastPriority(restId) != null) {
                 orderQueue.setPriority(orderQueueRepository.getLastPriority(restId) + 1);
             } else {
