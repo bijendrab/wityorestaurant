@@ -62,7 +62,24 @@ public class TaxServiceImpl implements TaxService {
 			taxProfile.getTaxComponents().forEach(component -> {
 				component.setTaxProfile(tProfile);
 			});
-			tProfile.setTaxComponents(taxProfile.getTaxComponents());
+			
+			for(TaxComponent temp : tProfile.getTaxComponents()) {
+				boolean isPresent = false;
+				for(TaxComponent temp2 : taxProfile.getTaxComponents()) {
+					if(temp.getTaxComponentId() == temp2.getTaxComponentId()) {
+						isPresent = true;
+						if(!temp2.getComponentName().equals(temp.getComponentName())){
+							temp.setComponentName(temp2.getComponentName());
+						}
+						if(temp2.getWeightage() != temp.getWeightage()) {
+							temp.setWeightage(temp2.getWeightage());
+						}
+					}
+				}
+				if(isPresent == false) {
+					tProfile.getTaxComponents().add(temp);
+				}
+			}
 			tProfile.setAppliedOn(taxProfile.getAppliedOn());
 			return taxRepository.save(tProfile);
 		} catch (Exception e) {
