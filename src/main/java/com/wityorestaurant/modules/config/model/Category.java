@@ -1,14 +1,16 @@
 package com.wityorestaurant.modules.config.model;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.wityorestaurant.modules.menu.model.Product;
 import com.wityorestaurant.modules.restaurant.model.RestaurantDetails;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Table(name = "category")
 public class Category implements Serializable {
     @Id
@@ -21,7 +23,20 @@ public class Category implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "restId")
+    @JsonIgnore
     private RestaurantDetails restaurantDetails;
+
+    /*@OneToOne(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonIgnore
+    private Product product;
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }*/
 
     public Long getId() {
         return id;
