@@ -42,6 +42,7 @@ public class Product implements Serializable {
     private SubCategory subCategory;
     
     @ManyToOne(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    @JoinColumn(name = "tax_profile_id")
     private TaxProfile appliedTax;
     
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
