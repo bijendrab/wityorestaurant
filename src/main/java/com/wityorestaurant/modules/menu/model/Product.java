@@ -23,6 +23,7 @@ import com.wityorestaurant.modules.config.model.Category;
 import com.wityorestaurant.modules.config.model.Cuisine;
 import com.wityorestaurant.modules.config.model.SubCategory;
 import com.wityorestaurant.modules.restaurant.model.RestaurantDetails;
+import com.wityorestaurant.modules.tax.model.TaxProfile;
 
 @Entity
 @Table(name = "item")
@@ -32,14 +33,17 @@ public class Product implements Serializable {
     @Column(name = "productId")
     private String productId;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToOne(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id")
     private Category category;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "sub_category_id")
     private SubCategory subCategory;
-
+    
+    @ManyToOne(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    private TaxProfile appliedTax;
+    
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "cuisine_id")
     private Cuisine cuisine;
