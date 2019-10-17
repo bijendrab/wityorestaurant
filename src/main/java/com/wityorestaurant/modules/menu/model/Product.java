@@ -200,5 +200,13 @@ public class Product implements Serializable {
 	public void setCuisine(Cuisine cuisine) {
 		this.cuisine = cuisine;
 	}
+
+	public TaxProfile getAppliedTax() {
+		return appliedTax;
+	}
+
+	public void setAppliedTax(TaxProfile appliedTax) {
+		this.appliedTax = appliedTax;
+	}
     
 }
