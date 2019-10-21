@@ -13,12 +13,20 @@ public class OrderQueue {
     private String status;
     private Integer priority;
     private Long restId;
-    private String category;
-    private String subCategory;
-    private String cuisine;
+    private Long category;
+    private Long subCategory;
+    private Long cuisine;
     private Date orderCreationTime;
     private String quantityOption;
+    private Boolean immediateStatus;
 
+    public Boolean getImmediateStatus() {
+        return immediateStatus;
+    }
+
+    public void setImmediateStatus(Boolean immediateStatus) {
+        this.immediateStatus = immediateStatus;
+    }
 
     public Long getQueueId() {
         return QueueId;
@@ -60,27 +68,27 @@ public class OrderQueue {
         this.restId = restId;
     }
 
-    public String getCategory() {
+    public Long getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(Long category) {
         this.category = category;
     }
 
-    public String getSubCategory() {
+    public Long getSubCategory() {
         return subCategory;
     }
 
-    public void setSubCategory(String subCategory) {
+    public void setSubCategory(Long subCategory) {
         this.subCategory = subCategory;
     }
 
-    public String getCuisine() {
+    public Long getCuisine() {
         return cuisine;
     }
 
-    public void setCuisine(String cuisine) {
+    public void setCuisine(Long cuisine) {
         this.cuisine = cuisine;
     }
 

@@ -33,19 +33,19 @@ public class Product implements Serializable {
     @Column(name = "productId")
     private String productId;
 
-    @OneToOne(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    @OneToOne
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToOne
     @JoinColumn(name = "sub_category_id")
     private SubCategory subCategory;
     
-    @ManyToOne(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    @OneToOne
     @JoinColumn(name = "tax_profile_id")
     private TaxProfile appliedTax;
     
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToOne
     @JoinColumn(name = "cuisine_id")
     private Cuisine cuisine;
 
@@ -73,7 +73,6 @@ public class Product implements Serializable {
     @Column(name = "selectedQuantity")
     private String selectedQuantity;
 
-    private int sequenceId;
 
     @ManyToOne()
     @JoinColumn(name = "restId")
@@ -168,14 +167,6 @@ public class Product implements Serializable {
 
     public void setRestaurantDetails(RestaurantDetails restaurantDetails) {
         this.restaurantDetails = restaurantDetails;
-    }
-
-    public int getSequenceId() {
-        return sequenceId;
-    }
-
-    public void setSequenceId(int sequenceId) {
-        this.sequenceId = sequenceId;
     }
 
 	public Category getCategory() {

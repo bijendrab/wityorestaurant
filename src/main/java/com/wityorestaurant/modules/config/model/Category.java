@@ -30,17 +30,6 @@ public class Category implements Serializable {
     @JsonIgnore
     private RestaurantDetails restaurantDetails;
 
-    /*@OneToOne(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JsonIgnore
-    private Product product;
-
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
-    }*/
 
     public Long getId() {
         return id;

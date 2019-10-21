@@ -19,7 +19,7 @@ import com.fasterxml.jackson.annotation.*;
 import com.wityorestaurant.modules.restaurant.model.RestaurantDetails;
 
 @Entity
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "taxProfileId")
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "taxProfileId")
 public class TaxProfile implements Serializable {
 
 	@Id
@@ -32,9 +32,7 @@ public class TaxProfile implements Serializable {
 
 	@ManyToOne()
 	@JoinColumn(name = "rest_id")
-	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "restId")
-	@JsonIdentityReference(alwaysAsId = true)
-	@JsonProperty("restId")
+	@JsonIgnore
 	private RestaurantDetails restaurant;
 
 
