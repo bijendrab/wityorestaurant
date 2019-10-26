@@ -112,10 +112,7 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService {
         newOrder.setTotalCost(totalPrice);
         newOrder.setOrderedBy("restaurant");
 
-        RestaurantCart cart = restaurant.getCart();
-
-        cartItemRepository.deleteAll(orderDTO.getCartItems());
-
+        /*RestaurantCart cart = restaurant.getCart();
         for (RestaurantCartItem cartItem : cart.getCartItems()) {
             for (RestaurantCartItem dtoCartItem : orderDTO.getCartItems()) {
                 if (cartItem.getCartItemId() == dtoCartItem.getCartItemId()) {
@@ -128,10 +125,10 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService {
                 break;
             }
         }
-
-        cartRepository.save(cart);
+        cartRepository.save(cart);*/
         orderRepository.save(newOrder);
         orderQueueService.processingOrderToQueue(newOrder, restaurant.getRestId());
+        cartItemRepository.deleteAll(orderDTO.getCartItems());
         return newOrder;
 
     }
