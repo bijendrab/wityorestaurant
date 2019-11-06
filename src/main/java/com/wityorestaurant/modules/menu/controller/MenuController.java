@@ -26,7 +26,6 @@ public class MenuController {
     @Autowired
     AuthenticationManager authManager;
 
-
     @Autowired
     RestaurantUserRepository userRepo;
 

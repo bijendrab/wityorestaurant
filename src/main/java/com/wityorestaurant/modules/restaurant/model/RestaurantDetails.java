@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.wityorestaurant.modules.cart.model.RestaurantCart;
 import com.wityorestaurant.modules.config.model.*;
+import com.wityorestaurant.modules.menu.model.AddOnProfile;
 import com.wityorestaurant.modules.menu.model.Product;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -61,6 +62,10 @@ public class RestaurantDetails implements Serializable {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "restaurantDetails", orphanRemoval = true)
     @Fetch(value = FetchMode.SUBSELECT)
     private List<Product> product;
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "restaurantDetails", orphanRemoval = true)
+    @Fetch(value = FetchMode.SUBSELECT)
+    private List<AddOnProfile> addOnProfiles;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "restaurantDetails", orphanRemoval = true, cascade = CascadeType.ALL)
     @Fetch(value = FetchMode.SUBSELECT)
@@ -237,6 +242,14 @@ public class RestaurantDetails implements Serializable {
 
     public void setProduct(List<Product> product) {
         this.product = product;
+    }
+
+    public List<AddOnProfile> getAddOnProfiles() {
+        return addOnProfiles;
+    }
+
+    public void setAddOnProfiles(List<AddOnProfile> addOnProfiles) {
+        this.addOnProfiles = addOnProfiles;
     }
 
     public List<RestTable> getRestTables() {
