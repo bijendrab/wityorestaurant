@@ -1,6 +1,7 @@
 package com.wityorestaurant.modules.menu.model;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -9,6 +10,8 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -23,6 +26,7 @@ import com.wityorestaurant.modules.config.model.Category;
 import com.wityorestaurant.modules.config.model.Cuisine;
 import com.wityorestaurant.modules.config.model.SubCategory;
 import com.wityorestaurant.modules.restaurant.model.RestaurantDetails;
+import com.wityorestaurant.modules.restaurant.model.Role;
 import com.wityorestaurant.modules.tax.model.TaxProfile;
 
 @Entity
@@ -84,6 +88,11 @@ public class Product implements Serializable {
     @OneToMany(mappedBy = "product", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<ProductQuantityOptions> productQuantityOptions;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "item_addOn",
+        joinColumns = @JoinColumn(name = "product_id"),
+        inverseJoinColumns = @JoinColumn(name = "profile_id"))
+    private Set<AddOnProfile> addOnProfiles = new HashSet<>();
 
     public Product() {
     }
@@ -200,5 +209,12 @@ public class Product implements Serializable {
 	public void setAppliedTax(TaxProfile appliedTax) {
 		this.appliedTax = appliedTax;
 	}
-    
+
+    public Set<AddOnProfile> getAddOnProfiles() {
+        return addOnProfiles;
+    }
+
+    public void setAddOnProfiles(Set<AddOnProfile> addOnProfiles) {
+        this.addOnProfiles = addOnProfiles;
+    }
 }

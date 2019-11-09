@@ -3,8 +3,10 @@ package com.wityorestaurant.modules.menu.service.impl;
 import com.wityorestaurant.modules.config.model.Category;
 import com.wityorestaurant.modules.config.repository.CategoryRepository;
 import com.wityorestaurant.modules.menu.dto.RestaurantMenuDto;
+import com.wityorestaurant.modules.menu.model.AddOnProfile;
 import com.wityorestaurant.modules.menu.model.Product;
 import com.wityorestaurant.modules.menu.model.ProductQuantityOptions;
+import com.wityorestaurant.modules.menu.repository.AddOnRepository;
 import com.wityorestaurant.modules.menu.repository.MenuRepository;
 import com.wityorestaurant.modules.menu.service.RestaurantMenuService;
 import com.wityorestaurant.modules.restaurant.model.RestaurantUser;
@@ -28,6 +30,8 @@ public class RestaurantMenuServiceImpl implements RestaurantMenuService {
     private RestaurantUserRepository userRepository;
     @Autowired
     private CategoryRepository categoryRepository;
+    @Autowired
+    private AddOnRepository addOnRepository;
 
     public List<Product> getAllProducts() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
