@@ -21,7 +21,7 @@ import com.wityorestaurant.modules.restaurant.model.RestaurantDetails;
 
 @Entity
 @Table(name = "addOnProfile")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "profileId")
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "profileId")
 public class AddOnProfile implements Serializable {
     @Id
     @Column(name = "profileId")
