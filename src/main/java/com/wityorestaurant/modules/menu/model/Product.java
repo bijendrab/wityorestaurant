@@ -2,6 +2,7 @@ package com.wityorestaurant.modules.menu.model;
 
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -25,6 +26,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.wityorestaurant.modules.config.model.Category;
 import com.wityorestaurant.modules.config.model.Cuisine;
 import com.wityorestaurant.modules.config.model.SubCategory;
+import com.wityorestaurant.modules.discount.model.DiscountItem;
 import com.wityorestaurant.modules.restaurant.model.RestaurantDetails;
 import com.wityorestaurant.modules.tax.model.TaxProfile;
 
@@ -95,6 +97,9 @@ public class Product implements Serializable {
         joinColumns = @JoinColumn(name = "product_id"),
         inverseJoinColumns = @JoinColumn(name = "profile_id"))
     private Set<AddOnProfile> addOnProfiles = new HashSet<>();
+    
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "products")
+    private List<DiscountItem> discountItems;
 
     public Product() {
     }
@@ -219,4 +224,13 @@ public class Product implements Serializable {
     public void setAddOnProfiles(Set<AddOnProfile> addOnProfiles) {
         this.addOnProfiles = addOnProfiles;
     }
+
+	public List<DiscountItem> getDiscountItems() {
+		return discountItems;
+	}
+
+	public void setDiscountItems(List<DiscountItem> discountItems) {
+		this.discountItems = discountItems;
+	}
+    
 }

@@ -3,9 +3,18 @@ package com.wityorestaurant.modules.discount.model;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+
+import com.wityorestaurant.modules.menu.model.Product;
 
 @Entity
 public class DiscountItem implements Serializable {
@@ -14,6 +23,10 @@ public class DiscountItem implements Serializable {
 
 	@Id
 	private Integer discountItemId;
+	@ManyToMany
+	@Cascade(CascadeType.PERSIST)
+	@JoinTable(name = "discount_item_product", joinColumns = @JoinColumn(name = "discount_item_id"), inverseJoinColumns = @JoinColumn(name = "product_id"))
+	private List<Product> products;
 	private LocalDate startDate;
 	private LocalTime startTime;
 	private boolean isEndingType;
@@ -66,6 +79,14 @@ public class DiscountItem implements Serializable {
 
 	public void setEndTime(LocalTime endTime) {
 		this.endTime = endTime;
+	}
+
+	public List<Product> getProducts() {
+		return products;
+	}
+
+	public void setProducts(List<Product> products) {
+		this.products = products;
 	}
 
 }

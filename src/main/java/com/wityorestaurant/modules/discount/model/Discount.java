@@ -94,4 +94,12 @@ public class Discount {
 		this.discountItems = discountItems;
 	}
 
+	public int getDiscountId() {
+		return discountId;
+	}
+
+	public void setDiscountId(int discountId) {
+		this.discountId = discountId;
+	}
+	
 }
