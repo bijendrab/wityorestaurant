@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.Cascade;
@@ -26,8 +28,9 @@ public class Discount {
 	private boolean totalPercentageDiscount;
 	private String frequency;
 
-	@OneToMany
-	@Cascade(CascadeType.ALL)
+	@OneToMany(mappedBy = "discount")
+//	@Cascade(CascadeType.ALL)
+//	@JoinTable(joinColumns = @JoinColumn(name = "discount_id"), inverseJoinColumns = @JoinColumn(name = "discount_item_id"))
 	private List<DiscountItem> discountItems;
 
 	public String getDiscountName() {

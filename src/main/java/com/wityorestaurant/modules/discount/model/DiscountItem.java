@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
@@ -27,6 +28,9 @@ public class DiscountItem implements Serializable {
 	@Cascade(CascadeType.PERSIST)
 	@JoinTable(name = "discount_item_product", joinColumns = @JoinColumn(name = "discount_item_id"), inverseJoinColumns = @JoinColumn(name = "product_id"))
 	private List<Product> products;
+	@ManyToOne
+	@JoinColumn(name = "discount_id")
+	private Discount discount;
 	private LocalDate startDate;
 	private LocalTime startTime;
 	private boolean isEndingType;
