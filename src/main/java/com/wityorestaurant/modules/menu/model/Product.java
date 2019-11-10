@@ -26,14 +26,16 @@ import com.wityorestaurant.modules.config.model.Category;
 import com.wityorestaurant.modules.config.model.Cuisine;
 import com.wityorestaurant.modules.config.model.SubCategory;
 import com.wityorestaurant.modules.restaurant.model.RestaurantDetails;
-import com.wityorestaurant.modules.restaurant.model.Role;
 import com.wityorestaurant.modules.tax.model.TaxProfile;
 
 @Entity
 @Table(name = "item")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "productId")
 public class Product implements Serializable {
-    @Id
+
+	private static final long serialVersionUID = -2186437972353058761L;
+
+	@Id
     @Column(name = "productId")
     private String productId;
 
