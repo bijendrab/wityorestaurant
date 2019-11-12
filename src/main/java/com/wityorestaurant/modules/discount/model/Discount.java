@@ -1,37 +1,57 @@
 package com.wityorestaurant.modules.discount.model;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.wityorestaurant.modules.restaurant.model.RestaurantDetails;
 
 @Entity
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "discountId")
 public class Discount {
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int discountId;
 	private String discountName;
 	private String discountType;
 	private String discountDescription;
-	private boolean isRupeesType;
-	private boolean totalRupeesDiscount;
-	private boolean totalPercentageDiscount;
+	private String discountValueType;
+	private float totalRupeesDiscount;
+	private float totalPercentageDiscount;
 	private String frequency;
+	private LocalDate startDate;
+	private LocalTime startTime;
+	private String endOption;
+	private LocalDate endDate;
+	private LocalTime endTime;
 
 	@OneToMany(mappedBy = "discount")
 //	@Cascade(CascadeType.ALL)
 //	@JoinTable(joinColumns = @JoinColumn(name = "discount_id"), inverseJoinColumns = @JoinColumn(name = "discount_item_id"))
-	private List<DiscountItem> discountItems;
+	private List<DiscountItem> discountedItems;
+
+	@ManyToOne
+	@JoinColumn(name = "restaurant_id")
+	private RestaurantDetails restaurant;
+
+	public int getDiscountId() {
+		return discountId;
+	}
+
+	public void setDiscountId(int discountId) {
+		this.discountId = discountId;
+	}
 
 	public String getDiscountName() {
 		return discountName;
@@ -57,27 +77,27 @@ public class Discount {
 		this.discountDescription = discountDescription;
 	}
 
-	public boolean isRupeesType() {
-		return isRupeesType;
+	public String getDiscountValueType() {
+		return discountValueType;
 	}
 
-	public void setRupeesType(boolean isRupeesType) {
-		this.isRupeesType = isRupeesType;
+	public void setDiscountValueType(String discountValueType) {
+		this.discountValueType = discountValueType;
 	}
 
-	public boolean isTotalRupeesDiscount() {
+	public float getTotalRupeesDiscount() {
 		return totalRupeesDiscount;
 	}
 
-	public void setTotalRupeesDiscount(boolean totalRupeesDiscount) {
+	public void setTotalRupeesDiscount(float totalRupeesDiscount) {
 		this.totalRupeesDiscount = totalRupeesDiscount;
 	}
 
-	public boolean isTotalPercentageDiscount() {
+	public float getTotalPercentageDiscount() {
 		return totalPercentageDiscount;
 	}
 
-	public void setTotalPercentageDiscount(boolean totalPercentageDiscount) {
+	public void setTotalPercentageDiscount(float totalPercentageDiscount) {
 		this.totalPercentageDiscount = totalPercentageDiscount;
 	}
 
@@ -89,20 +109,60 @@ public class Discount {
 		this.frequency = frequency;
 	}
 
-	public List<DiscountItem> getDiscountItems() {
-		return discountItems;
+	public List<DiscountItem> getDiscountedItems() {
+		return discountedItems;
 	}
 
-	public void setDiscountItems(List<DiscountItem> discountItems) {
-		this.discountItems = discountItems;
+	public void setDiscountedItems(List<DiscountItem> discountedItems) {
+		this.discountedItems = discountedItems;
 	}
 
-	public int getDiscountId() {
-		return discountId;
+	public LocalDate getStartDate() {
+		return startDate;
 	}
 
-	public void setDiscountId(int discountId) {
-		this.discountId = discountId;
+	public void setStartDate(LocalDate startDate) {
+		this.startDate = startDate;
 	}
-	
+
+	public LocalTime getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(LocalTime startTime) {
+		this.startTime = startTime;
+	}
+
+	public String getEndOption() {
+		return endOption;
+	}
+
+	public void setEndOption(String endOption) {
+		this.endOption = endOption;
+	}
+
+	public LocalDate getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(LocalDate endDate) {
+		this.endDate = endDate;
+	}
+
+	public LocalTime getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(LocalTime endTime) {
+		this.endTime = endTime;
+	}
+
+	public RestaurantDetails getRestaurant() {
+		return restaurant;
+	}
+
+	public void setRestaurant(RestaurantDetails restaurant) {
+		this.restaurant = restaurant;
+	}
+
 }
