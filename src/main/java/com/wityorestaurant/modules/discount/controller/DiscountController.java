@@ -30,14 +30,12 @@ public class DiscountController {
 	RestaurantUserRepository userRepo;
 
 	@PreAuthorize("hasRole('ROLE_USER')")
-	@PostMapping("/addconfig")
+	@PostMapping("/adddiscount")
 	public ResponseEntity<?> addDiscount(@RequestBody Discount discount) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		RestaurantUser restUser = userRepo.findByUsername(auth.getName());
 		RestaurantDetails restaurant = restUser.getRestDetails();
 		discount.setRestaurant(restaurant);
 		return new ResponseEntity<Discount>(discountService.insertDiscountRecord(discount), HttpStatus.OK);
-
 	}
-
 }

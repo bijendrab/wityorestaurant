@@ -4,7 +4,9 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -25,18 +27,22 @@ public class Discount {
 	private int discountId;
 	private String discountName;
 	private String discountType;
-	private String discountDescription;
 	private String discountValueType;
-	private float totalRupeesDiscount;
-	private float totalPercentageDiscount;
+	private String discountDescription;
+	private float discountValue;
 	private String frequency;
 	private LocalDate startDate;
 	private LocalTime startTime;
 	private String endOption;
 	private LocalDate endDate;
 	private LocalTime endTime;
+	private String daysOfMonth;
+	private String daysOfWeek;
+	private Boolean isEnable;
+	
+	
 
-	@OneToMany(mappedBy = "discount")
+	@OneToMany(mappedBy = "discount", orphanRemoval = true, fetch = FetchType.EAGER)
 //	@Cascade(CascadeType.ALL)
 //	@JoinTable(joinColumns = @JoinColumn(name = "discount_id"), inverseJoinColumns = @JoinColumn(name = "discount_item_id"))
 	private List<DiscountItem> discountedItems;
@@ -85,21 +91,7 @@ public class Discount {
 		this.discountValueType = discountValueType;
 	}
 
-	public float getTotalRupeesDiscount() {
-		return totalRupeesDiscount;
-	}
-
-	public void setTotalRupeesDiscount(float totalRupeesDiscount) {
-		this.totalRupeesDiscount = totalRupeesDiscount;
-	}
-
-	public float getTotalPercentageDiscount() {
-		return totalPercentageDiscount;
-	}
-
-	public void setTotalPercentageDiscount(float totalPercentageDiscount) {
-		this.totalPercentageDiscount = totalPercentageDiscount;
-	}
+	
 
 	public String getFrequency() {
 		return frequency;
@@ -163,6 +155,38 @@ public class Discount {
 
 	public void setRestaurant(RestaurantDetails restaurant) {
 		this.restaurant = restaurant;
+	}
+
+	public String getDaysOfMonth() {
+		return daysOfMonth;
+	}
+
+	public void setDaysOfMonth(String daysOfMonth) {
+		this.daysOfMonth = daysOfMonth;
+	}
+
+	public float getDiscountValue() {
+		return discountValue;
+	}
+
+	public void setDiscountValue(float discountValue) {
+		this.discountValue = discountValue;
+	}
+
+	public String getDaysOfWeek() {
+		return daysOfWeek;
+	}
+
+	public void setDaysOfWeek(String daysOfWeek) {
+		this.daysOfWeek = daysOfWeek;
+	}
+
+	public Boolean getIsEnable() {
+		return isEnable;
+	}
+
+	public void setIsEnable(Boolean isEnable) {
+		this.isEnable = isEnable;
 	}
 
 }

@@ -19,3 +19,4 @@ target/classes/application.properties
 target/classes/META-INF/maven/com.wityorestaurant/wityorestaurant/pom.properties
 target/maven-archiver/pom.properties
 .settings/org.springframework.ide.eclipse.boot.prefs
+/target/

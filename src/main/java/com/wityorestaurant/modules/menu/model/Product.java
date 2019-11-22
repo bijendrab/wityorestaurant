@@ -98,8 +98,8 @@ public class Product implements Serializable {
         inverseJoinColumns = @JoinColumn(name = "profile_id"))
     private Set<AddOnProfile> addOnProfiles = new HashSet<>();
     
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "products")
-    private List<DiscountItem> discountItems;
+    @OneToOne
+    private DiscountItem discountItem;
 
     public Product() {
     }
@@ -225,12 +225,14 @@ public class Product implements Serializable {
         this.addOnProfiles = addOnProfiles;
     }
 
-	public List<DiscountItem> getDiscountItems() {
-		return discountItems;
+	public DiscountItem getDiscountItem() {
+		return discountItem;
 	}
 
-	public void setDiscountItems(List<DiscountItem> discountItems) {
-		this.discountItems = discountItems;
+	public void setDiscountItem(DiscountItem discountItem) {
+		this.discountItem = discountItem;
 	}
+
+	
     
 }
