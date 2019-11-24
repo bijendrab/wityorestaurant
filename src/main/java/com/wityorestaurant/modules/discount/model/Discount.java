@@ -28,21 +28,20 @@ public class Discount {
 	private String discountName;
 	private String discountType;
 	private String discountValueType;
-	private String discountDescription;
-	private float discountValue;
-	private String frequency;
 	private LocalDate startDate;
 	private LocalTime startTime;
-	private String endOption;
 	private LocalDate endDate;
 	private LocalTime endTime;
+	private String discountDescription;
+	private String endOption;
 	private String daysOfMonth;
 	private String daysOfWeek;
+	private String frequency;
 	private Boolean isEnable;
-	
+	private float discountValue;
 	
 
-	@OneToMany(mappedBy = "discount", orphanRemoval = true, fetch = FetchType.EAGER)
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "discount", orphanRemoval = true, fetch = FetchType.EAGER)
 //	@Cascade(CascadeType.ALL)
 //	@JoinTable(joinColumns = @JoinColumn(name = "discount_id"), inverseJoinColumns = @JoinColumn(name = "discount_item_id"))
 	private List<DiscountItem> discountedItems;

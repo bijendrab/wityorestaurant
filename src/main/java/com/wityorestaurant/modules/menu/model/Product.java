@@ -2,7 +2,6 @@ package com.wityorestaurant.modules.menu.model;
 
 import java.io.Serializable;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -99,6 +98,7 @@ public class Product implements Serializable {
     private Set<AddOnProfile> addOnProfiles = new HashSet<>();
     
     @OneToOne
+    @JoinColumn(name = "discount_item_id")
     private DiscountItem discountItem;
 
     public Product() {
