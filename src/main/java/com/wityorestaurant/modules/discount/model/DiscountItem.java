@@ -3,6 +3,7 @@ package com.wityorestaurant.modules.discount.model;
 import java.io.Serializable;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -25,7 +26,7 @@ public class DiscountItem implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer discountItemId;
 
-	@OneToOne
+	@OneToOne(cascade = {CascadeType.ALL})
 	private Product product;
 
 	@OneToMany

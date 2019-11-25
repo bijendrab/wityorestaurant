@@ -18,6 +18,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.Cascade;
+
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -97,7 +99,7 @@ public class Product implements Serializable {
         inverseJoinColumns = @JoinColumn(name = "profile_id"))
     private Set<AddOnProfile> addOnProfiles = new HashSet<>();
     
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "discount_item_id")
     private DiscountItem discountItem;
 
