@@ -41,8 +41,7 @@ public class Discount {
 	private float discountValue;
 	
 
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "discount", orphanRemoval = true, fetch = FetchType.EAGER)
-//	@Cascade(CascadeType.ALL)
+	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE}, mappedBy = "discount", orphanRemoval = true, fetch = FetchType.EAGER)
 //	@JoinTable(joinColumns = @JoinColumn(name = "discount_id"), inverseJoinColumns = @JoinColumn(name = "discount_item_id"))
 	private List<DiscountItem> discountedItems;
 

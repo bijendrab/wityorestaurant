@@ -99,7 +99,7 @@ public class Product implements Serializable {
         inverseJoinColumns = @JoinColumn(name = "profile_id"))
     private Set<AddOnProfile> addOnProfiles = new HashSet<>();
     
-    @OneToOne(cascade = {CascadeType.ALL})
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "discount_item_id")
     private DiscountItem discountItem;
 

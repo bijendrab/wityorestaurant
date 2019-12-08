@@ -26,7 +26,7 @@ public class DiscountItem implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer discountItemId;
 
-	@OneToOne(cascade = {CascadeType.ALL})
+	@OneToOne(mappedBy = "discountItem")
 	private Product product;
 
 	@OneToMany
