@@ -3,6 +3,7 @@ package com.wityorestaurant.modules.discount.model;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -41,10 +42,10 @@ public class Discount {
 	private float discountValue;
 	
 
-	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE}, mappedBy = "discount", orphanRemoval = true, fetch = FetchType.EAGER)
+	@OneToMany(cascade = { CascadeType.ALL}, mappedBy = "discount", orphanRemoval = true, fetch = FetchType.EAGER)
 //	@JoinTable(joinColumns = @JoinColumn(name = "discount_id"), inverseJoinColumns = @JoinColumn(name = "discount_item_id"))
-	private List<DiscountItem> discountedItems;
-
+	private Set<DiscountItem> discountedItems;
+ 
 	@ManyToOne
 	@JoinColumn(name = "restaurant_id")
 	private RestaurantDetails restaurant;
@@ -99,11 +100,11 @@ public class Discount {
 		this.frequency = frequency;
 	}
 
-	public List<DiscountItem> getDiscountedItems() {
+	public Set<DiscountItem> getDiscountedItems() {
 		return discountedItems;
 	}
 
-	public void setDiscountedItems(List<DiscountItem> discountedItems) {
+	public void setDiscountedItems(Set<DiscountItem> discountedItems) {
 		this.discountedItems = discountedItems;
 	}
 

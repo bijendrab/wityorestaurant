@@ -26,4 +26,17 @@ public class DiscountController {
 	public ResponseEntity<?> addDiscount(@RequestBody Discount discount) {
 		return new ResponseEntity<Discount>(discountService.insertDiscountRecord(discount), HttpStatus.OK);
 	}
+	
+	@PreAuthorize("hasRole('ROLE_USER')") 
+	@PostMapping("/editdiscount")
+	public ResponseEntity<?> updateDiscount(@RequestBody Discount discount) {
+		return new ResponseEntity<Discount>(discountService.updateDiscount(discount), HttpStatus.OK);
+	}
+	
+	
+	@PreAuthorize("hasRole('ROLE_USER')")
+	@PostMapping("/enabledisablediscount")
+	public ResponseEntity<?> enableDisableDiscount(@RequestBody int discountId) {
+		return new ResponseEntity<>(discountService.enableDisableDiscount(discountId), HttpStatus.OK);
+	}
 }

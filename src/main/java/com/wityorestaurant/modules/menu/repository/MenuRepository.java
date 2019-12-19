@@ -20,5 +20,4 @@ public interface MenuRepository extends JpaRepository<Product, String> {
     @Query(value = "SELECT * from item where rest_id=?1", nativeQuery = true)
     List<Product> findByRestaurantId(Long restId);
 
-
 }

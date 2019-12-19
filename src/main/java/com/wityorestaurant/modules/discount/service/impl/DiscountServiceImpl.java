@@ -1,10 +1,13 @@
 package com.wityorestaurant.modules.discount.service.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.wityorestaurant.modules.config.service.impl.RestaurantConfigurationServiceImpl;
 import com.wityorestaurant.modules.discount.model.Discount;
 import com.wityorestaurant.modules.discount.repository.DiscountRepository;
 import com.wityorestaurant.modules.discount.service.DiscountService;
@@ -15,6 +18,8 @@ import com.wityorestaurant.modules.restaurant.repository.RestaurantUserRepositor
 @Service
 public class DiscountServiceImpl implements DiscountService {
 
+	Logger logger = LoggerFactory.getLogger(RestaurantConfigurationServiceImpl.class);
+	
 	@Autowired
 	private DiscountRepository discountRepository;
 
@@ -33,5 +38,46 @@ public class DiscountServiceImpl implements DiscountService {
 		});
 		return discountRepository.save(discount);
 	}
+	
+	public Discount updateDiscount(Discount updatedDiscount) {
+		try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            RestaurantUser tempUser = userRepo.findByUsername(auth.getName());
+            Long restaurantId = tempUser.getRestDetails().getRestId();
+            Discount updateObj = discountRepository.findRestaurantDiscountById(updatedDiscount.getDiscountId(), restaurantId);
+            updateObj.setDiscountDescription(updatedDiscount.getDiscountDescription());
+            updateObj.setEndOption(updatedDiscount.getEndOption());
+            updateObj.setEndDate(updatedDiscount.getEndDate());
+            updateObj.setEndTime(updatedDiscount.getEndTime());
+            updateObj.setStartDate(updatedDiscount.getStartDate());
+            updateObj.setStartTime(updatedDiscount.getStartTime());
+            updatedDiscount.getDiscountedItems().forEach(item -> {
+    			item.setDiscount(updatedDiscount);
+    			item.getProduct().setDiscountItem(item);
+    		});
+            updateObj.setDiscountedItems(updatedDiscount.getDiscountedItems());
+            return discountRepository.save(updateObj);
+            
+        } catch (Exception e) {
+            logger.error("UnableToUpdateDiscountException: {}", e.getMessage());
+        }
+        return null;
+	}
+	 
+	public boolean enableDisableDiscount(int discountId) {
+		try {
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            RestaurantUser tempUser = userRepo.findByUsername(auth.getName());
+            Long restaurantId = tempUser.getRestDetails().getRestId();
+            Discount updateObj = discountRepository.findRestaurantDiscountById(discountId, restaurantId);
+            updateObj.setIsEnable(!updateObj.getIsEnable());
+            discountRepository.save(updateObj);
+            return true;
+		} catch (Exception e) {
+			 logger.error("UnableToUpdateDiscountException: {}", e.getMessage());
+			 return false;
+		}
+	}
+	
 
 }
