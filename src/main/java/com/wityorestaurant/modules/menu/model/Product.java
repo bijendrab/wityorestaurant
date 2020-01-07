@@ -98,10 +98,6 @@ public class Product implements Serializable {
         joinColumns = @JoinColumn(name = "product_id"),
         inverseJoinColumns = @JoinColumn(name = "profile_id"))
     private Set<AddOnProfile> addOnProfiles = new HashSet<>();
-    
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinColumn(name = "discount_item_id")
-    private DiscountItem discountItem;
 
     public Product() {
     }
@@ -226,15 +222,5 @@ public class Product implements Serializable {
     public void setAddOnProfiles(Set<AddOnProfile> addOnProfiles) {
         this.addOnProfiles = addOnProfiles;
     }
-
-	public DiscountItem getDiscountItem() {
-		return discountItem;
-	}
-
-	public void setDiscountItem(DiscountItem discountItem) {
-		this.discountItem = discountItem;
-	}
-
-	
     
 }

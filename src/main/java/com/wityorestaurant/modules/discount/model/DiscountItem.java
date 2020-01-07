@@ -3,16 +3,21 @@ package com.wityorestaurant.modules.discount.model;
 import java.io.Serializable;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 import com.wityorestaurant.modules.menu.model.Product;
 import com.wityorestaurant.modules.menu.model.ProductQuantityOptions;
@@ -24,19 +29,29 @@ public class DiscountItem implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer discountItemId;
+	private int discountItemId;
 
-	@OneToOne(mappedBy = "discountItem")
+	@OneToOne
+	@JoinTable(name = "discount_item_product", joinColumns = @JoinColumn(name = "discount_item_id"), inverseJoinColumns = @JoinColumn(name = "product_id"))
 	private Product product;
 
 	@OneToMany
-	@JoinTable(name = "discount_item_product_quantity", 
-	joinColumns = @JoinColumn(name = "discount_item_id"), inverseJoinColumns = @JoinColumn(name = "qoid"))
-	private Set<ProductQuantityOptions> selectedItemQuantityOptions;
+	@JoinTable(name = "discount_item_product_quantity", joinColumns = @JoinColumn(name = "discount_item_id"), inverseJoinColumns = @JoinColumn(name = "qoid"))
+    private Set<ProductQuantityOptions> selectedItemQuantityOptions;
+	
 
 	@ManyToOne
-	@JoinColumn(name = "discount_id")
+	@JsonIgnore
+	@JoinColumn(name = "discountId")
 	private Discount discount;
+
+	public int getDiscountItemId() {
+		return discountItemId;
+	}
+
+	public void setDiscountItemId(int discountItemId) {
+		this.discountItemId = discountItemId;
+	}
 
 	public Set<ProductQuantityOptions> getSelectedItemQuantityOptions() {
 		return selectedItemQuantityOptions;
@@ -44,14 +59,6 @@ public class DiscountItem implements Serializable {
 
 	public void setSelectedItemQuantityOptions(Set<ProductQuantityOptions> selectedItemQuantityOptions) {
 		this.selectedItemQuantityOptions = selectedItemQuantityOptions;
-	}
-
-	public Integer getDiscountItemId() {
-		return discountItemId;
-	}
-
-	public void setDiscountItemId(Integer discountItemId) {
-		this.discountItemId = discountItemId;
 	}
 
 	public Product getProduct() {

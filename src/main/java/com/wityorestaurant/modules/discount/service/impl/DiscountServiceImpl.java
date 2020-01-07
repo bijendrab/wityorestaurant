@@ -34,7 +34,6 @@ public class DiscountServiceImpl implements DiscountService {
 		discount.setRestaurant(restaurant);
 		discount.getDiscountedItems().forEach(item -> {
 			item.setDiscount(discount);
-			item.getProduct().setDiscountItem(item);
 		});
 		return discountRepository.save(discount);
 	}
@@ -53,7 +52,6 @@ public class DiscountServiceImpl implements DiscountService {
             updateObj.setStartTime(updatedDiscount.getStartTime());
             updatedDiscount.getDiscountedItems().forEach(item -> {
     			item.setDiscount(updatedDiscount);
-    			item.getProduct().setDiscountItem(item);
     		});
             updateObj.setDiscountedItems(updatedDiscount.getDiscountedItems());
             return discountRepository.save(updateObj);
@@ -70,7 +68,7 @@ public class DiscountServiceImpl implements DiscountService {
             RestaurantUser tempUser = userRepo.findByUsername(auth.getName());
             Long restaurantId = tempUser.getRestDetails().getRestId();
             Discount updateObj = discountRepository.findRestaurantDiscountById(discountId, restaurantId);
-            updateObj.setIsEnable(!updateObj.getIsEnable());
+            updateObj.setIsEnabled(!updateObj.getIsEnabled());
             discountRepository.save(updateObj);
             return true;
 		} catch (Exception e) {
