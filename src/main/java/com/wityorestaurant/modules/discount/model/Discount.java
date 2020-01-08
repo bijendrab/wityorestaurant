@@ -16,6 +16,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.wityorestaurant.modules.restaurant.model.RestaurantDetails;
 
@@ -47,6 +48,7 @@ public class Discount {
 	private Set<DiscountItem> discountedItems;
 
 	@ManyToOne
+	@JsonIgnore
 	@JoinColumn(name = "restaurant_id")
 	private RestaurantDetails restaurant;
 

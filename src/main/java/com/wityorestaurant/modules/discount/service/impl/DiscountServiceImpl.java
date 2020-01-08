@@ -1,5 +1,9 @@
 package com.wityorestaurant.modules.discount.service.impl;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import com.wityorestaurant.modules.discount.model.DiscountItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +30,21 @@ public class DiscountServiceImpl implements DiscountService {
 	@Autowired
 	private RestaurantUserRepository userRepo;
 
+	@Autowired
+	private RestaurantUserRepository userRepository;
+
+	public List<Discount> getAllDiscounts() {
+		try {
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			RestaurantUser restUser = userRepository.findByUsername(auth.getName());
+			return discountRepository.findDiscountsByRestId(restUser.getRestDetails().getRestId());
+		}
+		catch (Exception e) {
+			logger.error("Exception in getDiscounts => {}", e);
+		}
+		return null;
+	}
+
 	public Discount insertDiscountRecord(Discount discount) {
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -50,10 +69,19 @@ public class DiscountServiceImpl implements DiscountService {
             updateObj.setEndTime(updatedDiscount.getEndTime());
             updateObj.setStartDate(updatedDiscount.getStartDate());
             updateObj.setStartTime(updatedDiscount.getStartTime());
+			updateObj.setIsEnabled(updatedDiscount.getIsEnabled());
+			updateObj.setDaysOfMonth(updatedDiscount.getDaysOfWeek());
+			updateObj.setDiscountType(updatedDiscount.getDiscountValueType());
+			updateObj.setDaysOfWeek(updatedDiscount.getDaysOfWeek());
+			updateObj.setFrequency(updatedDiscount.getFrequency());
+			updateObj.setDiscountName(updatedDiscount.getDiscountName());
+			updateObj.setDiscountValue(updatedDiscount.getDiscountValue());
+			updateObj.setDiscountValueType(updatedDiscount.getDiscountValueType());
+			Set<DiscountItem> discountItems = new HashSet<DiscountItem>();
             updatedDiscount.getDiscountedItems().forEach(item -> {
     			item.setDiscount(updatedDiscount);
+				discountItems.add(item);
     		});
-            updateObj.setDiscountedItems(updatedDiscount.getDiscountedItems());
             return discountRepository.save(updateObj);
             
         } catch (Exception e) {

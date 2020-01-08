@@ -1,10 +1,12 @@
 package com.wityorestaurant.modules.discount.controller;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +22,12 @@ public class DiscountController {
 
 	@Autowired
 	private DiscountService discountService;
+
+	@PreAuthorize("hasRole('ROLE_USER')")
+	@GetMapping("/get-discounts")
+	public ResponseEntity<?> getDiscounts(){
+		return new ResponseEntity<>(discountService.getAllDiscounts(),HttpStatus.OK);
+	}
 
 	@PreAuthorize("hasRole('ROLE_USER')")
 	@PostMapping("/adddiscount")
