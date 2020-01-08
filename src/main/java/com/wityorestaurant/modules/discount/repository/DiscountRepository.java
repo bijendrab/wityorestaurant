@@ -14,9 +14,9 @@ import com.wityorestaurant.modules.discount.model.Discount;
 @Transactional
 public interface DiscountRepository extends JpaRepository<Discount, Integer>{
 	
-	@Query(value="SELECT * FROM Discount a WHERE a.discount_id=:discountId and a.restaurant_id=:restId", nativeQuery = true)
+	@Query(value="SELECT * FROM discount a WHERE a.discount_id=:discountId and a.restaurant_id=:restId", nativeQuery = true)
     Discount findRestaurantDiscountById(@Param("discountId") int discountId, @Param("restId") Long restId);
 
-    @Query(value = "SELECT * FROM Discount WHERE restaurant_id=?1", nativeQuery = true)
+    @Query(value = "SELECT * FROM discount WHERE restaurant_id=?1", nativeQuery = true)
     List<Discount> findDiscountsByRestId(Long restId);
 }
