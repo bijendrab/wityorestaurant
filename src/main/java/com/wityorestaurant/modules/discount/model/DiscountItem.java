@@ -31,9 +31,9 @@ public class DiscountItem implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int discountItemId;
 
-	@OneToOne
+	@OneToMany
 	@JoinTable(name = "discount_item_product", joinColumns = @JoinColumn(name = "discount_item_id"), inverseJoinColumns = @JoinColumn(name = "product_id"))
-	private Product product;
+	private Set<Product> products;
 
 	@OneToMany
 	@JoinTable(name = "discount_item_product_quantity", joinColumns = @JoinColumn(name = "discount_item_id"), inverseJoinColumns = @JoinColumn(name = "qoid"))
@@ -61,12 +61,12 @@ public class DiscountItem implements Serializable {
 		this.selectedItemQuantityOptions = selectedItemQuantityOptions;
 	}
 
-	public Product getProduct() {
-		return product;
+	public Set<Product> getProducts() {
+		return products;
 	}
 
-	public void setProduct(Product product) {
-		this.product = product;
+	public void setProducts(Set<Product> products) {
+		this.products = products;
 	}
 
 	public Discount getDiscount() {
