@@ -1,5 +1,6 @@
 package com.wityorestaurant.modules.discount.service.impl;
 
+import javax.transaction.Transactional;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -103,6 +104,23 @@ public class DiscountServiceImpl implements DiscountService {
 			 logger.error("UnableToUpdateDiscountException: {}", e.getMessage());
 			 return false;
 		}
+	}
+
+	@Transactional
+	public String deleteDiscount(int discountId) {
+		try {
+			discountRepository.delete(getDiscount(discountId));
+			return "discount item deleted";
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return null;
+	}
+
+	private Discount getDiscount(int discountId) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		RestaurantUser tempUser = userRepository.findByUsername(auth.getName());
+		return discountRepository.findRestaurantDiscountById(discountId, tempUser.getRestDetails().getRestId());
 	}
 	
 

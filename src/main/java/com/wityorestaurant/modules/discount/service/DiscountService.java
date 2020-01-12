@@ -12,4 +12,6 @@ public interface DiscountService {
 	public Discount updateDiscount(Discount discount);
 	
 	public boolean enableDisableDiscount(int discountId);
+
+	String deleteDiscount(int discountId);
 }

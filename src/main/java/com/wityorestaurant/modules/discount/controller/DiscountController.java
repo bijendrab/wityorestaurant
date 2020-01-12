@@ -6,7 +6,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,4 +49,11 @@ public class DiscountController {
 	public ResponseEntity<?> enableDisableDiscount(@RequestBody int discountId) {
 		return new ResponseEntity<>(discountService.enableDisableDiscount(discountId), HttpStatus.OK);
 	}
+
+	@PreAuthorize("hasRole('ROLE_USER')")
+	@DeleteMapping("/deleteDiscount/{discountId}")
+	public ResponseEntity<?> deleteDiscount(@PathVariable(value = "discountId") int discountId) {
+		return new ResponseEntity<>(discountService.deleteDiscount(discountId), HttpStatus.ACCEPTED);
+	}
+
 }
