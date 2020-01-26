@@ -106,9 +106,7 @@ public class Discount {
 		return discountedItems;
 	}
 
-	public void setDiscountedItems(Set<DiscountItem> discountedItems) {
-		this.discountedItems = discountedItems;
-	}
+	public void setDiscountedItems(Set<DiscountItem> discountedItems) { this.discountedItems = discountedItems; }
 
 	public LocalDate getStartDate() {
 		return startDate;

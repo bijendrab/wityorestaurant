@@ -78,11 +78,14 @@ public class DiscountServiceImpl implements DiscountService {
 			updateObj.setDiscountName(updatedDiscount.getDiscountName());
 			updateObj.setDiscountValue(updatedDiscount.getDiscountValue());
 			updateObj.setDiscountValueType(updatedDiscount.getDiscountValueType());
-			Set<DiscountItem> discountItems = new HashSet<DiscountItem>();
+			//Set<DiscountItem> discountItems = new HashSet<DiscountItem>();
             updatedDiscount.getDiscountedItems().forEach(item -> {
     			item.setDiscount(updatedDiscount);
-				discountItems.add(item);
+				//discountItems.add(item);
     		});
+            //updateObj.getDiscountedItems().addAll(discountItems);
+			updateObj.getDiscountedItems().clear();
+			updateObj.getDiscountedItems().addAll(updatedDiscount.getDiscountedItems());
             return discountRepository.save(updateObj);
             
         } catch (Exception e) {
