@@ -71,7 +71,7 @@ public class DiscountServiceImpl implements DiscountService {
             updateObj.setStartDate(updatedDiscount.getStartDate());
             updateObj.setStartTime(updatedDiscount.getStartTime());
 			updateObj.setIsEnabled(updatedDiscount.getIsEnabled());
-			updateObj.setDaysOfMonth(updatedDiscount.getDaysOfWeek());
+			updateObj.setDaysOfMonth(updatedDiscount.getDaysOfMonth());
 			updateObj.setDiscountType(updatedDiscount.getDiscountValueType());
 			updateObj.setDaysOfWeek(updatedDiscount.getDaysOfWeek());
 			updateObj.setFrequency(updatedDiscount.getFrequency());
