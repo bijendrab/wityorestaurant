@@ -1,32 +1,62 @@
 package com.wityorestaurant.modules.menu.model;
 
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.annotations.Cascade;
+
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.wityorestaurant.modules.config.model.Category;
+import com.wityorestaurant.modules.config.model.Cuisine;
+import com.wityorestaurant.modules.config.model.SubCategory;
+import com.wityorestaurant.modules.discount.model.DiscountItem;
 import com.wityorestaurant.modules.restaurant.model.RestaurantDetails;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import java.io.Serializable;
-import java.util.Set;
+import com.wityorestaurant.modules.tax.model.TaxProfile;
 
 @Entity
 @Table(name = "item")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "productId")
 public class Product implements Serializable {
-    @Id
+
+	private static final long serialVersionUID = -2186437972353058761L;
+
+	@Id
     @Column(name = "productId")
     private String productId;
 
-    @Column(name = "category")
-    private String category;
+    @OneToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
 
-    @Column(name = "subCategory")
-    private String subCategory;
-
-    @Column(name = "cuisine")
-    private String cuisine;
+    @OneToOne
+    @JoinColumn(name = "sub_category_id")
+    private SubCategory subCategory;
+    
+    @OneToOne
+    @JoinColumn(name = "tax_profile_id")
+    private TaxProfile appliedTax;
+    
+    @OneToOne
+    @JoinColumn(name = "cuisine_id")
+    private Cuisine cuisine;
 
     @Column(name = "description")
     private String description;
@@ -52,7 +82,6 @@ public class Product implements Serializable {
     @Column(name = "selectedQuantity")
     private String selectedQuantity;
 
-    private int sequenceId;
 
     @ManyToOne()
     @JoinColumn(name = "restId")
@@ -64,6 +93,11 @@ public class Product implements Serializable {
     @OneToMany(mappedBy = "product", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<ProductQuantityOptions> productQuantityOptions;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "item_addOn",
+        joinColumns = @JoinColumn(name = "product_id"),
+        inverseJoinColumns = @JoinColumn(name = "profile_id"))
+    private Set<AddOnProfile> addOnProfiles = new HashSet<>();
 
     public Product() {
     }
@@ -100,19 +134,6 @@ public class Product implements Serializable {
         this.preparationTime = preparationTime;
     }
 
-
-    public String getCategory() {
-        return this.category;
-    }
-
-    public String getSubCategory() {
-        return this.subCategory;
-    }
-
-    public String getCuisine() {
-        return this.cuisine;
-    }
-
     public String getDescription() {
         return this.description;
     }
@@ -131,19 +152,6 @@ public class Product implements Serializable {
 
     public Set<ProductQuantityOptions> getProductQuantityOptions() {
         return this.productQuantityOptions;
-    }
-
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public void setSubCategory(String subCategory) {
-        this.subCategory = subCategory;
-    }
-
-    public void setCuisine(String cuisine) {
-        this.cuisine = cuisine;
     }
 
     public void setDescription(String description) {
@@ -175,12 +183,44 @@ public class Product implements Serializable {
         this.restaurantDetails = restaurantDetails;
     }
 
-    public int getSequenceId() {
-        return sequenceId;
+	public Category getCategory() {
+		return category;
+	}
+
+	public void setCategory(Category category) {
+		this.category = category;
+	}
+
+	public SubCategory getSubCategory() {
+		return subCategory;
+	}
+
+	public void setSubCategory(SubCategory subCategory) {
+		this.subCategory = subCategory;
+	}
+
+	public Cuisine getCuisine() {
+		return cuisine;
+	}
+
+	public void setCuisine(Cuisine cuisine) {
+		this.cuisine = cuisine;
+	}
+
+	public TaxProfile getAppliedTax() {
+		return appliedTax;
+	}
+
+	public void setAppliedTax(TaxProfile appliedTax) {
+		this.appliedTax = appliedTax;
+	}
+
+    public Set<AddOnProfile> getAddOnProfiles() {
+        return addOnProfiles;
     }
 
-    public void setSequenceId(int sequenceId) {
-        this.sequenceId = sequenceId;
+    public void setAddOnProfiles(Set<AddOnProfile> addOnProfiles) {
+        this.addOnProfiles = addOnProfiles;
     }
-
+    
 }

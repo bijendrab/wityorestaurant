@@ -9,7 +9,7 @@ public interface TaxService {
 	public List<TaxProfile> getTaxProfiles(); 
 	public TaxProfile addTaxProfile(TaxProfile profile);
 	public TaxProfile editTaxProfile(TaxProfile taxProfile);
-	public TaxProfile removeComponentsFromTaxProfile(Long taxProfileId, Long taxComponentId);
+	//public TaxProfile removeComponentsFromTaxProfile(Long taxProfileId, Long taxComponentId);
 	public Boolean deleteTaxProfile(Long taxProfileId);
 
 }
