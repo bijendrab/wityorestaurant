@@ -72,6 +72,7 @@ public class WityoSecurityConfig extends WebSecurityConfigurerAdapter{
 			.antMatchers("/api/customerOrder/**").permitAll()
 			.antMatchers("/api/reservation/**").permitAll()
 			.antMatchers("/api/restaurant-config/**").permitAll()
+			.antMatchers("/api/payment/**").permitAll()
 			.anyRequest().authenticated();
 		http.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
 	}

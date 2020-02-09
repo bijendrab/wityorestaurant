@@ -68,6 +68,7 @@ public class PaymentServiceImpl implements PaymentService {
 		Product product = new Gson().fromJson(cartItem.getProductJson(), Product.class);
 		TaxProfile taxProfile = product.getAppliedTax();
 		BillingDetailItem billingDetailsDto = new BillingDetailItem();
+		billingDetailsDto.setItemName(orderItem.getItemName());
 		billingDetailsDto.setOrderId(orderItem.getOrder().getOrderId());
 		billingDetailsDto.setQuantity(orderItem.getQuantity());
 		billingDetailsDto.setPrice(cartItem.getPrice());
