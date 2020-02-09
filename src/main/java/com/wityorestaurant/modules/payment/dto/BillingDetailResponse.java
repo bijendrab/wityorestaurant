@@ -12,6 +12,10 @@ public class BillingDetailResponse {
 
 	private Map<String, Double> totalCalculatedTaxed = new HashMap<>();
 
+	private float serviceCharge = 0.0F;
+	private float packagingCharge = 0.0F;
+	private float overallDiscount = 0.0F;
+
 	public Map<String, Double> getTotalCalculatedTaxed() {
 		return totalCalculatedTaxed;
 	}
@@ -35,5 +39,31 @@ public class BillingDetailResponse {
 	public void setTaxCharges(Map<String, Map<Double, List<String>>> taxCharges) {
 		this.taxCharges = taxCharges;
 	}
+
+	public float getServiceCharge() {
+		return serviceCharge;
+	}
+
+	public void setServiceCharge(float serviceCharge) {
+		this.serviceCharge = serviceCharge;
+	}
+
+	public float getPackagingCharge() {
+		return packagingCharge;
+	}
+
+	public void setPackagingCharge(float packagingCharge) {
+		this.packagingCharge = packagingCharge;
+	}
+
+	public float getOverallDiscount() {
+		return overallDiscount;
+	}
+
+	public void setOverallDiscount(float overallDiscount) {
+		this.overallDiscount = overallDiscount;
+	}
+	
+	
 
 }
