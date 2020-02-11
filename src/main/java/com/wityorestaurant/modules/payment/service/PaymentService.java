@@ -5,6 +5,6 @@ import com.wityorestaurant.modules.payment.dto.BillingDetailResponse;
 
 public interface PaymentService {
 	
-	public BillingDetailResponse getOrderPaymentSummary(Long tableId, Long restId);
+	public BillingDetailResponse getOrderPaymentSummary(Long restId , Long tableId);
 
 }

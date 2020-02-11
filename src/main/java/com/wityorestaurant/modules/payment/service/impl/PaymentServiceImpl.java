@@ -39,9 +39,10 @@ public class PaymentServiceImpl implements PaymentService {
 	}
 
 	@Autowired
-	public PaymentServiceImpl(OrderRepository orderRepository, ReservationRepository reservationRepository) {
+	public PaymentServiceImpl(OrderRepository orderRepository, ReservationRepository reservationRepository ,RestTableRepository restTableRepository) {
 		this.orderRepository = orderRepository;
 		this.reservationRepository = reservationRepository;
+		this.restTableRepository=restTableRepository;
 	}
 
 	private double getTotalPrice() {
@@ -172,7 +173,7 @@ public class PaymentServiceImpl implements PaymentService {
 	}
 
 	/* Method to calculate all the payment summary */
-	public BillingDetailResponse getOrderPaymentSummary(Long tableId, Long restId) {
+	public BillingDetailResponse getOrderPaymentSummary(Long restId, Long tableId) {
 		//Reservation reservation = reservationRepository.getByCustomerId(new Gson().toJson(customerInfoDTO), restId);
 		RestTable restTable=restTableRepository.findByRestaurantIdAndTableId(tableId,restId);
 		List<Order> orders = orderRepository.getOrderByTable(tableId, restId);

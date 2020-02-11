@@ -35,7 +35,7 @@ public class PaymentController {
 	public ResponseEntity<?> getOrderPaymentSummary(@PathVariable("restaurantId") Long restId,
 													@PathVariable("tableId") Long tableId) {
 		return ResponseEntity.status(HttpStatus.FOUND)
-				.body(paymentService.getOrderPaymentSummary(tableId, restId));
+				.body(paymentService.getOrderPaymentSummary(restId, tableId));
 	}
 
 }
