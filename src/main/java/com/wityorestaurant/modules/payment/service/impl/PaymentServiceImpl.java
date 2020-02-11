@@ -6,13 +6,12 @@ import java.util.List;
 import java.util.Map;
 
 import com.wityorestaurant.modules.config.model.RestTable;
-import com.wityorestaurant.modules.reservation.repository.RestTableRepository;
+import com.wityorestaurant.modules.config.repository.RestTableRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 import com.wityorestaurant.modules.customerdata.CustomerCartItems;
-import com.wityorestaurant.modules.customerdata.CustomerInfoDTO;
 import com.wityorestaurant.modules.menu.model.Product;
 import com.wityorestaurant.modules.orderservice.model.Order;
 import com.wityorestaurant.modules.orderservice.model.OrderItem;
@@ -20,7 +19,6 @@ import com.wityorestaurant.modules.orderservice.repository.OrderRepository;
 import com.wityorestaurant.modules.payment.dto.BillingDetailItem;
 import com.wityorestaurant.modules.payment.dto.BillingDetailResponse;
 import com.wityorestaurant.modules.payment.service.PaymentService;
-import com.wityorestaurant.modules.reservation.model.Reservation;
 import com.wityorestaurant.modules.reservation.repository.ReservationRepository;
 import com.wityorestaurant.modules.tax.model.TaxProfile;
 
@@ -176,7 +174,7 @@ public class PaymentServiceImpl implements PaymentService {
 	/* Method to calculate all the payment summary */
 	public BillingDetailResponse getOrderPaymentSummary(Long tableId, Long restId) {
 		//Reservation reservation = reservationRepository.getByCustomerId(new Gson().toJson(customerInfoDTO), restId);
-		RestTable restTable=restTableRepository.getByTableId(tableId,restId);
+		RestTable restTable=restTableRepository.findByRestaurantIdAndTableId(tableId,restId);
 		List<Order> orders = orderRepository.getOrderByTable(tableId, restId);
 		BillingDetailResponse billingDetailsResponse = new BillingDetailResponse();
 		List<BillingDetailItem> billingDetailsDtoList = new ArrayList<>();

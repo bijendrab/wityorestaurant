@@ -11,6 +11,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository
+@Transactional
 public interface RestTableRepository extends JpaRepository<RestTable, Long> {
     @Query(value = "SELECT * from resttable where rest_id=?1", nativeQuery = true)
     List<RestTable> findByRestaurantId(Long restId);
