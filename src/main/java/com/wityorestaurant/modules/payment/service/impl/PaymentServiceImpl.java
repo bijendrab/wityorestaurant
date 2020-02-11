@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.wityorestaurant.modules.config.model.RestTable;
+import com.wityorestaurant.modules.reservation.repository.RestTableRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +33,7 @@ public class PaymentServiceImpl implements PaymentService {
 
 	private OrderRepository orderRepository;
 	private ReservationRepository reservationRepository;
+	private RestTableRepository restTableRepository;
 	private double totalTaxedPrice = 0;
 	private double totalComponentCost = 0.0;
 
@@ -171,9 +174,10 @@ public class PaymentServiceImpl implements PaymentService {
 	}
 
 	/* Method to calculate all the payment summary */
-	public BillingDetailResponse getOrderPaymentSummary(CustomerInfoDTO customerInfoDTO, Long restId) {
-		Reservation reservation = reservationRepository.getByCustomerId(new Gson().toJson(customerInfoDTO), restId);
-		List<Order> orders = orderRepository.getOrderByTable(reservation.getRelatedTable().getId(), restId);
+	public BillingDetailResponse getOrderPaymentSummary(Long tableId, Long restId) {
+		//Reservation reservation = reservationRepository.getByCustomerId(new Gson().toJson(customerInfoDTO), restId);
+		RestTable restTable=restTableRepository.getByTableId(tableId,restId);
+		List<Order> orders = orderRepository.getOrderByTable(tableId, restId);
 		BillingDetailResponse billingDetailsResponse = new BillingDetailResponse();
 		List<BillingDetailItem> billingDetailsDtoList = new ArrayList<>();
 		orders.forEach(order -> {
@@ -186,9 +190,9 @@ public class PaymentServiceImpl implements PaymentService {
 		Map<String, Map<Double, List<String>>> taxCharges = getTaxChargesPerItem(billingDetailsResponse);
 		billingDetailsResponse.setTaxCharges(taxCharges);
 		billingDetailsResponse.setTotalCalculatedTaxed(this.findTotalTaxes(taxCharges, orders));
-		billingDetailsResponse.setPackagingCharge(reservation.getRelatedTable().getPackagingCharge());
-		billingDetailsResponse.setServiceCharge(reservation.getRelatedTable().getServiceCharge());
-		billingDetailsResponse.setOverallDiscount(reservation.getRelatedTable().getOverallDiscount());
+		billingDetailsResponse.setPackagingCharge(restTable.getPackagingCharge());
+		billingDetailsResponse.setServiceCharge(restTable.getServiceCharge());
+		billingDetailsResponse.setOverallDiscount(restTable.getOverallDiscount());
 		return billingDetailsResponse;
 
 	}

@@ -30,11 +30,11 @@ public class PaymentController {
 	}
 
 	@PreAuthorize("hasRole('ROLE_USER')")
-	@PostMapping("/billing/{restaurantId}")
+	@PostMapping("/billing/{restaurantId}/{tableId}")
 	public ResponseEntity<?> getOrderPaymentSummary(@PathVariable("restaurantId") Long restId,
-			@RequestBody CustomerInfoDTO customerInfoDTO) {
+													@PathVariable("restaurantId") Long tableId) {
 		return ResponseEntity.status(HttpStatus.FOUND)
-				.body(paymentService.getOrderPaymentSummary(customerInfoDTO, restId));
+				.body(paymentService.getOrderPaymentSummary(tableId, restId));
 	}
 
 }
