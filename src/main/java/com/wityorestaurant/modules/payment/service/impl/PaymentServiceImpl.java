@@ -172,6 +172,7 @@ public class PaymentServiceImpl implements PaymentService {
             else{
 				double taxCal = (billingItem.getAppliedTaxProfile().getTaxPercent() / 100) ;
 				Double taxAmount = Math.floor((billingItem.getPrice() * taxCal) * 100) / 100;
+                eachTax.put(billingItem.getAppliedTaxProfile().getTaxType(),taxAmount);
 				eachTax.replace("Total", Math.floor((eachTax.get("Total") + taxAmount) * 100) / 100);
 			}
 			taxList.add(eachTax);
