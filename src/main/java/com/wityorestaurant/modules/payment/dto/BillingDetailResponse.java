@@ -10,17 +10,17 @@ public class BillingDetailResponse {
 
 	private Map<String, Map<Double, List<String>>> taxCharges = new HashMap<>();
 
-	private Map<String, Double> totalCalculatedTaxed = new HashMap<>();
+	private Map<String, List<Map<String,Double>>> totalCalculatedTaxed = new HashMap<>();
 
 	private float serviceCharge = 0.0F;
 	private float packagingCharge = 0.0F;
 	private float overallDiscount = 0.0F;
 
-	public Map<String, Double> getTotalCalculatedTaxed() {
+	public Map<String, List<Map<String,Double>>> getTotalCalculatedTaxed() {
 		return totalCalculatedTaxed;
 	}
 
-	public void setTotalCalculatedTaxed(Map<String, Double> totalCalculatedTaxed) {
+	public void setTotalCalculatedTaxed(Map<String, List<Map<String,Double>>> totalCalculatedTaxed) {
 		this.totalCalculatedTaxed = totalCalculatedTaxed;
 	}
 
