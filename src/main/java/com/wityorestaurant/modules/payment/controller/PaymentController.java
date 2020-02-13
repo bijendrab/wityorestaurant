@@ -41,7 +41,7 @@ public class PaymentController {
 	public ResponseEntity<?> getOrderPaymentSummary(@PathVariable("tableId") Long tableId) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		RestaurantUser restaurantUser = restaurantUserRepository.findByUsername(auth.getName());
-		return ResponseEntity.status(HttpStatus.FOUND)
+		return ResponseEntity.status(HttpStatus.OK)
 				.body(paymentService.getOrderPaymentSummary(restaurantUser.getRestDetails().getRestId(), tableId));
 	}
 
