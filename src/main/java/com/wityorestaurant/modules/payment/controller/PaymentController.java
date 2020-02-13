@@ -1,9 +1,13 @@
 package com.wityorestaurant.modules.payment.controller;
 
+import com.wityorestaurant.modules.restaurant.model.RestaurantUser;
+import com.wityorestaurant.modules.restaurant.repository.RestaurantUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +24,8 @@ import com.wityorestaurant.modules.payment.service.PaymentService;
 public class PaymentController {
 
 	private PaymentService paymentService;
+	@Autowired
+	private RestaurantUserRepository restaurantUserRepository;
 
 	public PaymentController() {
 	}
@@ -31,11 +37,12 @@ public class PaymentController {
 	}
 
 	@PreAuthorize("hasRole('ROLE_USER')")
-	@GetMapping("/billing/{restaurantId}/{tableId}")
-	public ResponseEntity<?> getOrderPaymentSummary(@PathVariable("restaurantId") Long restId,
-													@PathVariable("tableId") Long tableId) {
+	@GetMapping("/billing/{tableId}")
+	public ResponseEntity<?> getOrderPaymentSummary(@PathVariable("tableId") Long tableId) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		RestaurantUser restaurantUser = restaurantUserRepository.findByUsername(auth.getName());
 		return ResponseEntity.status(HttpStatus.FOUND)
-				.body(paymentService.getOrderPaymentSummary(restId, tableId));
+				.body(paymentService.getOrderPaymentSummary(restaurantUser.getRestDetails().getRestId(), tableId));
 	}
 
 }
