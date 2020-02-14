@@ -14,8 +14,10 @@ import com.wityorestaurant.modules.orderservice.model.OrderItem;
 import com.wityorestaurant.modules.orderservice.repository.OrderRepository;
 import com.wityorestaurant.modules.payment.dto.BillingDetailItem;
 import com.wityorestaurant.modules.payment.dto.BillingDetailResponse;
+import com.wityorestaurant.modules.payment.dto.TaxDetails;
 import com.wityorestaurant.modules.payment.service.PaymentService;
 import com.wityorestaurant.modules.reservation.repository.ReservationRepository;
+import com.wityorestaurant.modules.tax.model.TaxComponent;
 import com.wityorestaurant.modules.tax.model.TaxProfile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -153,50 +155,87 @@ public class PaymentServiceImpl implements PaymentService {
      * Method to check the total taxes for each taxRate present and store it in a
      * response map
      */
-    private Map<String, List<Map<String, Double>>> findTotalTaxes(BillingDetailResponse response, List<Order> orders) {
+    private List<TaxDetails> findTotalTaxes(BillingDetailResponse response, List<Order> orders) {
         // Check if component exists
-        Map<String, List<Map<String, Double>>> totalTaxes = new HashMap<>();
+        List<TaxDetails> taxDetailsList = new ArrayList<>();
         response.getBillingDetailItems().forEach(billingItem -> {
-            List<Map<String, Double>> taxList = new ArrayList<Map<String, Double>>();
-			Map<String, Double> eachTax = new HashMap<>();
-			eachTax.put("Total", billingItem.getPrice());
             if (!billingItem.getAppliedTaxProfile().getTaxComponents().isEmpty()) {
                 billingItem.getAppliedTaxProfile().getTaxComponents().forEach(taxComponent -> {
                     double taxCal = (billingItem.getAppliedTaxProfile().getTaxPercent() / 100) * (taxComponent.getWeightage() / 100);
-                    Double taxAmount = Math.floor((billingItem.getPrice() * taxCal) * 100) / 100;
-                    eachTax.put(taxComponent.getComponentName(), taxAmount);
-                    eachTax.replace("Total", Math.floor((eachTax.get("Total") + taxAmount) * 100) / 100);
+                    double taxAmount = Math.floor((billingItem.getPrice() * taxCal) * 100) / 100;
+                    float taxPercent = billingItem.getAppliedTaxProfile().getTaxPercent()*taxComponent.getWeightage()/100;
+                    int flag = 0;
+                    if (taxDetailsList.isEmpty()){
+                        refractedMethod1(taxDetailsList, billingItem, taxComponent, taxAmount, taxPercent);
+                    }
+                    else{
+                        for(TaxDetails taxDetails1:taxDetailsList){
+                            if(taxDetails1.getTaxType().equals(taxComponent.getComponentName())
+                                && taxDetails1.getTaxPercentage().equals(taxPercent)){
+                                double taxAmountNew=taxDetailsList.get(taxDetailsList.indexOf(taxDetails1)).getTaxTotal();
+                                taxDetailsList.get(taxDetailsList.indexOf(taxDetails1)).setTaxTotal(taxAmountNew + taxAmount);
+                                taxDetailsList.get(taxDetailsList.indexOf(taxDetails1)).getItems().add(billingItem.getItemName());
+                                flag =1;
+                                break;
+                            }
+                        }
+                        if (flag==0) {
+                            refractedMethod1(taxDetailsList, billingItem, taxComponent, taxAmount, taxPercent);
+                        }
+                    }
                 });
 
             }
             else{
-				double taxCal = (billingItem.getAppliedTaxProfile().getTaxPercent() / 100) ;
-				Double taxAmount = Math.floor((billingItem.getPrice() * taxCal) * 100) / 100;
-                eachTax.put(billingItem.getAppliedTaxProfile().getTaxType(),taxAmount);
-				eachTax.replace("Total", Math.floor((eachTax.get("Total") + taxAmount) * 100) / 100);
+                int flagNew = 0;
+                double taxCal = (billingItem.getAppliedTaxProfile().getTaxPercent() / 100);
+                Double taxAmount = Math.floor((billingItem.getPrice() * taxCal) * 100) / 100;
+                if (taxDetailsList.isEmpty()) {
+                    refractedMethod2(taxDetailsList, billingItem, taxAmount);
+                }
+                else{
+                    for(TaxDetails taxDetails1:taxDetailsList){
+                        if(taxDetails1.getTaxType().equals(billingItem.getAppliedTaxProfile().getTaxType()) && taxDetails1.getTaxPercentage().equals(billingItem.getAppliedTaxProfile().getTaxPercent())){
+                            double taxAmountNew=taxDetailsList.get(taxDetailsList.indexOf(taxDetails1)).getTaxTotal();
+                            taxDetailsList.get(taxDetailsList.indexOf(taxDetails1)).setTaxTotal(taxAmountNew + taxAmount);
+                            taxDetailsList.get(taxDetailsList.indexOf(taxDetails1)).getItems().add(billingItem.getItemName());
+                            flagNew =1;
+                            break;
+                        }
+                    }
+                    if (flagNew==0) {
+                        refractedMethod2(taxDetailsList, billingItem, taxAmount);
+                    }
+                }
 			}
-			taxList.add(eachTax);
-            totalTaxes.put(billingItem.getItemName(), taxList);
-
-
         });
-		/*taxCharges.forEach((componentName, rateStringMap) -> {
-			rateStringMap.forEach((taxRate, itemNameList) -> {
-				String taxName = componentName + " " + taxRate + "%";
-				this.resetTotalComponentPrice();
-				itemNameList.forEach(orderedItemName -> {
-					this.setTotalComponentPrice(getTaxedItemPrice(orders, taxRate, orderedItemName));
-				});
-				totalTaxes.put(taxName, this.getTotalComponentPrice());
-			});
-		});*/
+        return taxDetailsList;
+    }
 
-        return totalTaxes;
+    private void refractedMethod1(List<TaxDetails> taxDetailsList, BillingDetailItem billingItem, TaxComponent taxComponent, double taxAmount, float taxPercent) {
+        List<String> itemList=new ArrayList<>();
+        itemList.add(billingItem.getItemName());
+        TaxDetails taxDetails = new TaxDetails();
+        taxDetails.setTaxTotal(taxAmount);
+        taxDetails.setItems(itemList);
+        taxDetails.setTaxType(taxComponent.getComponentName());
+        taxDetails.setTaxPercentage(taxPercent);
+        taxDetailsList.add(taxDetails);
+    }
+
+    private void refractedMethod2(List<TaxDetails> taxDetailsList, BillingDetailItem billingItem, Double taxAmount) {
+        List<String> itemList = new ArrayList<>();
+        itemList.add(billingItem.getItemName());
+        TaxDetails taxDetails = new TaxDetails();
+        taxDetails.setTaxTotal(taxAmount);
+        taxDetails.setItems(itemList);
+        taxDetails.setTaxType(billingItem.getAppliedTaxProfile().getTaxType());
+        taxDetails.setTaxPercentage(billingItem.getAppliedTaxProfile().getTaxPercent());
+        taxDetailsList.add(taxDetails);
     }
 
     /* Method to calculate all the payment summary */
     public BillingDetailResponse getOrderPaymentSummary(Long restId, Long tableId) {
-        //Reservation reservation = reservationRepository.getByCustomerId(new Gson().toJson(customerInfoDTO), restId);
         RestTable restTable = restTableRepository.findByRestaurantIdAndTableId(tableId, restId);
         List<Order> orders = orderRepository.getOrderByTable(tableId, restId);
         BillingDetailResponse billingDetailsResponse = new BillingDetailResponse();
@@ -208,12 +247,28 @@ public class PaymentServiceImpl implements PaymentService {
         });
         billingDetailsResponse.setBillingDetailItems(billingDetailsDtoList);
 
-        Map<String, Map<Double, List<String>>> taxCharges = getTaxChargesPerItem(billingDetailsResponse);
-        billingDetailsResponse.setTaxCharges(taxCharges);
-        billingDetailsResponse.setTotalCalculatedTaxed(this.findTotalTaxes(billingDetailsResponse, orders));
-        billingDetailsResponse.setPackagingCharge(restTable.getPackagingCharge());
-        billingDetailsResponse.setServiceCharge(restTable.getServiceCharge());
-        billingDetailsResponse.setOverallDiscount(restTable.getOverallDiscount());
+        //Map<String, Map<Double, List<String>>> taxCharges = getTaxChargesPerItem(billingDetailsResponse);
+        billingDetailsResponse.setTaxCharges(null);
+        billingDetailsResponse.setTotalCalculatedTaxed(findTotalTaxes(billingDetailsResponse, orders));
+        if(restTable.isPackagingChargeEnabled()){
+            billingDetailsResponse.setPackagingCharge(restTable.getPackagingCharge());
+        }
+        else{
+            billingDetailsResponse.setPackagingCharge(0);
+        }
+        if(restTable.isServiceChargeEnabled()){
+            billingDetailsResponse.setServiceCharge(restTable.getServiceCharge());
+        }
+        else{
+            billingDetailsResponse.setServiceCharge(0);
+        }
+        if(restTable.isOverAllDiscountEnabled()){
+            billingDetailsResponse.setOverallDiscount(restTable.getOverallDiscount());
+        }
+        else{
+            billingDetailsResponse.setOverallDiscount(0);
+        }
+
         return billingDetailsResponse;
 
     }

@@ -1,5 +1,6 @@
 package com.wityorestaurant.modules.payment.dto;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,17 +11,17 @@ public class BillingDetailResponse {
 
 	private Map<String, Map<Double, List<String>>> taxCharges = new HashMap<>();
 
-	private Map<String, List<Map<String,Double>>> totalCalculatedTaxed = new HashMap<>();
+	private List<TaxDetails> totalCalculatedTaxed = new ArrayList<>();
 
 	private float serviceCharge = 0.0F;
 	private float packagingCharge = 0.0F;
 	private float overallDiscount = 0.0F;
 
-	public Map<String, List<Map<String,Double>>> getTotalCalculatedTaxed() {
+	public List<TaxDetails> getTotalCalculatedTaxed() {
 		return totalCalculatedTaxed;
 	}
 
-	public void setTotalCalculatedTaxed(Map<String, List<Map<String,Double>>> totalCalculatedTaxed) {
+	public void setTotalCalculatedTaxed(List<TaxDetails> totalCalculatedTaxed) {
 		this.totalCalculatedTaxed = totalCalculatedTaxed;
 	}
 
