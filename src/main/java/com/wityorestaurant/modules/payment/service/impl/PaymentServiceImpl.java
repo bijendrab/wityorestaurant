@@ -249,7 +249,8 @@ public class PaymentServiceImpl implements PaymentService {
 
         //Map<String, Map<Double, List<String>>> taxCharges = getTaxChargesPerItem(billingDetailsResponse);
         billingDetailsResponse.setTaxCharges(null);
-        billingDetailsResponse.setTotalCalculatedTaxed(findTotalTaxes(billingDetailsResponse, orders));
+        List<TaxDetails> taxDetailsList = findTotalTaxes(billingDetailsResponse, orders);
+        billingDetailsResponse.setTotalCalculatedTaxed(taxDetailsList);
         if(restTable.isPackagingChargeEnabled()){
             billingDetailsResponse.setPackagingCharge(restTable.getPackagingCharge());
         }
@@ -269,8 +270,25 @@ public class PaymentServiceImpl implements PaymentService {
             billingDetailsResponse.setOverallDiscount(0);
         }
 
+        double totalPriceWO=getAllFoodItemCharges(billingDetailsResponse) + getAllTaxItemCharges(taxDetailsList);
+        double totalPrice = totalPriceWO +
+            totalPriceWO * (billingDetailsResponse.getServiceCharge()/100) +
+            totalPriceWO * (billingDetailsResponse.getPackagingCharge()/100)-
+            totalPriceWO * (billingDetailsResponse.getOverallDiscount()/100);
+
+        billingDetailsResponse.setTotalCost(totalPrice);
         return billingDetailsResponse;
 
+    }
+
+    public double getAllFoodItemCharges(BillingDetailResponse response){
+        double allFoodItemCost= response.getBillingDetailItems().stream().mapToDouble(BillingDetailItem::getPrice).sum();
+        return allFoodItemCost;
+    }
+
+    public double getAllTaxItemCharges(List<TaxDetails> taxDetails){
+        double taxTotal= taxDetails.stream().mapToDouble(TaxDetails::getTaxTotal).sum();
+        return taxTotal;
     }
 
 }

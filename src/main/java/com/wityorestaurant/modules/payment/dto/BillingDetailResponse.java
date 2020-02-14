@@ -17,6 +17,8 @@ public class BillingDetailResponse {
 	private float packagingCharge = 0.0F;
 	private float overallDiscount = 0.0F;
 
+	private double totalCost;
+
 	public List<TaxDetails> getTotalCalculatedTaxed() {
 		return totalCalculatedTaxed;
 	}
@@ -64,7 +66,12 @@ public class BillingDetailResponse {
 	public void setOverallDiscount(float overallDiscount) {
 		this.overallDiscount = overallDiscount;
 	}
-	
-	
 
+	public double getTotalCost() {
+		return totalCost;
+	}
+
+	public void setTotalCost(double totalCost) {
+		this.totalCost = totalCost;
+	}
 }
