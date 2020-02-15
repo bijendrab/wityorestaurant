@@ -9,6 +9,8 @@ import com.wityorestaurant.modules.config.model.RestTable;
 import com.wityorestaurant.modules.config.repository.RestTableRepository;
 import com.wityorestaurant.modules.customerdata.CustomerCartItems;
 import com.wityorestaurant.modules.menu.model.Product;
+import com.wityorestaurant.modules.menu.model.ProductQuantityOptions;
+import com.wityorestaurant.modules.menu.repository.MenuRepository;
 import com.wityorestaurant.modules.orderservice.model.Order;
 import com.wityorestaurant.modules.orderservice.model.OrderItem;
 import com.wityorestaurant.modules.orderservice.repository.OrderRepository;
@@ -31,6 +33,7 @@ public class PaymentServiceImpl implements PaymentService {
     private OrderRepository orderRepository;
     private ReservationRepository reservationRepository;
     private RestTableRepository restTableRepository;
+    private MenuRepository menuRepository;
     private double totalTaxedPrice = 0;
     private double totalComponentCost = 0.0;
 
@@ -38,10 +41,12 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Autowired
-    public PaymentServiceImpl(OrderRepository orderRepository, ReservationRepository reservationRepository, RestTableRepository restTableRepository) {
+    public PaymentServiceImpl(OrderRepository orderRepository, ReservationRepository reservationRepository,
+                              RestTableRepository restTableRepository, MenuRepository menuRepository) {
         this.orderRepository = orderRepository;
         this.reservationRepository = reservationRepository;
         this.restTableRepository = restTableRepository;
+        this.menuRepository = menuRepository;
     }
 
     private double getTotalPrice() {
@@ -64,16 +69,22 @@ public class PaymentServiceImpl implements PaymentService {
         return this.totalComponentCost;
     }
 
-    private BillingDetailItem orderToBDto(OrderItem orderItem) {
+    private BillingDetailItem orderToBDto(OrderItem orderItem,Long restId) {
         CustomerCartItems cartItem = new Gson().fromJson(orderItem.getCustomerCartItems(), CustomerCartItems.class);
-        Product product = new Gson().fromJson(cartItem.getProductJson(), Product.class);
+        Product productJson = new Gson().fromJson(cartItem.getProductJson(), Product.class);
+        Product product = menuRepository.findByItemAndRestId(productJson.getProductId(),restId);
         TaxProfile taxProfile = product.getAppliedTax();
         BillingDetailItem billingDetailsDto = new BillingDetailItem();
         billingDetailsDto.setItemName(orderItem.getItemName());
         billingDetailsDto.setOrderId(orderItem.getOrder().getOrderId());
         billingDetailsDto.setQuantity(orderItem.getQuantity());
-        billingDetailsDto.setPrice(cartItem.getPrice());
-        billingDetailsDto.setValue(orderItem.getPrice());
+        for(ProductQuantityOptions pq:product.getProductQuantityOptions()){
+            if(pq.getQuantityOption().equals(cartItem.getQuantityOption())){
+                double itemCost = cartItem.getQuantity()*pq.getPrice();
+                billingDetailsDto.setPrice(itemCost);
+                billingDetailsDto.setValue(itemCost);
+            }
+        }
         billingDetailsDto.setAppliedTaxProfile(taxProfile);
         return billingDetailsDto;
     }
@@ -242,7 +253,7 @@ public class PaymentServiceImpl implements PaymentService {
         List<BillingDetailItem> billingDetailsDtoList = new ArrayList<>();
         orders.forEach(order -> {
             order.getMenuItemOrders().forEach(orderItem -> {
-                billingDetailsDtoList.add(orderToBDto(orderItem));
+                billingDetailsDtoList.add(orderToBDto(orderItem,restId));
             });
         });
         billingDetailsResponse.setBillingDetailItems(billingDetailsDtoList);
