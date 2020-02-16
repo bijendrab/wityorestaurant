@@ -21,6 +21,7 @@ import com.wityorestaurant.modules.payment.service.PaymentService;
 import com.wityorestaurant.modules.reservation.repository.ReservationRepository;
 import com.wityorestaurant.modules.tax.model.TaxComponent;
 import com.wityorestaurant.modules.tax.model.TaxProfile;
+import com.wityorestaurant.modules.tax.repository.TaxRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +35,7 @@ public class PaymentServiceImpl implements PaymentService {
     private ReservationRepository reservationRepository;
     private RestTableRepository restTableRepository;
     private MenuRepository menuRepository;
+    private TaxRepository taxRepository;
     private double totalTaxedPrice = 0;
     private double totalComponentCost = 0.0;
 
@@ -42,11 +44,12 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Autowired
     public PaymentServiceImpl(OrderRepository orderRepository, ReservationRepository reservationRepository,
-                              RestTableRepository restTableRepository, MenuRepository menuRepository) {
+                              RestTableRepository restTableRepository, MenuRepository menuRepository, TaxRepository taxRepository) {
         this.orderRepository = orderRepository;
         this.reservationRepository = reservationRepository;
         this.restTableRepository = restTableRepository;
         this.menuRepository = menuRepository;
+        this.taxRepository = taxRepository;
     }
 
     private double getTotalPrice() {
@@ -263,13 +266,19 @@ public class PaymentServiceImpl implements PaymentService {
         List<TaxDetails> taxDetailsList = findTotalTaxes(billingDetailsResponse, orders);
         billingDetailsResponse.setTotalCalculatedTaxed(taxDetailsList);
         if(restTable.isPackagingChargeEnabled()){
+
             billingDetailsResponse.setPackagingCharge(restTable.getPackagingCharge());
         }
         else{
             billingDetailsResponse.setPackagingCharge(0);
         }
         if(restTable.isServiceChargeEnabled()){
-            billingDetailsResponse.setServiceCharge(restTable.getServiceCharge());
+            TaxProfile taxProfile = taxRepository.findTaxProfileByRestIdAndTaxType(restId, "SCharge");
+            if (taxProfile!=null)
+                billingDetailsResponse.setServiceCharge(taxProfile.getTaxPercent());
+            else{
+                billingDetailsResponse.setServiceCharge(0);
+            }
         }
         else{
             billingDetailsResponse.setServiceCharge(0);
@@ -284,7 +293,7 @@ public class PaymentServiceImpl implements PaymentService {
         double totalPriceWO=getAllFoodItemCharges(billingDetailsResponse) + getAllTaxItemCharges(taxDetailsList);
         double totalPrice = totalPriceWO +
             totalPriceWO * (billingDetailsResponse.getServiceCharge()/100) +
-            totalPriceWO * (billingDetailsResponse.getPackagingCharge()/100)-
+            totalPriceWO * (billingDetailsResponse.getPackagingCharge())-
             totalPriceWO * (billingDetailsResponse.getOverallDiscount()/100);
 
         billingDetailsResponse.setTotalCost(totalPrice);
