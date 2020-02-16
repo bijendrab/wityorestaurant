@@ -293,7 +293,7 @@ public class PaymentServiceImpl implements PaymentService {
         double totalPriceWO=getAllFoodItemCharges(billingDetailsResponse) + getAllTaxItemCharges(taxDetailsList);
         double totalPrice = totalPriceWO +
             totalPriceWO * (billingDetailsResponse.getServiceCharge()/100) +
-            totalPriceWO * (billingDetailsResponse.getPackagingCharge())-
+            billingDetailsResponse.getPackagingCharge()-
             totalPriceWO * (billingDetailsResponse.getOverallDiscount()/100);
 
         billingDetailsResponse.setTotalCost(totalPrice);
