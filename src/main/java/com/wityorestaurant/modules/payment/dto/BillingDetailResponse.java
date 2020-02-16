@@ -13,9 +13,11 @@ public class BillingDetailResponse {
 
 	private List<TaxDetails> totalCalculatedTaxed = new ArrayList<>();
 
-	private float serviceCharge = 0.0F;
+	private double serviceCharge = 0.0F;
+	private float serviceChargePercent;
 	private float packagingCharge = 0.0F;
-	private float overallDiscount = 0.0F;
+	private double overallDiscount = 0.0F;
+	private float overallDiscountPercent;
 
 	private double totalCost;
 
@@ -43,11 +45,11 @@ public class BillingDetailResponse {
 		this.taxCharges = taxCharges;
 	}
 
-	public float getServiceCharge() {
+	public double getServiceCharge() {
 		return serviceCharge;
 	}
 
-	public void setServiceCharge(float serviceCharge) {
+	public void setServiceCharge(double serviceCharge) {
 		this.serviceCharge = serviceCharge;
 	}
 
@@ -59,12 +61,29 @@ public class BillingDetailResponse {
 		this.packagingCharge = packagingCharge;
 	}
 
-	public float getOverallDiscount() {
+	public double getOverallDiscount() {
 		return overallDiscount;
 	}
 
-	public void setOverallDiscount(float overallDiscount) {
+	public void setOverallDiscount(double overallDiscount) {
 		this.overallDiscount = overallDiscount;
+	}
+
+	public float getServiceChargePercent() {
+		return serviceChargePercent;
+	}
+
+	public void setServiceChargePercent(float serviceChargePercent) {
+		this.serviceChargePercent = serviceChargePercent;
+	}
+
+
+	public float getOverallDiscountPercent() {
+		return overallDiscountPercent;
+	}
+
+	public void setOverallDiscountPercent(float overallDiscountPercent) {
+		this.overallDiscountPercent = overallDiscountPercent;
 	}
 
 	public double getTotalCost() {

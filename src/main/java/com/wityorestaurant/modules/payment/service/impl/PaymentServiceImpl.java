@@ -1,5 +1,8 @@
 package com.wityorestaurant.modules.payment.service.impl;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,6 +41,7 @@ public class PaymentServiceImpl implements PaymentService {
     private TaxRepository taxRepository;
     private double totalTaxedPrice = 0;
     private double totalComponentCost = 0.0;
+    private static DecimalFormat df = new DecimalFormat("0.00");
 
     public PaymentServiceImpl() {
     }
@@ -79,10 +83,11 @@ public class PaymentServiceImpl implements PaymentService {
         TaxProfile taxProfile = product.getAppliedTax();
         BillingDetailItem billingDetailsDto = new BillingDetailItem();
         billingDetailsDto.setItemName(orderItem.getItemName());
+        billingDetailsDto.setQuantityOption(orderItem.getQuantityOption());
         billingDetailsDto.setOrderId(orderItem.getOrder().getOrderId());
         billingDetailsDto.setQuantity(orderItem.getQuantity());
         for(ProductQuantityOptions pq:product.getProductQuantityOptions()){
-            if(pq.getQuantityOption().equals(cartItem.getQuantityOption())){
+            if(pq.getQuantityOption().equals(orderItem.getQuantityOption())){
                 double itemCost = cartItem.getQuantity()*pq.getPrice();
                 billingDetailsDto.setPrice(pq.getPrice());
                 billingDetailsDto.setValue(itemCost);
@@ -176,25 +181,23 @@ public class PaymentServiceImpl implements PaymentService {
             if (!billingItem.getAppliedTaxProfile().getTaxComponents().isEmpty()) {
                 billingItem.getAppliedTaxProfile().getTaxComponents().forEach(taxComponent -> {
                     double taxCal = (billingItem.getAppliedTaxProfile().getTaxPercent() / 100) * (taxComponent.getWeightage() / 100);
-                    double taxAmount = Math.floor((billingItem.getPrice() * taxCal) * 100) / 100;
+                    double taxAmount = ((billingItem.getPrice() * taxCal) * 100 / 100);
+                    BigDecimal taxDouble = new BigDecimal(taxAmount).setScale(2, RoundingMode.HALF_UP);
                     float taxPercent = billingItem.getAppliedTaxProfile().getTaxPercent()*taxComponent.getWeightage()/100;
                     int flag = 0;
                     if (taxDetailsList.isEmpty()){
-                        refractedMethod1(taxDetailsList, billingItem, taxComponent, taxAmount, taxPercent);
+                        refractedMethod1(taxDetailsList, billingItem, taxComponent, taxDouble.doubleValue(), taxPercent);
                     }
                     else{
                         for(TaxDetails taxDetails1:taxDetailsList){
                             if(taxDetails1.getTaxType().equals(taxComponent.getComponentName())
                                 && taxDetails1.getTaxPercentage().equals(taxPercent)){
-                                double taxAmountNew=taxDetailsList.get(taxDetailsList.indexOf(taxDetails1)).getTaxTotal();
-                                taxDetailsList.get(taxDetailsList.indexOf(taxDetails1)).setTaxTotal(taxAmountNew + taxAmount);
-                                taxDetailsList.get(taxDetailsList.indexOf(taxDetails1)).getItems().add(billingItem.getItemName());
-                                flag =1;
+                                flag = getTaxFlag(taxDetailsList, billingItem, taxDouble.doubleValue(), taxDetails1);
                                 break;
                             }
                         }
                         if (flag==0) {
-                            refractedMethod1(taxDetailsList, billingItem, taxComponent, taxAmount, taxPercent);
+                            refractedMethod1(taxDetailsList, billingItem, taxComponent, taxDouble.doubleValue(), taxPercent);
                         }
                     }
                 });
@@ -203,27 +206,33 @@ public class PaymentServiceImpl implements PaymentService {
             else{
                 int flagNew = 0;
                 double taxCal = (billingItem.getAppliedTaxProfile().getTaxPercent() / 100);
-                Double taxAmount = Math.floor((billingItem.getPrice() * taxCal) * 100) / 100;
+                double taxAmount = (billingItem.getPrice() * taxCal) * 100 / 100;
+                BigDecimal taxDouble = new BigDecimal(taxAmount).setScale(2, RoundingMode.HALF_UP);
                 if (taxDetailsList.isEmpty()) {
-                    refractedMethod2(taxDetailsList, billingItem, taxAmount);
+                    refractedMethod2(taxDetailsList, billingItem, taxDouble.doubleValue());
                 }
                 else{
-                    for(TaxDetails taxDetails1:taxDetailsList){
-                        if(taxDetails1.getTaxType().equals(billingItem.getAppliedTaxProfile().getTaxType()) && taxDetails1.getTaxPercentage().equals(billingItem.getAppliedTaxProfile().getTaxPercent())){
-                            double taxAmountNew=taxDetailsList.get(taxDetailsList.indexOf(taxDetails1)).getTaxTotal();
-                            taxDetailsList.get(taxDetailsList.indexOf(taxDetails1)).setTaxTotal(taxAmountNew + taxAmount);
-                            taxDetailsList.get(taxDetailsList.indexOf(taxDetails1)).getItems().add(billingItem.getItemName());
-                            flagNew =1;
-                            break;
+                    for(TaxDetails taxDetails2:taxDetailsList){
+                        if(taxDetails2.getTaxType().equals(billingItem.getAppliedTaxProfile().getTaxType()) && taxDetails2.getTaxPercentage().equals(billingItem.getAppliedTaxProfile().getTaxPercent())){
+                            flagNew = getTaxFlag(taxDetailsList, billingItem, taxDouble.doubleValue(), taxDetails2);
                         }
                     }
                     if (flagNew==0) {
-                        refractedMethod2(taxDetailsList, billingItem, taxAmount);
+                        refractedMethod2(taxDetailsList, billingItem, taxDouble.doubleValue());
                     }
                 }
 			}
         });
         return taxDetailsList;
+    }
+
+    private int getTaxFlag(List<TaxDetails> taxDetailsList, BillingDetailItem billingItem, double taxAmount, TaxDetails taxDetails) {
+        int flag;
+        double taxAmountNew=taxDetailsList.get(taxDetailsList.indexOf(taxDetails)).getTaxTotal();
+        taxDetailsList.get(taxDetailsList.indexOf(taxDetails)).setTaxTotal(taxAmountNew + taxAmount);
+        taxDetailsList.get(taxDetailsList.indexOf(taxDetails)).getItems().add(billingItem.getItemName());
+        flag =1;
+        return flag;
     }
 
     private void refractedMethod1(List<TaxDetails> taxDetailsList, BillingDetailItem billingItem, TaxComponent taxComponent, double taxAmount, float taxPercent) {
@@ -265,8 +274,9 @@ public class PaymentServiceImpl implements PaymentService {
         billingDetailsResponse.setTaxCharges(null);
         List<TaxDetails> taxDetailsList = findTotalTaxes(billingDetailsResponse, orders);
         billingDetailsResponse.setTotalCalculatedTaxed(taxDetailsList);
+        double totalPriceWithoutTax=getAllFoodItemCharges(billingDetailsResponse);
+        double totalPriceWithTax = getAllTaxItemCharges(taxDetailsList);
         if(restTable.isPackagingChargeEnabled()){
-
             billingDetailsResponse.setPackagingCharge(restTable.getPackagingCharge());
         }
         else{
@@ -274,29 +284,39 @@ public class PaymentServiceImpl implements PaymentService {
         }
         if(restTable.isServiceChargeEnabled()){
             TaxProfile taxProfile = taxRepository.findTaxProfileByRestIdAndTaxType(restId, "SCharge");
-            if (taxProfile!=null)
-                billingDetailsResponse.setServiceCharge(taxProfile.getTaxPercent());
+            if (taxProfile!=null) {
+                billingDetailsResponse.setServiceChargePercent(taxProfile.getTaxPercent());
+                double serviceCharge = totalPriceWithoutTax * taxProfile.getTaxPercent()/100;
+                BigDecimal totalServiceCharge = new BigDecimal(serviceCharge).setScale(2, RoundingMode.HALF_UP);
+                billingDetailsResponse.setServiceCharge(totalServiceCharge.doubleValue());
+            }
             else{
+                billingDetailsResponse.setServiceChargePercent(0);
                 billingDetailsResponse.setServiceCharge(0);
             }
         }
         else{
+            billingDetailsResponse.setServiceChargePercent(0);
             billingDetailsResponse.setServiceCharge(0);
         }
         if(restTable.isOverAllDiscountEnabled()){
-            billingDetailsResponse.setOverallDiscount(restTable.getOverallDiscount());
+            billingDetailsResponse.setOverallDiscountPercent(restTable.getOverallDiscount());
+            double overAllDiscount = totalPriceWithoutTax * restTable.getOverallDiscount()/100;
+            BigDecimal totalOverAllDiscount = new BigDecimal(overAllDiscount).setScale(2, RoundingMode.HALF_UP);
+            billingDetailsResponse.setOverallDiscount(totalOverAllDiscount.doubleValue());
         }
         else{
+            billingDetailsResponse.setOverallDiscountPercent(0);
             billingDetailsResponse.setOverallDiscount(0);
         }
 
-        double totalPriceWO=getAllFoodItemCharges(billingDetailsResponse) + getAllTaxItemCharges(taxDetailsList);
-        double totalPrice = totalPriceWO +
-            totalPriceWO * (billingDetailsResponse.getServiceCharge()/100) +
+        double totalPrice = totalPriceWithoutTax + totalPriceWithTax +
+            billingDetailsResponse.getServiceCharge() +
             billingDetailsResponse.getPackagingCharge()-
-            totalPriceWO * (billingDetailsResponse.getOverallDiscount()/100);
+            billingDetailsResponse.getOverallDiscount();
 
-        billingDetailsResponse.setTotalCost(totalPrice);
+        BigDecimal totalDouble = new BigDecimal(totalPrice).setScale(2, RoundingMode.HALF_UP);
+        billingDetailsResponse.setTotalCost(totalDouble.doubleValue());
         return billingDetailsResponse;
 
     }

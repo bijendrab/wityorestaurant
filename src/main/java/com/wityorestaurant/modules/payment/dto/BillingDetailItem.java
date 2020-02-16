@@ -7,6 +7,7 @@ public class BillingDetailItem {
 	private Long orderId;
 	private String itemName;
 	private Integer quantity;
+	private String quantityOption;
 	private Double price;
 	private Double value;
 	private TaxProfile appliedTaxProfile;
@@ -33,6 +34,14 @@ public class BillingDetailItem {
 
 	public void setQuantity(Integer quantity) {
 		this.quantity = quantity;
+	}
+
+	public String getQuantityOption() {
+		return quantityOption;
+	}
+
+	public void setQuantityOption(String quantityOption) {
+		this.quantityOption = quantityOption;
 	}
 
 	public Double getPrice() {
