@@ -34,12 +34,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class PaymentServiceImpl implements PaymentService {
 
+    public static final int PERCENT = 100;
+    public static final int ZERO = 0;
     private OrderRepository orderRepository;
-    private ReservationRepository reservationRepository;
     private RestTableRepository restTableRepository;
     private MenuRepository menuRepository;
     private TaxRepository taxRepository;
-    private double totalTaxedPrice = 0;
+    private double totalTaxedPrice = ZERO;
     private double totalComponentCost = 0.0;
     private static DecimalFormat df = new DecimalFormat("0.00");
 
@@ -47,10 +48,9 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Autowired
-    public PaymentServiceImpl(OrderRepository orderRepository, ReservationRepository reservationRepository,
-                              RestTableRepository restTableRepository, MenuRepository menuRepository, TaxRepository taxRepository) {
+    public PaymentServiceImpl(OrderRepository orderRepository, RestTableRepository restTableRepository,
+                              MenuRepository menuRepository, TaxRepository taxRepository) {
         this.orderRepository = orderRepository;
-        this.reservationRepository = reservationRepository;
         this.restTableRepository = restTableRepository;
         this.menuRepository = menuRepository;
         this.taxRepository = taxRepository;
@@ -103,9 +103,9 @@ public class PaymentServiceImpl implements PaymentService {
         response.getBillingDetailItems().forEach(billingItem -> {
 
             float taxPercent = billingItem.getAppliedTaxProfile().getTaxPercent();
-            if (billingItem.getAppliedTaxProfile().getTaxComponents().size() == 0) {
+            if (billingItem.getAppliedTaxProfile().getTaxComponents().size() == ZERO) {
 
-                double taxPercentWeightageCalculated = taxPercent / 100;
+                double taxPercentWeightageCalculated = taxPercent / PERCENT;
                 if (taxMap.containsKey(billingItem.getAppliedTaxProfile().getTaxProfileName())) {
                     if (taxMap.get(billingItem.getAppliedTaxProfile().getTaxProfileName())
                         .containsKey(taxPercentWeightageCalculated)) {
@@ -122,7 +122,7 @@ public class PaymentServiceImpl implements PaymentService {
                 }
             } else {
                 billingItem.getAppliedTaxProfile().getTaxComponents().forEach(taxComponent -> {
-                    double taxPercentWeightageCalculated = taxPercent * (taxComponent.getWeightage() / 100);
+                    double taxPercentWeightageCalculated = taxPercent * (taxComponent.getWeightage() / PERCENT);
                     String taxComponentName = taxComponent.getComponentName();
                     // Check if component name exists in the map
                     if (taxMap.containsKey(taxComponentName)) {
@@ -156,14 +156,14 @@ public class PaymentServiceImpl implements PaymentService {
 
     private double getTaxedItemPrice(List<Order> orders, double taxRate, String orderItemName) {
 
-        this.setTotalTaxedPrice(0);
-        for (int i = 0; i < orders.size(); i++) {
+        this.setTotalTaxedPrice(ZERO);
+        for (int i = ZERO; i < orders.size(); i++) {
             orders.get(i).getMenuItemOrders().forEach(orderItem -> {
                 if (orderItem.getItemName().equals(orderItemName)) {
                     this.setTotalTaxedPrice((orderItem.getPrice() * taxRate));
                 }
             });
-            if (getTotalPrice() > 0) {
+            if (getTotalPrice() > ZERO) {
                 break;
             }
         }
@@ -180,11 +180,11 @@ public class PaymentServiceImpl implements PaymentService {
         response.getBillingDetailItems().forEach(billingItem -> {
             if (!billingItem.getAppliedTaxProfile().getTaxComponents().isEmpty()) {
                 billingItem.getAppliedTaxProfile().getTaxComponents().forEach(taxComponent -> {
-                    double taxCal = (billingItem.getAppliedTaxProfile().getTaxPercent() / 100) * (taxComponent.getWeightage() / 100);
-                    double taxAmount = ((billingItem.getPrice() * taxCal) * 100 / 100);
-                    BigDecimal taxDouble = new BigDecimal(taxAmount).setScale(2, RoundingMode.HALF_UP);
-                    float taxPercent = billingItem.getAppliedTaxProfile().getTaxPercent()*taxComponent.getWeightage()/100;
-                    int flag = 0;
+                    double taxCal = (billingItem.getAppliedTaxProfile().getTaxPercent() / PERCENT) * (taxComponent.getWeightage() / PERCENT);
+                    double taxAmount = ((billingItem.getPrice() * taxCal) * PERCENT / PERCENT);
+                    BigDecimal taxDouble = getBigDecimal(taxAmount);
+                    float taxPercent = billingItem.getAppliedTaxProfile().getTaxPercent()*taxComponent.getWeightage()/ PERCENT;
+                    int flag = ZERO;
                     if (taxDetailsList.isEmpty()){
                         refractedMethod1(taxDetailsList, billingItem, taxComponent, taxDouble.doubleValue(), taxPercent);
                     }
@@ -196,7 +196,7 @@ public class PaymentServiceImpl implements PaymentService {
                                 break;
                             }
                         }
-                        if (flag==0) {
+                        if (flag== ZERO) {
                             refractedMethod1(taxDetailsList, billingItem, taxComponent, taxDouble.doubleValue(), taxPercent);
                         }
                     }
@@ -204,10 +204,10 @@ public class PaymentServiceImpl implements PaymentService {
 
             }
             else{
-                int flagNew = 0;
-                double taxCal = (billingItem.getAppliedTaxProfile().getTaxPercent() / 100);
-                double taxAmount = (billingItem.getPrice() * taxCal) * 100 / 100;
-                BigDecimal taxDouble = new BigDecimal(taxAmount).setScale(2, RoundingMode.HALF_UP);
+                int flagNew = ZERO;
+                double taxCal = (billingItem.getAppliedTaxProfile().getTaxPercent() / PERCENT);
+                double taxAmount = (billingItem.getPrice() * taxCal) * PERCENT / PERCENT;
+                BigDecimal taxDouble = getBigDecimal(taxAmount);
                 if (taxDetailsList.isEmpty()) {
                     refractedMethod2(taxDetailsList, billingItem, taxDouble.doubleValue());
                 }
@@ -217,7 +217,7 @@ public class PaymentServiceImpl implements PaymentService {
                             flagNew = getTaxFlag(taxDetailsList, billingItem, taxDouble.doubleValue(), taxDetails2);
                         }
                     }
-                    if (flagNew==0) {
+                    if (flagNew== ZERO) {
                         refractedMethod2(taxDetailsList, billingItem, taxDouble.doubleValue());
                     }
                 }
@@ -280,34 +280,34 @@ public class PaymentServiceImpl implements PaymentService {
             billingDetailsResponse.setPackagingCharge(restTable.getPackagingCharge());
         }
         else{
-            billingDetailsResponse.setPackagingCharge(0);
+            billingDetailsResponse.setPackagingCharge(ZERO);
         }
         if(restTable.isServiceChargeEnabled()){
             TaxProfile taxProfile = taxRepository.findTaxProfileByRestIdAndTaxType(restId, "SCharge");
             if (taxProfile!=null) {
                 billingDetailsResponse.setServiceChargePercent(taxProfile.getTaxPercent());
-                double serviceCharge = totalPriceWithoutTax * taxProfile.getTaxPercent()/100;
-                BigDecimal totalServiceCharge = new BigDecimal(serviceCharge).setScale(2, RoundingMode.HALF_UP);
+                double serviceCharge = totalPriceWithoutTax * taxProfile.getTaxPercent()/ PERCENT;
+                BigDecimal totalServiceCharge = getBigDecimal(serviceCharge);
                 billingDetailsResponse.setServiceCharge(totalServiceCharge.doubleValue());
             }
             else{
-                billingDetailsResponse.setServiceChargePercent(0);
-                billingDetailsResponse.setServiceCharge(0);
+                billingDetailsResponse.setServiceChargePercent(ZERO);
+                billingDetailsResponse.setServiceCharge(ZERO);
             }
         }
         else{
-            billingDetailsResponse.setServiceChargePercent(0);
-            billingDetailsResponse.setServiceCharge(0);
+            billingDetailsResponse.setServiceChargePercent(ZERO);
+            billingDetailsResponse.setServiceCharge(ZERO);
         }
         if(restTable.isOverAllDiscountEnabled()){
             billingDetailsResponse.setOverallDiscountPercent(restTable.getOverallDiscount());
-            double overAllDiscount = totalPriceWithoutTax * restTable.getOverallDiscount()/100;
-            BigDecimal totalOverAllDiscount = new BigDecimal(overAllDiscount).setScale(2, RoundingMode.HALF_UP);
+            double overAllDiscount = totalPriceWithoutTax * restTable.getOverallDiscount()/ PERCENT;
+            BigDecimal totalOverAllDiscount = getBigDecimal(overAllDiscount);
             billingDetailsResponse.setOverallDiscount(totalOverAllDiscount.doubleValue());
         }
         else{
-            billingDetailsResponse.setOverallDiscountPercent(0);
-            billingDetailsResponse.setOverallDiscount(0);
+            billingDetailsResponse.setOverallDiscountPercent(ZERO);
+            billingDetailsResponse.setOverallDiscount(ZERO);
         }
 
         double totalPrice = totalPriceWithoutTax + totalPriceWithTax +
@@ -315,10 +315,14 @@ public class PaymentServiceImpl implements PaymentService {
             billingDetailsResponse.getPackagingCharge()-
             billingDetailsResponse.getOverallDiscount();
 
-        BigDecimal totalDouble = new BigDecimal(totalPrice).setScale(2, RoundingMode.HALF_UP);
+        BigDecimal totalDouble = getBigDecimal(totalPrice);
         billingDetailsResponse.setTotalCost(totalDouble.doubleValue());
         return billingDetailsResponse;
 
+    }
+
+    private BigDecimal getBigDecimal(double inputPrice) {
+        return new BigDecimal(inputPrice).setScale(2, RoundingMode.HALF_UP);
     }
 
     public double getAllFoodItemCharges(BillingDetailResponse response){
