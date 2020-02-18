@@ -188,7 +188,7 @@ public class PaymentServiceImpl implements PaymentService {
             if (!billingItem.getAppliedTaxProfile().getTaxComponents().isEmpty()) {
                 billingItem.getAppliedTaxProfile().getTaxComponents().forEach(taxComponent -> {
                     double taxCal = (billingItem.getAppliedTaxProfile().getTaxPercent() / PERCENT) * (taxComponent.getWeightage() / PERCENT);
-                    double taxAmount = ((billingItem.getPrice() * taxCal) * PERCENT / PERCENT);
+                    double taxAmount = ((billingItem.getValue() * taxCal) * PERCENT / PERCENT);
                     BigDecimal taxDouble = getBigDecimal(taxAmount);
                     float taxPercent = billingItem.getAppliedTaxProfile().getTaxPercent()*taxComponent.getWeightage()/ PERCENT;
                     int flag = ZERO;
@@ -213,7 +213,7 @@ public class PaymentServiceImpl implements PaymentService {
             else{
                 int flagNew = ZERO;
                 double taxCal = (billingItem.getAppliedTaxProfile().getTaxPercent() / PERCENT);
-                double taxAmount = (billingItem.getPrice() * taxCal) * PERCENT / PERCENT;
+                double taxAmount = (billingItem.getValue() * taxCal) * PERCENT / PERCENT;
                 BigDecimal taxDouble = getBigDecimal(taxAmount);
                 if (taxDetailsList.isEmpty()) {
                     refractedMethod2(taxDetailsList, billingItem, taxDouble.doubleValue());
