@@ -20,9 +20,9 @@ public class BillingDetailResponse {
 	private float packagingCharge = 0.0F;
 	private double overallDiscount = 0.0F;
 	private float overallDiscountPercent;
-	private double totalCostWithoutTax;
-	private double totalCostWithTax;
-	private double totalCostWithDiscount;
+	private double totalCostWithoutTaxAndDiscount;
+	private double totalTax;
+	private double totalDiscount;
 	private double totalCost;
 
 
@@ -107,28 +107,27 @@ public class BillingDetailResponse {
 		this.totalCalculatedDiscount = totalCalculatedDiscount;
 	}
 
-
-	public double getTotalCostWithoutTax() {
-		return totalCostWithoutTax;
+	public double getTotalCostWithoutTaxAndDiscount() {
+		return totalCostWithoutTaxAndDiscount;
 	}
 
-	public void setTotalCostWithoutTax(double totalCostWithoutTax) {
-		this.totalCostWithoutTax = totalCostWithoutTax;
+	public void setTotalCostWithoutTaxAndDiscount(double totalCostWithoutTaxAndDiscount) {
+		this.totalCostWithoutTaxAndDiscount = totalCostWithoutTaxAndDiscount;
 	}
 
-	public double getTotalCostWithTax() {
-		return totalCostWithTax;
+	public double getTotalTax() {
+		return totalTax;
 	}
 
-	public void setTotalCostWithTax(double totalCostWithTax) {
-		this.totalCostWithTax = totalCostWithTax;
+	public void setTotalTax(double totalTax) {
+		this.totalTax = totalTax;
 	}
 
-	public double getTotalCostWithDiscount() {
-		return totalCostWithDiscount;
+	public double getTotalDiscount() {
+		return totalDiscount;
 	}
 
-	public void setTotalCostWithDiscount(double totalCostWithDiscount) {
-		this.totalCostWithDiscount = totalCostWithDiscount;
+	public void setTotalDiscount(double totalDiscount) {
+		this.totalDiscount = totalDiscount;
 	}
 }

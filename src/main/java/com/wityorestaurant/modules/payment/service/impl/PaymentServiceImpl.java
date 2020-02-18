@@ -297,9 +297,9 @@ public class PaymentServiceImpl implements PaymentService {
         List<DiscountDetails> discountDetailsList = findTotalDiscount(billingDetailsResponse,restId);
         billingDetailsResponse.setTotalCalculatedDiscount(discountDetailsList);
         billingDetailsResponse.setTotalCalculatedTaxed(taxDetailsList);
-        double totalPriceWithoutTax=getAllFoodItemCharges(billingDetailsResponse);
-        double totalPriceWithTax = getAllTaxItemCharges(taxDetailsList);
-        double totalPriceWithDiscount= getAllDiscountItemCharges(discountDetailsList);
+        double totalPriceWithoutTaxAndDiscount=getAllFoodItemCharges(billingDetailsResponse);
+        double totalTax = getAllTaxItemCharges(taxDetailsList);
+        double totalDiscount= getAllDiscountItemCharges(discountDetailsList);
         if(restTable.isPackagingChargeEnabled()){
             billingDetailsResponse.setPackagingCharge(restTable.getPackagingCharge());
         }
@@ -310,7 +310,7 @@ public class PaymentServiceImpl implements PaymentService {
             TaxProfile taxProfile = taxRepository.findTaxProfileByRestIdAndTaxType(restId, "SCharge");
             if (taxProfile!=null) {
                 billingDetailsResponse.setServiceChargePercent(taxProfile.getTaxPercent());
-                double serviceCharge = totalPriceWithoutTax * taxProfile.getTaxPercent()/ PERCENT;
+                double serviceCharge = totalPriceWithoutTaxAndDiscount * taxProfile.getTaxPercent()/ PERCENT;
                 BigDecimal totalServiceCharge = getBigDecimal(serviceCharge);
                 billingDetailsResponse.setServiceCharge(totalServiceCharge.doubleValue());
             }
@@ -325,7 +325,7 @@ public class PaymentServiceImpl implements PaymentService {
         }
         if(restTable.isOverAllDiscountEnabled()){
             billingDetailsResponse.setOverallDiscountPercent(restTable.getOverallDiscount());
-            double overAllDiscount = totalPriceWithoutTax * restTable.getOverallDiscount()/ PERCENT;
+            double overAllDiscount = totalPriceWithoutTaxAndDiscount * restTable.getOverallDiscount()/ PERCENT;
             BigDecimal totalOverAllDiscount = getBigDecimal(overAllDiscount);
             billingDetailsResponse.setOverallDiscount(totalOverAllDiscount.doubleValue());
         }
@@ -334,14 +334,14 @@ public class PaymentServiceImpl implements PaymentService {
             billingDetailsResponse.setOverallDiscount(ZERO);
         }
 
-        double totalPrice = (totalPriceWithoutTax + totalPriceWithTax - totalPriceWithDiscount) +
+        double totalPrice = (totalPriceWithoutTaxAndDiscount + totalTax - totalDiscount) +
             billingDetailsResponse.getServiceCharge() +
             billingDetailsResponse.getPackagingCharge()-
             billingDetailsResponse.getOverallDiscount();
 
-        billingDetailsResponse.setTotalCostWithoutTax(getBigDecimal(totalPriceWithoutTax).doubleValue());
-        billingDetailsResponse.setTotalCostWithDiscount(getBigDecimal(totalPriceWithDiscount).doubleValue());
-        billingDetailsResponse.setTotalCostWithTax(getBigDecimal(totalPriceWithTax).doubleValue());
+        billingDetailsResponse.setTotalCostWithoutTaxAndDiscount(getBigDecimal(totalPriceWithoutTaxAndDiscount).doubleValue());
+        billingDetailsResponse.setTotalDiscount(getBigDecimal(totalDiscount).doubleValue());
+        billingDetailsResponse.setTotalTax(getBigDecimal(totalTax).doubleValue());
         billingDetailsResponse.setTotalCost(getBigDecimal(totalPrice).doubleValue());
         return billingDetailsResponse;
 
