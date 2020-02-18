@@ -352,7 +352,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     public double getAllFoodItemCharges(BillingDetailResponse response){
-        double allFoodItemCost= response.getBillingDetailItems().stream().mapToDouble(BillingDetailItem::getPrice).sum();
+        double allFoodItemCost= response.getBillingDetailItems().stream().mapToDouble(BillingDetailItem::getValue).sum();
         return allFoodItemCost;
     }
 
