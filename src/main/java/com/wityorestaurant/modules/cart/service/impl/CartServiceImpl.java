@@ -59,7 +59,7 @@ public class CartServiceImpl implements CartService {
             RestaurantCartItem tempCartItem = null;
             for (RestaurantCartItem cartItem : userCartItems) {
                 Product p = new Gson().fromJson(cartItem.getProductJson(), Product.class);
-                if (productId.equalsIgnoreCase(p.getProductId())) {
+                if (productId.equalsIgnoreCase(p.getProductId()) && cartItem.getQuantityOption().equals(quantityOption)) {
                     tempCartItem = cartItem;
                     break;
                 }
@@ -68,17 +68,15 @@ public class CartServiceImpl implements CartService {
             if (tempCartItem != null) {
                 Product tempProduct = new Gson().fromJson(tempCartItem.getProductJson(), Product.class);
                 Set<ProductQuantityOptions> productQuantityOptions = tempProduct.getProductQuantityOptions();
-                for (ProductQuantityOptions qOption : productQuantityOptions) {
-                    if (qOption.getQuantityOption().equalsIgnoreCase(quantityOption)) {
+                    if (tempCartItem.getQuantityOption().equalsIgnoreCase(quantityOption)) {
+                        double newPrice= tempCartItem.getPrice()/tempCartItem.getQuantity();
                         cart.setTotalPrice(cart.getTotalPrice() - tempCartItem.getPrice());
-                        tempCartItem.setQuantity(Integer.parseInt(product.getSelectedQuantity()));
-                        tempCartItem.setPrice(tempCartItem.getQuantity() * qOption.getPrice());
-                        tempCartItem.setQuantityOption(qOption.getQuantityOption());
+                        tempCartItem.setQuantity(tempCartItem.getQuantity() + Integer.parseInt(product.getSelectedQuantity()));
+                        tempCartItem.setPrice(tempCartItem.getQuantity() * newPrice);
+                        tempCartItem.setQuantityOption(tempCartItem.getQuantityOption());
                         cart.setTotalPrice(cart.getTotalPrice() + tempCartItem.getPrice());
-                        break;
+                        return cartItemRepository.save(tempCartItem);
                     }
-                }
-                return cartItemRepository.save(tempCartItem);
             }
             RestaurantCartItem newCartItem = new RestaurantCartItem();
             newCartItem.setCart(cart);
