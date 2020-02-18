@@ -5,6 +5,7 @@ import com.wityorestaurant.modules.tax.model.TaxProfile;
 public class BillingDetailItem {
 
 	private Long orderId;
+	private String productId;
 	private String itemName;
 	private Integer quantity;
 	private String quantityOption;
@@ -18,6 +19,14 @@ public class BillingDetailItem {
 
 	public void setOrderId(Long orderId) {
 		this.orderId = orderId;
+	}
+
+	public String getProductId() {
+		return productId;
+	}
+
+	public void setProductId(String productId) {
+		this.productId = productId;
 	}
 
 	public String getItemName() {

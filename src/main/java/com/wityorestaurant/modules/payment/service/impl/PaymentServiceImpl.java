@@ -11,6 +11,8 @@ import com.google.gson.Gson;
 import com.wityorestaurant.modules.config.model.RestTable;
 import com.wityorestaurant.modules.config.repository.RestTableRepository;
 import com.wityorestaurant.modules.customerdata.CustomerCartItems;
+import com.wityorestaurant.modules.discount.model.Discount;
+import com.wityorestaurant.modules.discount.repository.DiscountRepository;
 import com.wityorestaurant.modules.menu.model.Product;
 import com.wityorestaurant.modules.menu.model.ProductQuantityOptions;
 import com.wityorestaurant.modules.menu.repository.MenuRepository;
@@ -19,6 +21,7 @@ import com.wityorestaurant.modules.orderservice.model.OrderItem;
 import com.wityorestaurant.modules.orderservice.repository.OrderRepository;
 import com.wityorestaurant.modules.payment.dto.BillingDetailItem;
 import com.wityorestaurant.modules.payment.dto.BillingDetailResponse;
+import com.wityorestaurant.modules.payment.dto.DiscountDetails;
 import com.wityorestaurant.modules.payment.dto.TaxDetails;
 import com.wityorestaurant.modules.payment.service.PaymentService;
 import com.wityorestaurant.modules.reservation.repository.ReservationRepository;
@@ -40,6 +43,7 @@ public class PaymentServiceImpl implements PaymentService {
     private RestTableRepository restTableRepository;
     private MenuRepository menuRepository;
     private TaxRepository taxRepository;
+    private DiscountRepository discountRepository;
     private double totalTaxedPrice = ZERO;
     private double totalComponentCost = 0.0;
     private static DecimalFormat df = new DecimalFormat("0.00");
@@ -49,11 +53,13 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Autowired
     public PaymentServiceImpl(OrderRepository orderRepository, RestTableRepository restTableRepository,
-                              MenuRepository menuRepository, TaxRepository taxRepository) {
+                              MenuRepository menuRepository, TaxRepository taxRepository,
+                              DiscountRepository discountRepository) {
         this.orderRepository = orderRepository;
         this.restTableRepository = restTableRepository;
         this.menuRepository = menuRepository;
         this.taxRepository = taxRepository;
+        this.discountRepository = discountRepository;
     }
 
     private double getTotalPrice() {
@@ -82,6 +88,7 @@ public class PaymentServiceImpl implements PaymentService {
         Product product = menuRepository.findByItemAndRestId(productJson.getProductId(),restId);
         TaxProfile taxProfile = product.getAppliedTax();
         BillingDetailItem billingDetailsDto = new BillingDetailItem();
+        billingDetailsDto.setProductId(product.getProductId());
         billingDetailsDto.setItemName(orderItem.getItemName());
         billingDetailsDto.setQuantityOption(orderItem.getQuantityOption());
         billingDetailsDto.setOrderId(orderItem.getOrder().getOrderId());
@@ -225,6 +232,20 @@ public class PaymentServiceImpl implements PaymentService {
         });
         return taxDetailsList;
     }
+    private List<DiscountDetails> findTotalDiscount(BillingDetailResponse response, Long restId) {
+        List<DiscountDetails> discountDetailsList = new ArrayList<>();
+        response.getBillingDetailItems().forEach(billingItem -> {
+            double discountPercent=getDiscountPercent(restId,billingItem.getProductId(),billingItem.getQuantityOption());
+            DiscountDetails discountDetails= new DiscountDetails();
+            discountDetails.setItem(billingItem.getItemName());
+            discountDetails.setQuantityOption(billingItem.getQuantityOption());
+            discountDetails.setDiscountPercentage(discountPercent);
+            BigDecimal discountValue = getBigDecimal(billingItem.getValue()*discountPercent/100);
+            discountDetails.setDiscountTotal(discountValue.doubleValue());
+            discountDetailsList.add(discountDetails);
+        });
+        return discountDetailsList;
+    }
 
     private int getTaxFlag(List<TaxDetails> taxDetailsList, BillingDetailItem billingItem, double taxAmount, TaxDetails taxDetails) {
         int flag;
@@ -273,9 +294,12 @@ public class PaymentServiceImpl implements PaymentService {
         //Map<String, Map<Double, List<String>>> taxCharges = getTaxChargesPerItem(billingDetailsResponse);
         billingDetailsResponse.setTaxCharges(null);
         List<TaxDetails> taxDetailsList = findTotalTaxes(billingDetailsResponse, orders);
+        List<DiscountDetails> discountDetailsList = findTotalDiscount(billingDetailsResponse,restId);
+        billingDetailsResponse.setTotalCalculatedDiscount(discountDetailsList);
         billingDetailsResponse.setTotalCalculatedTaxed(taxDetailsList);
         double totalPriceWithoutTax=getAllFoodItemCharges(billingDetailsResponse);
         double totalPriceWithTax = getAllTaxItemCharges(taxDetailsList);
+        double totalPriceWithDiscount= getAllDiscountItemCharges(discountDetailsList);
         if(restTable.isPackagingChargeEnabled()){
             billingDetailsResponse.setPackagingCharge(restTable.getPackagingCharge());
         }
@@ -310,13 +334,15 @@ public class PaymentServiceImpl implements PaymentService {
             billingDetailsResponse.setOverallDiscount(ZERO);
         }
 
-        double totalPrice = totalPriceWithoutTax + totalPriceWithTax +
+        double totalPrice = (totalPriceWithoutTax + totalPriceWithTax - totalPriceWithDiscount) +
             billingDetailsResponse.getServiceCharge() +
             billingDetailsResponse.getPackagingCharge()-
             billingDetailsResponse.getOverallDiscount();
 
-        BigDecimal totalDouble = getBigDecimal(totalPrice);
-        billingDetailsResponse.setTotalCost(totalDouble.doubleValue());
+        billingDetailsResponse.setTotalCostWithoutTax(getBigDecimal(totalPriceWithoutTax).doubleValue());
+        billingDetailsResponse.setTotalCostWithDiscount(getBigDecimal(totalPriceWithDiscount).doubleValue());
+        billingDetailsResponse.setTotalCostWithTax(getBigDecimal(totalPriceWithTax).doubleValue());
+        billingDetailsResponse.setTotalCost(getBigDecimal(totalPrice).doubleValue());
         return billingDetailsResponse;
 
     }
@@ -333,6 +359,21 @@ public class PaymentServiceImpl implements PaymentService {
     public double getAllTaxItemCharges(List<TaxDetails> taxDetails){
         double taxTotal= taxDetails.stream().mapToDouble(TaxDetails::getTaxTotal).sum();
         return taxTotal;
+    }
+
+    public double getAllDiscountItemCharges(List<DiscountDetails> discountDetails){
+        double discountTotal= discountDetails.stream().mapToDouble(DiscountDetails::getDiscountTotal).sum();
+        return discountTotal;
+    }
+
+    private double getDiscountPercent(Long restId,String productId,String quantityOption){
+        Discount discount = discountRepository.getDiscountByRestIdProductIdQuantityOption(restId,productId,quantityOption);
+        if(discount!=null) {
+            return discount.getDiscountValue();
+        }
+        else{
+            return 0;
+        }
     }
 
 }
