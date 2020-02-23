@@ -1,18 +1,35 @@
 package com.wityorestaurant.modules.payment.dto;
 
 public class DiscountDetails {
-    private Double discountPercentage;
+    private float discountValue;
+    private double specialDiscount;
+    private String discountType;
     private Double discountTotal;
     private String item;
     private String quantityOption;
 
-
-    public Double getDiscountPercentage() {
-        return discountPercentage;
+    public float getDiscountValue() {
+        return discountValue;
     }
 
-    public void setDiscountPercentage(Double discountPercentage) {
-        this.discountPercentage = discountPercentage;
+    public void setDiscountValue(float discountValue) {
+        this.discountValue = discountValue;
+    }
+
+    public double getSpecialDiscount() {
+        return specialDiscount;
+    }
+
+    public void setSpecialDiscount(double specialDiscount) {
+        this.specialDiscount = specialDiscount;
+    }
+
+    public String getDiscountType() {
+        return discountType;
+    }
+
+    public void setDiscountType(String discountType) {
+        this.discountType = discountType;
     }
 
     public Double getDiscountTotal() {

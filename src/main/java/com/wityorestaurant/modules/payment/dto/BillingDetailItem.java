@@ -11,6 +11,7 @@ public class BillingDetailItem {
 	private String quantityOption;
 	private Double price;
 	private Double value;
+	private Double specialDiscount;
 	private TaxProfile appliedTaxProfile;
 
 	public Long getOrderId() {
@@ -67,6 +68,14 @@ public class BillingDetailItem {
 
 	public void setValue(Double value) {
 		this.value = value;
+	}
+
+	public Double getSpecialDiscount() {
+		return specialDiscount;
+	}
+
+	public void setSpecialDiscount(Double specialDiscount) {
+		this.specialDiscount = specialDiscount;
 	}
 
 	public TaxProfile getAppliedTaxProfile() {

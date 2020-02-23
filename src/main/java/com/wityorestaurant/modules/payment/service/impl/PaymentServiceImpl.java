@@ -3,6 +3,7 @@ package com.wityorestaurant.modules.payment.service.impl;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -93,6 +94,12 @@ public class PaymentServiceImpl implements PaymentService {
         billingDetailsDto.setQuantityOption(orderItem.getQuantityOption());
         billingDetailsDto.setOrderId(orderItem.getOrder().getOrderId());
         billingDetailsDto.setQuantity(orderItem.getQuantity());
+        if(orderItem.getSpecialDiscount()){
+            billingDetailsDto.setSpecialDiscount((double)orderItem.getSpecialDiscountValue());
+        }
+        else{
+            billingDetailsDto.setSpecialDiscount(0d);
+        }
         for(ProductQuantityOptions pq:product.getProductQuantityOptions()){
             if(pq.getQuantityOption().equals(orderItem.getQuantityOption())){
                 double itemCost = cartItem.getQuantity()*pq.getPrice();
@@ -234,16 +241,43 @@ public class PaymentServiceImpl implements PaymentService {
     }
     private List<DiscountDetails> findTotalDiscount(BillingDetailResponse response, Long restId) {
         List<DiscountDetails> discountDetailsList = new ArrayList<>();
-        response.getBillingDetailItems().forEach(billingItem -> {
-            double discountPercent=getDiscountPercent(restId,billingItem.getProductId(),billingItem.getQuantityOption());
+        for (BillingDetailItem billingItem: response.getBillingDetailItems()){
+            Discount discount = discountRepository.getDiscountByRestIdProductIdQuantityOption(restId,billingItem.getProductId(),billingItem.getQuantityOption());
             DiscountDetails discountDetails= new DiscountDetails();
+            if(discount==null) {
+                discountDetails.setItem(billingItem.getItemName());
+                discountDetails.setQuantityOption(billingItem.getQuantityOption());
+                discountDetails.setDiscountType("");
+                discountDetails.setDiscountValue(0);
+                BigDecimal specialDiscountValue = getBigDecimal(billingItem.getValue() * billingItem.getSpecialDiscount() / 100);
+                discountDetails.setSpecialDiscount(specialDiscountValue.doubleValue());
+                discountDetails.setDiscountTotal(discountDetails.getSpecialDiscount());
+                discountDetailsList.add(discountDetails);
+                continue;
+            }
+
             discountDetails.setItem(billingItem.getItemName());
             discountDetails.setQuantityOption(billingItem.getQuantityOption());
-            discountDetails.setDiscountPercentage(discountPercent);
-            BigDecimal discountValue = getBigDecimal(billingItem.getValue()*discountPercent/100);
-            discountDetails.setDiscountTotal(discountValue.doubleValue());
+            discountDetails.setDiscountType(discount.getDiscountType());
+            discountDetails.setDiscountValue(discount.getDiscountValue());
+            discountDetails.setSpecialDiscount(billingItem.getValue() * billingItem.getSpecialDiscount()/100);
+            if(discount.getStartDate()==null || LocalDateTime.of(discount.getStartDate(),discount.getStartTime()).compareTo(LocalDateTime.now())<0 ) {
+                if(discount.getEndOption().equalsIgnoreCase("Never")|| discount.getEndOption().isEmpty() || (discount.getEndOption().equalsIgnoreCase("On Date") && LocalDateTime.of(discount.getEndDate(),discount.getEndTime()).compareTo(LocalDateTime.now())>0 )) {
+                    if (discount.getDiscountType().equalsIgnoreCase("percentage")) {
+                        BigDecimal discountValue = getBigDecimal(billingItem.getValue() * discount.getDiscountValue() / 100);
+                        discountDetails.setDiscountTotal(discountValue.doubleValue()+discountDetails.getSpecialDiscount());
+                    } else if (discount.getDiscountType().equalsIgnoreCase("rupees")) {
+                        BigDecimal discountValue = getBigDecimal(discount.getDiscountValue());
+                        discountDetails.setDiscountTotal(discountValue.doubleValue()+discountDetails.getSpecialDiscount());
+                    }
+                }
+            }
+            else{
+                discountDetails.setDiscountTotal(0d+discountDetails.getSpecialDiscount());
+            }
+
             discountDetailsList.add(discountDetails);
-        });
+        }
         return discountDetailsList;
     }
 
@@ -340,7 +374,7 @@ public class PaymentServiceImpl implements PaymentService {
             billingDetailsResponse.getOverallDiscount();
 
         billingDetailsResponse.setTotalCostWithoutTaxAndDiscount(getBigDecimal(totalPriceWithoutTaxAndDiscount).doubleValue());
-        billingDetailsResponse.setTotalDiscount(getBigDecimal(totalDiscount).doubleValue());
+        billingDetailsResponse.setTotalItemsDiscount(getBigDecimal(totalDiscount).doubleValue());
         billingDetailsResponse.setTotalTax(getBigDecimal(totalTax).doubleValue());
         billingDetailsResponse.setTotalCost(getBigDecimal(totalPrice).doubleValue());
         return billingDetailsResponse;
@@ -366,8 +400,8 @@ public class PaymentServiceImpl implements PaymentService {
         return discountTotal;
     }
 
-    private double getDiscountPercent(Long restId,String productId,String quantityOption){
-        Discount discount = discountRepository.getDiscountByRestIdProductIdQuantityOption(restId,productId,quantityOption);
+    private double getDiscountPercent(Long restId,BillingDetailItem billingDetailItem){
+        Discount discount = discountRepository.getDiscountByRestIdProductIdQuantityOption(restId,billingDetailItem.getProductId(),billingDetailItem.getQuantityOption());
         if(discount!=null) {
             return discount.getDiscountValue();
         }

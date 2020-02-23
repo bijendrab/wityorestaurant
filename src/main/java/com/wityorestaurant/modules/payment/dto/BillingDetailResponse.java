@@ -22,7 +22,7 @@ public class BillingDetailResponse {
 	private float overallDiscountPercent;
 	private double totalCostWithoutTaxAndDiscount;
 	private double totalTax;
-	private double totalDiscount;
+	private double totalItemsDiscount;
 	private double totalCost;
 
 
@@ -123,11 +123,11 @@ public class BillingDetailResponse {
 		this.totalTax = totalTax;
 	}
 
-	public double getTotalDiscount() {
-		return totalDiscount;
+	public double getTotalItemsDiscount() {
+		return totalItemsDiscount;
 	}
 
-	public void setTotalDiscount(double totalDiscount) {
-		this.totalDiscount = totalDiscount;
+	public void setTotalItemsDiscount(double totalItemsDiscount) {
+		this.totalItemsDiscount = totalItemsDiscount;
 	}
 }
