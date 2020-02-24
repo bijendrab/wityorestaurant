@@ -263,10 +263,10 @@ public class PaymentServiceImpl implements PaymentService {
             discountDetails.setSpecialDiscount(billingItem.getValue() * billingItem.getSpecialDiscount()/100);
             if(discount.getStartDate()==null || LocalDateTime.of(discount.getStartDate(),discount.getStartTime()).compareTo(LocalDateTime.now())<0 ) {
                 if(discount.getEndOption().equalsIgnoreCase("Never")|| discount.getEndOption().isEmpty() || (discount.getEndOption().equalsIgnoreCase("On Date") && LocalDateTime.of(discount.getEndDate(),discount.getEndTime()).compareTo(LocalDateTime.now())>0 )) {
-                    if (discount.getDiscountType().equalsIgnoreCase("percentage")) {
+                    if (discount.getDiscountValueType().equalsIgnoreCase("percentage")) {
                         BigDecimal discountValue = getBigDecimal(billingItem.getValue() * discount.getDiscountValue() / 100);
                         discountDetails.setDiscountTotal(discountValue.doubleValue()+discountDetails.getSpecialDiscount());
-                    } else if (discount.getDiscountType().equalsIgnoreCase("rupees")) {
+                    } else if (discount.getDiscountValueType().equalsIgnoreCase("rupees")) {
                         BigDecimal discountValue = getBigDecimal(discount.getDiscountValue());
                         discountDetails.setDiscountTotal(discountValue.doubleValue()+discountDetails.getSpecialDiscount());
                     }
