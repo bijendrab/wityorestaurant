@@ -102,7 +102,7 @@ public class PaymentServiceImpl implements PaymentService {
         }
         for(ProductQuantityOptions pq:product.getProductQuantityOptions()){
             if(pq.getQuantityOption().equals(orderItem.getQuantityOption())){
-                double itemCost = cartItem.getQuantity()*pq.getPrice();
+                double itemCost = orderItem.getQuantity()*pq.getPrice();
                 billingDetailsDto.setPrice(pq.getPrice());
                 billingDetailsDto.setValue(itemCost);
             }
