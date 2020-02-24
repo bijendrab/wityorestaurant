@@ -23,14 +23,24 @@ public class CartController {
         return new ResponseEntity<RestaurantCart>(cartServiceImpl.getCart(tableId), HttpStatus.OK);
     }
 
-    @PostMapping("/add-update/{quantityOption}")
-    public ResponseEntity<?> addOrUpdateCartItem(@RequestBody Product product,
+    @PostMapping("/add/{quantityOption}")
+    public ResponseEntity<?> addCartItem(@RequestBody Product product,
                                                  @PathVariable String quantityOption,
                                                  @RequestParam Long tableId,
                                                  @RequestParam String immediateStatus,
                                                  @RequestParam String orderTaker
     ) {
-        return new ResponseEntity<RestaurantCartItem>(cartServiceImpl.addOrUpdateCart(product, quantityOption, tableId, orderTaker), HttpStatus.OK);
+        return new ResponseEntity<RestaurantCartItem>(cartServiceImpl.addCart(product, quantityOption, tableId, orderTaker), HttpStatus.OK);
+    }
+
+    @PutMapping("/update/{quantityOption}")
+    public ResponseEntity<?>  UpdateCartItem(@RequestBody Product product,
+                                                 @PathVariable String quantityOption,
+                                                 @RequestParam Long tableId,
+                                                 @RequestParam String immediateStatus,
+                                                 @RequestParam String orderTaker
+    ) {
+        return new ResponseEntity<RestaurantCartItem>(cartServiceImpl.updateCart(product, quantityOption, tableId, orderTaker), HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{cartItemId}")

@@ -47,7 +47,7 @@ public class CartServiceImpl implements CartService {
         return null;
     }
 
-    public RestaurantCartItem addOrUpdateCart(Product product, String quantityOption, Long tableId, String orderTaker) {
+    public RestaurantCartItem addCart(Product product, String quantityOption, Long tableId, String orderTaker) {
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             RestaurantUser tempUser = userRepository.findByUsername(auth.getName());
@@ -66,11 +66,8 @@ public class CartServiceImpl implements CartService {
             }
 
             if (tempCartItem != null) {
-                Product tempProduct = new Gson().fromJson(tempCartItem.getProductJson(), Product.class);
-                Set<ProductQuantityOptions> productQuantityOptions = tempProduct.getProductQuantityOptions();
                     if (tempCartItem.getQuantityOption().equalsIgnoreCase(quantityOption)) {
                         double newPrice= tempCartItem.getPrice()/tempCartItem.getQuantity();
-                        cart.setTotalPrice(cart.getTotalPrice() - tempCartItem.getPrice());
                         tempCartItem.setQuantity(tempCartItem.getQuantity() + Integer.parseInt(product.getSelectedQuantity()));
                         tempCartItem.setPrice(tempCartItem.getQuantity() * newPrice);
                         tempCartItem.setQuantityOption(tempCartItem.getQuantityOption());
@@ -92,6 +89,41 @@ public class CartServiceImpl implements CartService {
                 }
             });
             return cartItemRepository.save(newCartItem);
+        } catch (Exception e) {
+            logger.debug("Error in add to cart {}", e);
+        }
+        return null;
+    }
+
+    public RestaurantCartItem updateCart(Product product, String quantityOption, Long tableId, String orderTaker) {
+        try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            RestaurantUser tempUser = userRepository.findByUsername(auth.getName());
+            RestaurantDetails restaurant = tempUser.getRestDetails();
+
+            RestaurantCart cart = restaurant.getCart();
+            List<RestaurantCartItem> userCartItems = cart.getCartItems();
+            String productId = product.getProductId();
+            RestaurantCartItem tempCartItem = null;
+            for (RestaurantCartItem cartItem : userCartItems) {
+                Product p = new Gson().fromJson(cartItem.getProductJson(), Product.class);
+                if ((productId.equalsIgnoreCase(p.getProductId()) && cartItem.getQuantityOption().equals(quantityOption)) ||
+                    (productId.equalsIgnoreCase(p.getProductId()) && !cartItem.getQuantityOption().equals(quantityOption))) {
+                    tempCartItem = cartItem;
+                    break;
+                }
+            }
+
+            if (tempCartItem != null) {
+                    double newPrice= tempCartItem.getPrice()/tempCartItem.getQuantity();
+                    tempCartItem.setQuantity(Integer.parseInt(product.getSelectedQuantity()));
+                    tempCartItem.setPrice(tempCartItem.getQuantity() * newPrice);
+                    tempCartItem.setQuantityOption(quantityOption);
+                    cart.setTotalPrice(tempCartItem.getQuantity() * newPrice);
+                    return cartItemRepository.save(tempCartItem);
+
+            }
+
         } catch (Exception e) {
             logger.debug("Error in add to cart {}", e);
         }
