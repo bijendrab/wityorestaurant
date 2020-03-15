@@ -1,9 +1,13 @@
 package com.wityorestaurant.modules.cart.controller;
 
+import java.util.List;
+import java.util.Set;
 import com.wityorestaurant.common.Constant;
 import com.wityorestaurant.modules.cart.model.RestaurantCart;
+import com.wityorestaurant.modules.cart.model.RestaurantCartAddOnItems;
 import com.wityorestaurant.modules.cart.model.RestaurantCartItem;
 import com.wityorestaurant.modules.cart.service.CartService;
+import com.wityorestaurant.modules.menu.model.AddOnItems;
 import com.wityorestaurant.modules.menu.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -42,6 +46,14 @@ public class CartController {
     ) {
         return new ResponseEntity<RestaurantCartItem>(cartServiceImpl.updateCart(product, quantityOption, tableId, orderTaker), HttpStatus.OK);
     }
+
+    @PutMapping("/update/addon/{productId}")
+    public ResponseEntity<?>  UpdateCartAddOn(@RequestBody RestaurantCartItem restaurantCartItem,
+                                              @PathVariable String productId
+    ) {
+        return new ResponseEntity<RestaurantCartItem>(cartServiceImpl.updateCartAddOn(restaurantCartItem,productId), HttpStatus.OK);
+    }
+
 
     @DeleteMapping("/delete/{cartItemId}")
     public ResponseEntity<?> removeCartItem(@PathVariable Long cartItemId) {

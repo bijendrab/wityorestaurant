@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "orderitem")
@@ -34,6 +36,9 @@ public class OrderItem implements Serializable {
 
 
     private Boolean immediateStatus;
+
+    @OneToMany(mappedBy = "orderItem", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<OrderItemAddOn> orderItemAddOns = new HashSet<>(0);;
 
 
     public Boolean getImmediateStatus() {
@@ -151,5 +156,17 @@ public class OrderItem implements Serializable {
 
     public void setSpecialDiscountValue(float specialDiscountValue) {
         this.specialDiscountValue = specialDiscountValue;
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public Set<OrderItemAddOn> getOrderItemAddOns() {
+        return orderItemAddOns;
+    }
+
+    public void setOrderItemAddOns(Set<OrderItemAddOn> orderItemAddOns) {
+        this.orderItemAddOns = orderItemAddOns;
     }
 }

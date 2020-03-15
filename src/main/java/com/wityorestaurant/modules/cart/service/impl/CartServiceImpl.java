@@ -2,6 +2,7 @@ package com.wityorestaurant.modules.cart.service.impl;
 
 import com.google.gson.Gson;
 import com.wityorestaurant.modules.cart.model.RestaurantCart;
+import com.wityorestaurant.modules.cart.model.RestaurantCartAddOnItems;
 import com.wityorestaurant.modules.cart.model.RestaurantCartItem;
 import com.wityorestaurant.modules.cart.repository.CartItemRepository;
 import com.wityorestaurant.modules.cart.service.CartService;
@@ -18,6 +19,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -130,6 +132,49 @@ public class CartServiceImpl implements CartService {
         return null;
     }
 
+    public RestaurantCartItem updateCartAddOn(RestaurantCartItem restaurantCartItemUpdate, String productId) {
+        try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            RestaurantUser tempUser = userRepository.findByUsername(auth.getName());
+            RestaurantDetails restaurant = tempUser.getRestDetails();
+
+            RestaurantCart cart = restaurant.getCart();
+            List<RestaurantCartItem> userCartItems = cart.getCartItems();
+            RestaurantCartItem tempCartItem = null;
+            for (RestaurantCartItem cartItem : userCartItems) {
+                Product p = new Gson().fromJson(cartItem.getProductJson(), Product.class);
+                if ((productId.equalsIgnoreCase(p.getProductId())) ) {
+                    tempCartItem = cartItem;
+                    break;
+                }
+            }
+
+            if (tempCartItem != null) {
+
+                restaurantCartItemUpdate.getRestaurantCartAddOnItems().forEach(item -> {
+                    item.setRestaurantCartItem(restaurantCartItemUpdate);
+                });
+                tempCartItem.getRestaurantCartAddOnItems().clear();
+                tempCartItem.getRestaurantCartAddOnItems().addAll(restaurantCartItemUpdate.getRestaurantCartAddOnItems());
+                return cartItemRepository.save(tempCartItem);
+
+            }
+
+        } catch (Exception e) {
+            logger.debug("Error in add to cart {}", e);
+        }
+        return null;
+    }
+
+    public void setAddOnItems(RestaurantCartItem restaurantCartItem) {
+        Set<RestaurantCartAddOnItems> pqo = new HashSet<>();
+        for (RestaurantCartAddOnItems restaurantCartAddOnItem : restaurantCartItem.getRestaurantCartAddOnItems()) {
+            restaurantCartAddOnItem.setRestaurantCartItem(restaurantCartItem);
+            pqo.add(restaurantCartAddOnItem);
+
+        }
+
+    }
     public String deleteCartItemById(Long cartItemId) {
         try {
             cartItemRepository.deleteById(cartItemId);

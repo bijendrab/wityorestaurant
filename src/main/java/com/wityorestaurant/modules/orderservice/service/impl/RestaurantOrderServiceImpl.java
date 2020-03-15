@@ -2,6 +2,7 @@ package com.wityorestaurant.modules.orderservice.service.impl;
 
 import com.google.gson.Gson;
 import com.wityorestaurant.modules.cart.model.RestaurantCart;
+import com.wityorestaurant.modules.cart.model.RestaurantCartAddOnItems;
 import com.wityorestaurant.modules.cart.model.RestaurantCartItem;
 import com.wityorestaurant.modules.cart.repository.CartItemRepository;
 import com.wityorestaurant.modules.cart.repository.CartRepository;
@@ -15,6 +16,7 @@ import com.wityorestaurant.modules.orderservice.dto.UpdateOrderItemDTO;
 import com.wityorestaurant.modules.orderservice.model.CancelledOrderItem;
 import com.wityorestaurant.modules.orderservice.model.Order;
 import com.wityorestaurant.modules.orderservice.model.OrderItem;
+import com.wityorestaurant.modules.orderservice.model.OrderItemAddOn;
 import com.wityorestaurant.modules.orderservice.model.OrderStatus;
 import com.wityorestaurant.modules.orderservice.repository.CancelledOrderRepository;
 import com.wityorestaurant.modules.orderservice.repository.OrderItemRepository;
@@ -33,8 +35,11 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -108,6 +113,19 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService {
             menuItem_Order.setImmediateStatus(mi.getImmediateStatus());
             menuItem_Order.setOrder(newOrder);
             newOrder.getMenuItemOrders().add(menuItem_Order);
+            for(RestaurantCartAddOnItems restaurantCartAddOnItems:mi.getRestaurantCartAddOnItems()){
+                String orderAddOnItemUUID = UUID.randomUUID().toString();
+                orderAddOnItemUUID = orderAddOnItemUUID.replaceAll("-", "");
+                OrderItemAddOn orderItemAddOnItem=new OrderItemAddOn();
+                orderItemAddOnItem.setOrderItemAddOnId(orderAddOnItemUUID);
+                orderItemAddOnItem.setItemId(restaurantCartAddOnItems.getItemId());
+                orderItemAddOnItem.setItemName(restaurantCartAddOnItems.getItemName());
+                orderItemAddOnItem.setPrice(restaurantCartAddOnItems.getPrice());
+                orderItemAddOnItem.setOrderItem(menuItem_Order);
+                menuItem_Order.getOrderItemAddOns().clear();
+                menuItem_Order.getOrderItemAddOns().add(orderItemAddOnItem);
+            }
+
         }
         newOrder.setTotalCost(totalPrice);
         newOrder.setOrderedBy("restaurant");
@@ -128,7 +146,7 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService {
         cartRepository.save(cart);*/
         orderRepository.save(newOrder);
         orderQueueService.processingOrderToQueue(newOrder, restaurant.getRestId());
-        cartItemRepository.deleteAll(orderDTO.getCartItems());
+        //cartItemRepository.deleteAll(orderDTO.getCartItems());
         return newOrder;
 
     }

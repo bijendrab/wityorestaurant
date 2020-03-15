@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.wityorestaurant.modules.config.model.RestTable;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "restaurant_cart_item")
@@ -35,6 +36,9 @@ public class RestaurantCartItem {
     private String productJson;
 
     private String orderTaker;
+
+    @OneToMany(mappedBy = "restaurantCartItem", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<RestaurantCartAddOnItems> restaurantCartAddOnItems;
 
     public Long getCartItemId() {
         return cartItemId;
@@ -116,5 +120,11 @@ public class RestaurantCartItem {
         this.productJson = productJson;
     }
 
+    public Set<RestaurantCartAddOnItems> getRestaurantCartAddOnItems() {
+        return restaurantCartAddOnItems;
+    }
 
+    public void setRestaurantCartAddOnItems(Set<RestaurantCartAddOnItems> restaurantCartAddOnItems) {
+        this.restaurantCartAddOnItems = restaurantCartAddOnItems;
+    }
 }
