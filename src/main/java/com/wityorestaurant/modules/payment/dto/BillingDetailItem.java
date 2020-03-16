@@ -1,5 +1,8 @@
 package com.wityorestaurant.modules.payment.dto;
 
+import java.util.List;
+import java.util.Set;
+import com.wityorestaurant.modules.orderservice.model.OrderItemAddOn;
 import com.wityorestaurant.modules.tax.model.TaxProfile;
 
 public class BillingDetailItem {
@@ -13,6 +16,7 @@ public class BillingDetailItem {
 	private Double value;
 	private Double specialDiscount;
 	private TaxProfile appliedTaxProfile;
+	private Set<OrderItemAddOn> orderItemAddOns;
 
 	public Long getOrderId() {
 		return orderId;
@@ -86,4 +90,11 @@ public class BillingDetailItem {
 		this.appliedTaxProfile = appliedTaxProfile;
 	}
 
+	public Set<OrderItemAddOn> getOrderItemAddOns() {
+		return orderItemAddOns;
+	}
+
+	public void setOrderItemAddOns(Set<OrderItemAddOn> orderItemAddOns) {
+		this.orderItemAddOns = orderItemAddOns;
+	}
 }

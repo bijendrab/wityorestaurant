@@ -17,6 +17,7 @@ public class BillingDetailResponse {
 
 	private double serviceCharge = 0.0F;
 	private float serviceChargePercent;
+	private double addOnCharge = 0.0F;
 	private float packagingCharge = 0.0F;
 	private double overallDiscount = 0.0F;
 	private float overallDiscountPercent;
@@ -129,5 +130,13 @@ public class BillingDetailResponse {
 
 	public void setTotalItemsDiscount(double totalItemsDiscount) {
 		this.totalItemsDiscount = totalItemsDiscount;
+	}
+
+	public double getAddOnCharge() {
+		return addOnCharge;
+	}
+
+	public void setAddOnCharge(double addOnCharge) {
+		this.addOnCharge = addOnCharge;
 	}
 }

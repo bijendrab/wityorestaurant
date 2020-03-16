@@ -19,6 +19,7 @@ import com.wityorestaurant.modules.menu.model.ProductQuantityOptions;
 import com.wityorestaurant.modules.menu.repository.MenuRepository;
 import com.wityorestaurant.modules.orderservice.model.Order;
 import com.wityorestaurant.modules.orderservice.model.OrderItem;
+import com.wityorestaurant.modules.orderservice.model.OrderItemAddOn;
 import com.wityorestaurant.modules.orderservice.repository.OrderRepository;
 import com.wityorestaurant.modules.payment.dto.BillingDetailItem;
 import com.wityorestaurant.modules.payment.dto.BillingDetailResponse;
@@ -108,6 +109,7 @@ public class PaymentServiceImpl implements PaymentService {
             }
         }
         billingDetailsDto.setAppliedTaxProfile(taxProfile);
+        billingDetailsDto.setOrderItemAddOns(orderItem.getOrderItemAddOns());
         return billingDetailsDto;
     }
 
@@ -334,6 +336,7 @@ public class PaymentServiceImpl implements PaymentService {
         double totalPriceWithoutTaxAndDiscount=getAllFoodItemCharges(billingDetailsResponse);
         double totalTax = getAllTaxItemCharges(taxDetailsList);
         double totalDiscount= getAllDiscountItemCharges(discountDetailsList);
+        double totalAddOnCharges = getAllAddOnCharges(billingDetailsResponse.getBillingDetailItems());
         if(restTable.isPackagingChargeEnabled()){
             billingDetailsResponse.setPackagingCharge(restTable.getPackagingCharge());
         }
@@ -368,7 +371,7 @@ public class PaymentServiceImpl implements PaymentService {
             billingDetailsResponse.setOverallDiscount(ZERO);
         }
 
-        double totalPrice = (totalPriceWithoutTaxAndDiscount + totalTax - totalDiscount) +
+        double totalPrice = (totalPriceWithoutTaxAndDiscount + totalTax + totalAddOnCharges - totalDiscount) +
             billingDetailsResponse.getServiceCharge() +
             billingDetailsResponse.getPackagingCharge()-
             billingDetailsResponse.getOverallDiscount();
@@ -376,6 +379,7 @@ public class PaymentServiceImpl implements PaymentService {
         billingDetailsResponse.setTotalCostWithoutTaxAndDiscount(getBigDecimal(totalPriceWithoutTaxAndDiscount).doubleValue());
         billingDetailsResponse.setTotalItemsDiscount(getBigDecimal(totalDiscount).doubleValue());
         billingDetailsResponse.setTotalTax(getBigDecimal(totalTax).doubleValue());
+        billingDetailsResponse.setAddOnCharge(totalAddOnCharges);
         billingDetailsResponse.setTotalCost(getBigDecimal(totalPrice).doubleValue());
         return billingDetailsResponse;
 
@@ -409,5 +413,15 @@ public class PaymentServiceImpl implements PaymentService {
             return 0;
         }
     }
+    public double getAllAddOnCharges(List<BillingDetailItem> billingDetailItems){
+        double addOnTotal =0d;
+        for(BillingDetailItem billingDetailItem:billingDetailItems){
+            for(OrderItemAddOn orderItemAddOn:billingDetailItem.getOrderItemAddOns()){
+                addOnTotal=addOnTotal+orderItemAddOn.getPrice();
+            }
+        }
+        return addOnTotal;
+    }
+
 
 }
