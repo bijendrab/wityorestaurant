@@ -122,7 +122,6 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService {
                 orderItemAddOnItem.setItemName(restaurantCartAddOnItems.getItemName());
                 orderItemAddOnItem.setPrice(restaurantCartAddOnItems.getPrice());
                 orderItemAddOnItem.setOrderItem(menuItem_Order);
-                menuItem_Order.getOrderItemAddOns().clear();
                 menuItem_Order.getOrderItemAddOns().add(orderItemAddOnItem);
             }
 
