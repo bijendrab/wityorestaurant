@@ -145,7 +145,7 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService {
         cartRepository.save(cart);*/
         orderRepository.save(newOrder);
         orderQueueService.processingOrderToQueue(newOrder, restaurant.getRestId());
-        //cartItemRepository.deleteAll(orderDTO.getCartItems());
+        cartItemRepository.deleteAll(orderDTO.getCartItems());
         return newOrder;
 
     }
