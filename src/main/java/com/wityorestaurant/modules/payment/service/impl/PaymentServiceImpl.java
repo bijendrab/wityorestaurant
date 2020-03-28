@@ -21,7 +21,6 @@ import com.wityorestaurant.modules.menu.repository.MenuRepository;
 import com.wityorestaurant.modules.orderservice.model.Order;
 import com.wityorestaurant.modules.orderservice.model.OrderItem;
 import com.wityorestaurant.modules.orderservice.model.OrderItemAddOn;
-import com.wityorestaurant.modules.orderservice.repository.OrderItemAddOnRepository;
 import com.wityorestaurant.modules.orderservice.repository.OrderItemRepository;
 import com.wityorestaurant.modules.orderservice.repository.OrderRepository;
 import com.wityorestaurant.modules.payment.dto.BillingDetailItem;
@@ -53,7 +52,6 @@ public class PaymentServiceImpl implements PaymentService {
     private DiscountRepository discountRepository;
     private ReservationRepository reservationRepository;
     private OrderItemRepository orderItemRepository;
-    private OrderItemAddOnRepository orderItemAddOnRepository;
     private double totalTaxedPrice = ZERO;
     private double totalComponentCost = 0.0;
     private static DecimalFormat df = new DecimalFormat("0.00");
@@ -65,7 +63,7 @@ public class PaymentServiceImpl implements PaymentService {
     public PaymentServiceImpl(OrderRepository orderRepository, RestTableRepository restTableRepository,
                               MenuRepository menuRepository, TaxRepository taxRepository,
                               DiscountRepository discountRepository, ReservationRepository reservationRepository,
-                              OrderItemRepository orderItemRepository, OrderItemAddOnRepository orderItemAddOnRepository) {
+                              OrderItemRepository orderItemRepository) {
         this.orderRepository = orderRepository;
         this.restTableRepository = restTableRepository;
         this.menuRepository = menuRepository;
@@ -73,7 +71,6 @@ public class PaymentServiceImpl implements PaymentService {
         this.discountRepository = discountRepository;
         this.reservationRepository = reservationRepository;
         this.orderItemRepository=orderItemRepository;
-        this.orderItemAddOnRepository = orderItemAddOnRepository;
     }
 
     private double getTotalPrice() {
