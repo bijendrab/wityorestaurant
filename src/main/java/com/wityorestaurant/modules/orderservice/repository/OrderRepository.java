@@ -2,6 +2,7 @@ package com.wityorestaurant.modules.orderservice.repository;
 
 import com.wityorestaurant.modules.orderservice.model.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -20,5 +21,10 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     @Query(value = "SELECT * from foodorder fo inner join reservation r on fo.reservation_id=r.id inner join resttable c on c.id=r.table_Id where c.rest_id=:restId", nativeQuery = true)
     List<Order> getAllOrderByRestaurant(@Param("restId") Long restId);
+
+    @Transactional
+    @Modifying
+    @Query(value = "DELETE  from foodorder where order_id=:orderId", nativeQuery = true)
+    void deleteOrderById(@Param("orderId") Long orderId);
 
 }

@@ -1,5 +1,6 @@
 package com.wityorestaurant.modules.payment.service.impl;
 
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -20,17 +21,21 @@ import com.wityorestaurant.modules.menu.repository.MenuRepository;
 import com.wityorestaurant.modules.orderservice.model.Order;
 import com.wityorestaurant.modules.orderservice.model.OrderItem;
 import com.wityorestaurant.modules.orderservice.model.OrderItemAddOn;
+import com.wityorestaurant.modules.orderservice.repository.OrderItemAddOnRepository;
+import com.wityorestaurant.modules.orderservice.repository.OrderItemRepository;
 import com.wityorestaurant.modules.orderservice.repository.OrderRepository;
 import com.wityorestaurant.modules.payment.dto.BillingDetailItem;
 import com.wityorestaurant.modules.payment.dto.BillingDetailResponse;
 import com.wityorestaurant.modules.payment.dto.DiscountDetails;
 import com.wityorestaurant.modules.payment.dto.TaxDetails;
 import com.wityorestaurant.modules.payment.service.PaymentService;
+import com.wityorestaurant.modules.reservation.model.Reservation;
 import com.wityorestaurant.modules.reservation.repository.ReservationRepository;
 import com.wityorestaurant.modules.tax.model.TaxComponent;
 import com.wityorestaurant.modules.tax.model.TaxProfile;
 import com.wityorestaurant.modules.tax.repository.TaxRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 
 /**
@@ -46,6 +51,9 @@ public class PaymentServiceImpl implements PaymentService {
     private MenuRepository menuRepository;
     private TaxRepository taxRepository;
     private DiscountRepository discountRepository;
+    private ReservationRepository reservationRepository;
+    private OrderItemRepository orderItemRepository;
+    private OrderItemAddOnRepository orderItemAddOnRepository;
     private double totalTaxedPrice = ZERO;
     private double totalComponentCost = 0.0;
     private static DecimalFormat df = new DecimalFormat("0.00");
@@ -56,12 +64,16 @@ public class PaymentServiceImpl implements PaymentService {
     @Autowired
     public PaymentServiceImpl(OrderRepository orderRepository, RestTableRepository restTableRepository,
                               MenuRepository menuRepository, TaxRepository taxRepository,
-                              DiscountRepository discountRepository) {
+                              DiscountRepository discountRepository, ReservationRepository reservationRepository,
+                              OrderItemRepository orderItemRepository, OrderItemAddOnRepository orderItemAddOnRepository) {
         this.orderRepository = orderRepository;
         this.restTableRepository = restTableRepository;
         this.menuRepository = menuRepository;
         this.taxRepository = taxRepository;
         this.discountRepository = discountRepository;
+        this.reservationRepository = reservationRepository;
+        this.orderItemRepository=orderItemRepository;
+        this.orderItemAddOnRepository = orderItemAddOnRepository;
     }
 
     private double getTotalPrice() {
@@ -421,6 +433,41 @@ public class PaymentServiceImpl implements PaymentService {
             }
         }
         return addOnTotal;
+    }
+
+    @Transactional
+    @Modifying
+    public String navigateOrderHistory(Long restId, Long tableId) {
+        try {
+            RestTable restTable = restTableRepository.findByRestaurantIdAndTableId(tableId, restId);
+            List<Reservation> reservations = restTable.getReservationList();
+            List<Order> orders = orderRepository.getOrderByTable(tableId, restId);
+            orders.forEach(order -> {
+                order.getMenuItemOrders().forEach(orderItem -> {
+                    orderItem.getOrderItemAddOns().forEach(orderItemAddOn -> {
+                        orderItem.getOrderItemAddOns().remove(orderItemAddOn);
+                    });
+                    order.getMenuItemOrders().remove(orderItem);
+                });
+                orderRepository.save(order);
+                orderRepository.deleteOrderById(order.getOrderId());
+            });
+            int count=5;
+            while (count >0) {
+                if(orderRepository.getOrderByTable(tableId,restId).isEmpty()) {
+                    reservations.forEach(reservation -> {
+                        reservationRepository.deleteReservationById(reservation.getId());
+                    });
+                    break;
+                }
+                count--;
+            }
+            return "menu item deleted";
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
+
     }
 
 

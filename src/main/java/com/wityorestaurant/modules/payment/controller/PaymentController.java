@@ -9,6 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,6 +44,14 @@ public class PaymentController {
 		RestaurantUser restaurantUser = restaurantUserRepository.findByUsername(auth.getName());
 		return ResponseEntity.status(HttpStatus.OK)
 				.body(paymentService.getOrderPaymentSummary(restaurantUser.getRestDetails().getRestId(), tableId));
+	}
+
+	@PreAuthorize("hasRole('ROLE_USER')")
+	@DeleteMapping("/billing/{tableId}")
+	public ResponseEntity<?> navigateOrderHistory(@PathVariable("tableId") Long tableId) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		RestaurantUser restaurantUser = restaurantUserRepository.findByUsername(auth.getName());
+		return new ResponseEntity<>(paymentService.navigateOrderHistory(restaurantUser.getRestDetails().getRestId(), tableId),HttpStatus.ACCEPTED);
 	}
 
 }

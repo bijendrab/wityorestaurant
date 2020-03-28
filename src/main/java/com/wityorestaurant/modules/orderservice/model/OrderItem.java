@@ -37,8 +37,8 @@ public class OrderItem implements Serializable {
 
     private Boolean immediateStatus;
 
-    @OneToMany(mappedBy = "orderItem", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Set<OrderItemAddOn> orderItemAddOns = new HashSet<>(0);;
+    @OneToMany(mappedBy = "orderItem", cascade = CascadeType.ALL, fetch = FetchType.EAGER,orphanRemoval=true)
+    private Set<OrderItemAddOn> orderItemAddOns = new HashSet<>(0);
 
 
     public Boolean getImmediateStatus() {

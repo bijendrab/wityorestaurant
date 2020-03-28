@@ -33,7 +33,7 @@ public class Order implements Serializable {
     private Reservation accordingReservation;
 
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "order", orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "order", cascade = CascadeType.ALL,orphanRemoval=true)
     private Set<OrderItem> menuItemOrders = new HashSet<OrderItem>(0);
 
     private String orderedBy;

@@ -1,6 +1,7 @@
 package com.wityorestaurant.modules.reservation.model;
 
 import com.wityorestaurant.modules.config.model.RestTable;
+import com.wityorestaurant.modules.orderservice.model.Order;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -40,6 +41,8 @@ public class Reservation implements Serializable {
     @JoinColumn(name = "tableId")
     private RestTable relatedTable;
 
+    @OneToOne(mappedBy = "accordingReservation", orphanRemoval=true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Order order;
 
     public Long getId() {
         return id;
@@ -95,6 +98,14 @@ public class Reservation implements Serializable {
 
     public void setRelatedTable(RestTable relatedTable) {
         this.relatedTable = relatedTable;
+    }
+
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
     }
 
     public boolean doesTimeSpanConflicts(TimeSpan ts) {
