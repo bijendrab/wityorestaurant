@@ -1,5 +1,8 @@
 package com.wityorestaurant.modules.orderservice.service.impl;
 
+import javax.transaction.Transactional;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.wityorestaurant.modules.cart.model.RestaurantCart;
 import com.wityorestaurant.modules.cart.model.RestaurantCartAddOnItems;
@@ -15,10 +18,12 @@ import com.wityorestaurant.modules.orderservice.dto.RestaurantOrderDTO;
 import com.wityorestaurant.modules.orderservice.dto.UpdateOrderItemDTO;
 import com.wityorestaurant.modules.orderservice.model.CancelledOrderItem;
 import com.wityorestaurant.modules.orderservice.model.Order;
+import com.wityorestaurant.modules.orderservice.model.OrderHistory;
 import com.wityorestaurant.modules.orderservice.model.OrderItem;
 import com.wityorestaurant.modules.orderservice.model.OrderItemAddOn;
 import com.wityorestaurant.modules.orderservice.model.OrderStatus;
 import com.wityorestaurant.modules.orderservice.repository.CancelledOrderRepository;
+import com.wityorestaurant.modules.orderservice.repository.OrderHistoryRepository;
 import com.wityorestaurant.modules.orderservice.repository.OrderItemRepository;
 import com.wityorestaurant.modules.orderservice.repository.OrderRepository;
 import com.wityorestaurant.modules.orderservice.service.OrderQueueService;
@@ -31,6 +36,7 @@ import com.wityorestaurant.modules.restaurant.repository.RestaurantRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -38,6 +44,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -64,6 +71,10 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService {
     private CancelledOrderRepository cancelItemRepository;
     @Autowired
     private OrderQueueService orderQueueService;
+    @Autowired
+    private RestTableRepository restTableRepository;
+    @Autowired
+    private OrderHistoryRepository orderHistoryRepository;
 
     @Override
     public Order placeOrder(RestaurantOrderDTO orderDTO, Long tableId, RestaurantDetails restaurant) {
@@ -297,5 +308,83 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService {
             return orderItemRepository.save(orderItemToBeUpdated);
         }
     }
+
+    public Boolean saveToOrderHistory(Long restId, Long tableId) {
+        try {
+            RestTable restTable = restTableRepository.findByRestaurantIdAndTableId(tableId, restId);
+            List<Reservation> reservations = restTable.getReservationList();
+            List<Order> orders = orderRepository.getOrderByTable(tableId, restId);
+
+            saveOrdersHistory(restTable, orders);
+
+            return DeleteTableOrderWithReservation(restId, tableId, reservations, orders);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
+
+    }
+
+    public List<OrderHistory> getOrderHistory(Long restId, Long tableId,int duration) {
+        try {
+
+            List<OrderHistory> orderHistories=orderHistoryRepository.getOrderHistory(tableId,restId);
+            if(duration==0){
+                return orderHistories;
+            }
+            for(Iterator<OrderHistory> orderHistoryIterator=orderHistories.iterator();orderHistoryIterator.hasNext();){
+                OrderHistory orderHistory=orderHistoryIterator.next();
+                if(orderHistory.getOrderHistoryTime().compareTo(LocalDateTime.now().minusMinutes(duration))<0){
+                    orderHistoryIterator.remove();
+                }
+            }
+            return orderHistories;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
+
+    }
+
+    private void saveOrdersHistory(RestTable restTable, List<Order> orders) throws JsonProcessingException {
+        OrderHistory orderHistory = new OrderHistory();
+        orderHistory.setOrders(new ObjectMapper().writeValueAsString(orders));
+        orderHistory.setRestaurantDetails(restTable.getRestaurantDetails());
+        orderHistory.setTableId(restTable.getId());
+        orderHistory.setOrderCreationTime(orders.get(0).getMenuItemOrders().iterator().next().getOrderCreationTime());Date creationDate = new Date();
+        orderHistory.setOrderHistoryTime(LocalDateTime.now());
+        orderHistoryRepository.save(orderHistory);
+    }
+
+    private Boolean DeleteTableOrderWithReservation(Long restId, Long tableId, List<Reservation> reservations, List<Order> orders) {
+        for (Iterator<Order> orderIterator = orders.iterator(); orderIterator.hasNext();){
+            Order order=orderIterator.next();
+            for (Iterator<OrderItem> orderItemIterator = order.getMenuItemOrders().iterator(); orderItemIterator.hasNext();) {
+                OrderItem orderItem = orderItemIterator.next();
+                for (Iterator<OrderItemAddOn> orderItemAddOnIterator = orderItem.getOrderItemAddOns().iterator(); orderItemAddOnIterator.hasNext();) {
+                    orderItemAddOnIterator.next();
+                    orderItemAddOnIterator.remove();
+                }
+
+                orderItemIterator.remove();
+            }
+            orderRepository.save(order);
+            orderRepository.deleteOrderById(order.getOrderId());
+        }
+
+        int count=5;
+        while (count >0) {
+            if(orderRepository.getOrderByTable(tableId,restId).isEmpty()) {
+                reservations.forEach(reservation -> {
+                    reservationRepository.deleteReservationById(reservation.getId());
+                });
+                break;
+            }
+            count--;
+        }
+        return true;
+    }
+
+
 
 }

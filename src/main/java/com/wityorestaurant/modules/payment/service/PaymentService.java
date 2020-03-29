@@ -7,6 +7,4 @@ public interface PaymentService {
 	
 	public BillingDetailResponse getOrderPaymentSummary(Long restId , Long tableId);
 
-	public String navigateOrderHistory(Long restId , Long tableId);
-
 }

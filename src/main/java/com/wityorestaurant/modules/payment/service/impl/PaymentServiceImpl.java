@@ -7,8 +7,10 @@ import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.wityorestaurant.modules.config.model.RestTable;
 import com.wityorestaurant.modules.config.repository.RestTableRepository;
@@ -19,10 +21,12 @@ import com.wityorestaurant.modules.menu.model.Product;
 import com.wityorestaurant.modules.menu.model.ProductQuantityOptions;
 import com.wityorestaurant.modules.menu.repository.MenuRepository;
 import com.wityorestaurant.modules.orderservice.model.Order;
+import com.wityorestaurant.modules.orderservice.model.OrderHistory;
 import com.wityorestaurant.modules.orderservice.model.OrderItem;
 import com.wityorestaurant.modules.orderservice.model.OrderItemAddOn;
 import com.wityorestaurant.modules.orderservice.repository.OrderItemRepository;
 import com.wityorestaurant.modules.orderservice.repository.OrderRepository;
+import com.wityorestaurant.modules.orderservice.repository.OrderHistoryRepository;
 import com.wityorestaurant.modules.payment.dto.BillingDetailItem;
 import com.wityorestaurant.modules.payment.dto.BillingDetailResponse;
 import com.wityorestaurant.modules.payment.dto.DiscountDetails;
@@ -52,6 +56,7 @@ public class PaymentServiceImpl implements PaymentService {
     private DiscountRepository discountRepository;
     private ReservationRepository reservationRepository;
     private OrderItemRepository orderItemRepository;
+    private OrderHistoryRepository orderHistoryRepository;
     private double totalTaxedPrice = ZERO;
     private double totalComponentCost = 0.0;
     private static DecimalFormat df = new DecimalFormat("0.00");
@@ -63,13 +68,14 @@ public class PaymentServiceImpl implements PaymentService {
     public PaymentServiceImpl(OrderRepository orderRepository, RestTableRepository restTableRepository,
                               MenuRepository menuRepository, TaxRepository taxRepository,
                               DiscountRepository discountRepository, ReservationRepository reservationRepository,
-                              OrderItemRepository orderItemRepository) {
+                              OrderItemRepository orderItemRepository, OrderHistoryRepository orderHistoryRepository) {
         this.orderRepository = orderRepository;
         this.restTableRepository = restTableRepository;
         this.menuRepository = menuRepository;
         this.taxRepository = taxRepository;
         this.discountRepository = discountRepository;
         this.reservationRepository = reservationRepository;
+        this.orderHistoryRepository = orderHistoryRepository;
         this.orderItemRepository=orderItemRepository;
     }
 
@@ -430,41 +436,6 @@ public class PaymentServiceImpl implements PaymentService {
             }
         }
         return addOnTotal;
-    }
-
-    @Transactional
-    @Modifying
-    public String navigateOrderHistory(Long restId, Long tableId) {
-        try {
-            RestTable restTable = restTableRepository.findByRestaurantIdAndTableId(tableId, restId);
-            List<Reservation> reservations = restTable.getReservationList();
-            List<Order> orders = orderRepository.getOrderByTable(tableId, restId);
-            orders.forEach(order -> {
-                order.getMenuItemOrders().forEach(orderItem -> {
-                    orderItem.getOrderItemAddOns().forEach(orderItemAddOn -> {
-                        orderItem.getOrderItemAddOns().remove(orderItemAddOn);
-                    });
-                    order.getMenuItemOrders().remove(orderItem);
-                });
-                orderRepository.save(order);
-                orderRepository.deleteOrderById(order.getOrderId());
-            });
-            int count=5;
-            while (count >0) {
-                if(orderRepository.getOrderByTable(tableId,restId).isEmpty()) {
-                    reservations.forEach(reservation -> {
-                        reservationRepository.deleteReservationById(reservation.getId());
-                    });
-                    break;
-                }
-                count--;
-            }
-            return "menu item deleted";
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-        return null;
-
     }
 
 

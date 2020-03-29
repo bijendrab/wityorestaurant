@@ -1,8 +1,12 @@
 package com.wityorestaurant.modules.orderservice.controller;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+import java.util.List;
 import com.wityorestaurant.modules.orderservice.dto.RestaurantOrderDTO;
 import com.wityorestaurant.modules.orderservice.dto.UpdateOrderItemDTO;
 import com.wityorestaurant.modules.orderservice.model.Order;
+import com.wityorestaurant.modules.orderservice.model.OrderHistory;
 import com.wityorestaurant.modules.orderservice.model.OrderItem;
 import com.wityorestaurant.modules.orderservice.service.OrderService;
 import com.wityorestaurant.modules.orderservice.service.RestaurantOrderService;
@@ -74,6 +78,31 @@ public class RestaurantOrderController {
     @PutMapping("/update-orderitem-charges/{orderId}")
     public ResponseEntity<?> updateOrderItemFromOrder(@RequestBody OrderItem orderItem, @PathVariable Long orderId) {
         return new ResponseEntity<OrderItem>(restOrderService.updateOrderItemSpecialDiscount(orderItem, orderId), HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @DeleteMapping("/save-order-history/{tableId}")
+    public ResponseEntity<Boolean> navigateOrderHistory(@PathVariable("tableId") Long tableId) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        RestaurantUser restaurantUser = restaurantUserRepository.findByUsername(auth.getName());
+        return new ResponseEntity<>(restOrderService.saveToOrderHistory(restaurantUser.getRestDetails().getRestId(), tableId),HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping("/get-order-history/{tableId}/{duration}")
+    public ResponseEntity<?> getOrderHistory(@PathVariable("tableId") Long tableId,
+                                                   @PathVariable("duration") @NotBlank @Size(min = 1) int duration ) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        RestaurantUser restaurantUser = restaurantUserRepository.findByUsername(auth.getName());
+        return new ResponseEntity<List<OrderHistory>>(restOrderService.getOrderHistory(restaurantUser.getRestDetails().getRestId(), tableId,duration),HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping("/get-order-history-all/{tableId}")
+    public ResponseEntity<?> getOrderAllHistory(@PathVariable("tableId") Long tableId) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        RestaurantUser restaurantUser = restaurantUserRepository.findByUsername(auth.getName());
+        return new ResponseEntity<List<OrderHistory>>(restOrderService.getOrderHistory(restaurantUser.getRestDetails().getRestId(), tableId,0),HttpStatus.OK);
     }
 
 

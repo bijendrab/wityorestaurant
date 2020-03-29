@@ -46,12 +46,4 @@ public class PaymentController {
 				.body(paymentService.getOrderPaymentSummary(restaurantUser.getRestDetails().getRestId(), tableId));
 	}
 
-	@PreAuthorize("hasRole('ROLE_USER')")
-	@DeleteMapping("/billing/{tableId}")
-	public ResponseEntity<?> navigateOrderHistory(@PathVariable("tableId") Long tableId) {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		RestaurantUser restaurantUser = restaurantUserRepository.findByUsername(auth.getName());
-		return new ResponseEntity<>(paymentService.navigateOrderHistory(restaurantUser.getRestDetails().getRestId(), tableId),HttpStatus.ACCEPTED);
-	}
-
 }
