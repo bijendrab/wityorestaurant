@@ -90,19 +90,19 @@ public class RestaurantOrderController {
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/get-order-history/{tableId}/{duration}")
-    public ResponseEntity<?> getOrderHistory(@PathVariable("tableId") Long tableId,
+    public ResponseEntity<List<OrderHistory>> getOrderHistory(@PathVariable("tableId") Long tableId,
                                                    @PathVariable("duration") @NotBlank @Size(min = 1) int duration ) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         RestaurantUser restaurantUser = restaurantUserRepository.findByUsername(auth.getName());
-        return new ResponseEntity<List<OrderHistory>>(restOrderService.getOrderHistory(restaurantUser.getRestDetails().getRestId(), tableId,duration),HttpStatus.OK);
+        return new ResponseEntity<>(restOrderService.getOrderHistory(restaurantUser.getRestDetails().getRestId(), tableId,duration),HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/get-order-history-all/{tableId}")
-    public ResponseEntity<?> getOrderAllHistory(@PathVariable("tableId") Long tableId) {
+    public ResponseEntity<List<OrderHistory>> getOrderAllHistory(@PathVariable("tableId") Long tableId) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         RestaurantUser restaurantUser = restaurantUserRepository.findByUsername(auth.getName());
-        return new ResponseEntity<List<OrderHistory>>(restOrderService.getOrderHistory(restaurantUser.getRestDetails().getRestId(), tableId,0),HttpStatus.OK);
+        return new ResponseEntity<>(restOrderService.getOrderHistory(restaurantUser.getRestDetails().getRestId(), tableId,0),HttpStatus.OK);
     }
 
 
