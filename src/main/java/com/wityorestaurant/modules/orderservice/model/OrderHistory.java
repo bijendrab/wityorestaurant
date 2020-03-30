@@ -43,6 +43,9 @@ public class OrderHistory {
     @Column(name = "paymentMethod")
     private String paymentMethod;
 
+    @Column(name="totalCost")
+    private double totalCost;
+
 
     @ManyToOne()
     @JoinColumn(name = "restId")
@@ -120,6 +123,14 @@ public class OrderHistory {
 
     public void setPaymentMethod(String paymentMethod) {
         this.paymentMethod = paymentMethod;
+    }
+
+    public double getTotalCost() {
+        return totalCost;
+    }
+
+    public void setTotalCost(double totalCost) {
+        this.totalCost = totalCost;
     }
 }
 

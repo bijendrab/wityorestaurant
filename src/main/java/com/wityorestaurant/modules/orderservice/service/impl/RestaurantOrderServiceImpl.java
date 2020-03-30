@@ -28,6 +28,8 @@ import com.wityorestaurant.modules.orderservice.repository.OrderItemRepository;
 import com.wityorestaurant.modules.orderservice.repository.OrderRepository;
 import com.wityorestaurant.modules.orderservice.service.OrderQueueService;
 import com.wityorestaurant.modules.orderservice.service.RestaurantOrderService;
+import com.wityorestaurant.modules.payment.dto.BillingDetailResponse;
+import com.wityorestaurant.modules.payment.service.PaymentService;
 import com.wityorestaurant.modules.reservation.model.Reservation;
 import com.wityorestaurant.modules.reservation.model.TimeSpan;
 import com.wityorestaurant.modules.reservation.repository.ReservationRepository;
@@ -75,6 +77,8 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService {
     private RestTableRepository restTableRepository;
     @Autowired
     private OrderHistoryRepository orderHistoryRepository;
+    @Autowired
+    private PaymentService paymentService;
 
     @Override
     public Order placeOrder(RestaurantOrderDTO orderDTO, Long tableId, RestaurantDetails restaurant) {
@@ -358,6 +362,7 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService {
         orderHistory.setPaymentMethod("TBD");
         orderHistory.setOrderCreationTime(orders.get(0).getMenuItemOrders().iterator().next().getOrderCreationTime());Date creationDate = new Date();
         orderHistory.setOrderHistoryTime(LocalDateTime.now());
+        orderHistory.setTotalCost(paymentService.getOrderPaymentSummary(restTable.getRestaurantDetails().getRestId(),restTable.getId()).getTotalCost());
         orderHistoryRepository.save(orderHistory);
     }
 
