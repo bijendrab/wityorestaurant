@@ -1,5 +1,6 @@
 package com.wityorestaurant.modules.orderservice.controller;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.List;
@@ -91,7 +92,7 @@ public class RestaurantOrderController {
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/get-order-history/{tableId}/{duration}")
     public ResponseEntity<List<OrderHistory>> getOrderHistory(@PathVariable("tableId") Long tableId,
-                                                   @PathVariable("duration") @NotBlank @Size(min = 1) int duration ) {
+                                                   @PathVariable("duration") @NotBlank @Min(1) int duration ) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         RestaurantUser restaurantUser = restaurantUserRepository.findByUsername(auth.getName());
         return new ResponseEntity<>(restOrderService.getOrderHistory(restaurantUser.getRestDetails().getRestId(), tableId,duration),HttpStatus.OK);
@@ -103,6 +104,14 @@ public class RestaurantOrderController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         RestaurantUser restaurantUser = restaurantUserRepository.findByUsername(auth.getName());
         return new ResponseEntity<>(restOrderService.getOrderHistory(restaurantUser.getRestDetails().getRestId(), tableId,0),HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping("/get-order-history-all-tables")
+    public ResponseEntity<List<OrderHistory>> getOrderAllTableHistory() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        RestaurantUser restaurantUser = restaurantUserRepository.findByUsername(auth.getName());
+        return new ResponseEntity<>(restOrderService.getOrderHistory(restaurantUser.getRestDetails().getRestId(), 0L,-1),HttpStatus.OK);
     }
 
 

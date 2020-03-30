@@ -37,6 +37,13 @@ public class OrderHistory {
     @Column(name = "tableId")
     private Long tableId;
 
+    @Column(name = "paymentStatus")
+    private Boolean paymentStatus;
+
+    @Column(name = "paymentMethod")
+    private String paymentMethod;
+
+
     @ManyToOne()
     @JoinColumn(name = "restId")
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "restId")
@@ -97,6 +104,22 @@ public class OrderHistory {
 
     public void setOrderHistoryTime(LocalDateTime orderHistoryTime) {
         this.orderHistoryTime = orderHistoryTime;
+    }
+
+    public Boolean getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(Boolean paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
+
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
     }
 }
 

@@ -1,5 +1,7 @@
 package com.wityorestaurant.modules.payment.controller;
 
+import com.wityorestaurant.modules.config.dto.PaymentModeDTO;
+import com.wityorestaurant.modules.payment.dto.PaymentUpdateDTO;
 import com.wityorestaurant.modules.restaurant.model.RestaurantUser;
 import com.wityorestaurant.modules.restaurant.repository.RestaurantUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +46,16 @@ public class PaymentController {
 		RestaurantUser restaurantUser = restaurantUserRepository.findByUsername(auth.getName());
 		return ResponseEntity.status(HttpStatus.OK)
 				.body(paymentService.getOrderPaymentSummary(restaurantUser.getRestDetails().getRestId(), tableId));
+	}
+
+	@PreAuthorize("hasRole('ROLE_USER')")
+	@PostMapping("/updatePaymentStatus/{tableId}")
+	public ResponseEntity<?> updatePaymentStatus(@PathVariable("tableId") Long tableId,
+												 @RequestBody PaymentUpdateDTO paymentUpdateDTO) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		RestaurantUser restaurantUser = restaurantUserRepository.findByUsername(auth.getName());
+		return ResponseEntity.status(HttpStatus.OK)
+			.body(paymentService.updatePaymentStatus(restaurantUser.getRestDetails().getRestId(), tableId,paymentUpdateDTO));
 	}
 
 }

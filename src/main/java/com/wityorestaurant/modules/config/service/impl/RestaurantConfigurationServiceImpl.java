@@ -1,6 +1,7 @@
 package com.wityorestaurant.modules.config.service.impl;
 
 import com.wityorestaurant.modules.config.dto.ConfigurationDTO;
+import com.wityorestaurant.modules.config.dto.PaymentModeDTO;
 import com.wityorestaurant.modules.config.dto.RestTableDTO;
 import com.wityorestaurant.modules.config.model.*;
 import com.wityorestaurant.modules.config.repository.*;
@@ -41,6 +42,8 @@ public class RestaurantConfigurationServiceImpl implements RestaurantConfigurati
     private StaffRepository staffRepository;
     @Autowired
     private RestaurantRepository restaurantRepository;
+    @Autowired
+    private PaymentModeRepository paymentModeRepository;
 
     public Object add(ConfigurationDTO config) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -274,6 +277,56 @@ public class RestaurantConfigurationServiceImpl implements RestaurantConfigurati
         }
         return Boolean.FALSE;
     }
+
+    public PaymentMode addPaymentMethod(PaymentModeDTO paymentConfig,RestaurantDetails restaurantDetails) {
+        try {
+            PaymentMode paymentMode = new PaymentMode();
+            paymentMode.setPaymentMethod(paymentConfig.getPaymentMethod());
+            paymentMode.setIsEnabled(paymentConfig.getIsEnabled());
+            paymentMode.setRestaurantDetails(restaurantDetails);
+            return paymentModeRepository.save(paymentMode);
+        } catch (Exception e) {
+            logger.error("UnableToAddPayment. Exception: {}", e);
+        }
+        return null;
+    }
+
+    public Boolean deletePaymentMethod(Long paymentId,Long restaurantId) {
+        try {
+            paymentModeRepository.deleteByRestaurantIdAndPaymentId(paymentId,restaurantId);
+            return Boolean.TRUE;
+        } catch (Exception e) {
+            logger.error("UnableToDeletePayments. Exception: {}", e);
+        }
+        return Boolean.FALSE;
+    }
+
+    public List<PaymentMode> getPaymentMethod(Long restaurantId) {
+        try {
+            return paymentModeRepository.findPaymentByRestaurantId(restaurantId);
+        } catch (Exception e) {
+            logger.error("UnableToFetchPayments. Exception: {}", e.getMessage());
+        }
+        return Collections.emptyList();
+    }
+
+    public Boolean setPaymentMethodStatus(Long paymentId,Long restaurantId) {
+        try {
+            PaymentMode paymentMode = paymentModeRepository.findPaymentByRestaurantIdAndPaymentId(paymentId,restaurantId);
+            if (paymentMode.getIsEnabled().equals(true)) {
+                paymentMode.setIsEnabled(false);
+                paymentModeRepository.save(paymentMode);
+            } else {
+                paymentMode.setIsEnabled(false);
+                paymentModeRepository.save(paymentMode);
+            }
+            return Boolean.TRUE;
+        } catch (Exception e) {
+            logger.error("UnableToSetPaymentModeStatus. Exception: {}", e);
+        }
+        return Boolean.FALSE;
+    }
+
 
 
 }

@@ -30,6 +30,7 @@ import com.wityorestaurant.modules.orderservice.repository.OrderHistoryRepositor
 import com.wityorestaurant.modules.payment.dto.BillingDetailItem;
 import com.wityorestaurant.modules.payment.dto.BillingDetailResponse;
 import com.wityorestaurant.modules.payment.dto.DiscountDetails;
+import com.wityorestaurant.modules.payment.dto.PaymentUpdateDTO;
 import com.wityorestaurant.modules.payment.dto.TaxDetails;
 import com.wityorestaurant.modules.payment.service.PaymentService;
 import com.wityorestaurant.modules.reservation.model.Reservation;
@@ -438,5 +439,19 @@ public class PaymentServiceImpl implements PaymentService {
         return addOnTotal;
     }
 
+
+    public Boolean updatePaymentStatus(Long restId, Long tableId, PaymentUpdateDTO paymentUpdateDTO) {
+        try {
+            OrderHistory orderHistory = orderHistoryRepository.getOrderByOrderHistoryId(tableId, restId,paymentUpdateDTO.getOrderHistoryId());
+            orderHistory.setPaymentMethod(paymentUpdateDTO.getPaymentMethod());
+            orderHistory.setPaymentStatus(paymentUpdateDTO.getPaymentStatus());
+            orderHistoryRepository.save(orderHistory);
+            return Boolean.TRUE;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return Boolean.FALSE;
+
+    }
 
 }

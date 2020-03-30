@@ -328,9 +328,12 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService {
     public List<OrderHistory> getOrderHistory(Long restId, Long tableId,int duration) {
         try {
 
-            List<OrderHistory> orderHistories=orderHistoryRepository.getOrderHistory(tableId,restId);
+            List<OrderHistory> orderHistories=orderHistoryRepository.getOrderTableHistory(tableId,restId);
             if(duration==0){
                 return orderHistories;
+            }
+            if (duration==-1 && tableId==0L){
+                return orderHistoryRepository.getOrderRestaurantHistory(restId);
             }
             for(Iterator<OrderHistory> orderHistoryIterator=orderHistories.iterator();orderHistoryIterator.hasNext();){
                 OrderHistory orderHistory=orderHistoryIterator.next();
@@ -351,6 +354,8 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService {
         orderHistory.setOrders(new ObjectMapper().writeValueAsString(orders));
         orderHistory.setRestaurantDetails(restTable.getRestaurantDetails());
         orderHistory.setTableId(restTable.getId());
+        orderHistory.setPaymentStatus(Boolean.FALSE);
+        orderHistory.setPaymentMethod("TBD");
         orderHistory.setOrderCreationTime(orders.get(0).getMenuItemOrders().iterator().next().getOrderCreationTime());Date creationDate = new Date();
         orderHistory.setOrderHistoryTime(LocalDateTime.now());
         orderHistoryRepository.save(orderHistory);
