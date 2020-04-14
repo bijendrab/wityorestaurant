@@ -30,9 +30,12 @@ import com.wityorestaurant.modules.orderservice.service.OrderQueueService;
 import com.wityorestaurant.modules.orderservice.service.RestaurantOrderService;
 import com.wityorestaurant.modules.payment.dto.BillingDetailResponse;
 import com.wityorestaurant.modules.payment.service.PaymentService;
+import com.wityorestaurant.modules.reservation.dto.CheckReservationResponseDTO;
 import com.wityorestaurant.modules.reservation.model.Reservation;
 import com.wityorestaurant.modules.reservation.model.TimeSpan;
 import com.wityorestaurant.modules.reservation.repository.ReservationRepository;
+import com.wityorestaurant.modules.reservation.service.MangerReservationService;
+import com.wityorestaurant.modules.reservation.service.ReservationService;
 import com.wityorestaurant.modules.restaurant.model.RestaurantDetails;
 import com.wityorestaurant.modules.restaurant.repository.RestaurantRepository;
 import org.slf4j.Logger;
@@ -79,6 +82,8 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService {
     private OrderHistoryRepository orderHistoryRepository;
     @Autowired
     private PaymentService paymentService;
+    @Autowired
+    private MangerReservationService mangerReservationService;
 
     @Override
     public Order placeOrder(RestaurantOrderDTO orderDTO, Long tableId, RestaurantDetails restaurant) {
@@ -97,18 +102,22 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService {
                 selectedTable = tbl;
             }
         }
-        Reservation reservation = new Reservation();
-        reservation.setCustomerInfo(new Gson().toJson(orderDTO.getCustomer()));
-        reservation.setRelatedTable(selectedTable);
-        reservation.setReservationDate(LocalDate.now());
-        String startTime = String.valueOf(LocalDateTime.now()).substring(11, 16);
-        String endTime = String.valueOf(LocalDateTime.now().plusHours(2)).substring(11, 16);
-        reservation.setReservationTime(new TimeSpan(startTime, endTime));
-        reservation.setSubmissionDate(LocalDate.now());
-
         Order newOrder = new Order();
-
-        newOrder.setAccordingReservation(reservationRepository.save(reservation));
+        CheckReservationResponseDTO response =mangerReservationService.isTableAssigned(orderDTO.getCustomer(),restaurant.getRestId());
+        if(response.getReservationStatus()==Boolean.FALSE) {
+            Reservation reservation = new Reservation();
+            reservation.setCustomerInfo(new Gson().toJson(orderDTO.getCustomer()));
+            reservation.setRelatedTable(selectedTable);
+            reservation.setReservationDate(LocalDate.now());
+            String startTime = String.valueOf(LocalDateTime.now()).substring(11, 16);
+            String endTime = String.valueOf(LocalDateTime.now().plusHours(2)).substring(11, 16);
+            reservation.setReservationTime(new TimeSpan(startTime, endTime));
+            reservation.setSubmissionDate(LocalDate.now());
+            newOrder.setAccordingReservation(reservationRepository.save(reservation));
+        }
+        else{
+            newOrder.setAccordingReservation(reservationRepository.save(reservationRepository.getByCustomerId(new Gson().toJson(orderDTO.getCustomer()),restaurant.getRestId())));
+        }
         newOrder.setStatus(OrderStatus.ON_HOLD);
         float totalPrice = 0;
         Date creationDate = new Date();
@@ -209,6 +218,14 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService {
             order.setTotalCost(order.getTotalCost() - (float) orderItem.getPrice());
             order.getMenuItemOrders().remove(orderItem);
             orderRepository.save(order);
+            if (order.getTotalCost() == 0) {
+                orderRepository.deleteOrderById(order.getOrderId());
+                if (orderRepository.getOrderByTable(order.getAccordingReservation().getRelatedTable().getId(), restaurantId).isEmpty()) {
+                    reservationRepository.deleteReservationById(order.getAccordingReservation().getId());
+                    return true;
+                }
+                return true;
+            }
             orderQueueService.updatingOrderToQueue(orderItem, restaurantId);
             cancelledOrderItemLogger(order, dto, restaurantId, orderItem.getOrderItemId());
             return true;
@@ -318,9 +335,8 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService {
             RestTable restTable = restTableRepository.findByRestaurantIdAndTableId(tableId, restId);
             List<Reservation> reservations = restTable.getReservationList();
             List<Order> orders = orderRepository.getOrderByTable(tableId, restId);
-
             saveOrdersHistory(restTable, orders);
-
+            resetTableConfig(restId,tableId);
             return DeleteTableOrderWithReservation(restId, tableId, reservations, orders);
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -393,6 +409,16 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService {
             count--;
         }
         return true;
+    }
+
+    public void resetTableConfig(Long restId, Long tableId){
+        RestTable restTable = restTableRepository.findByRestaurantIdAndTableId(tableId, restId);
+        restTable.setOverAllDiscountEnabled(false);
+        restTable.setOverallDiscount(0.0F);
+        restTable.setPackagingCharge(0.0F);
+        restTable.setPackagingChargeEnabled(false);
+        restTable.setServiceChargeEnabled(false);
+        restTableRepository.save(restTable);
     }
 
 

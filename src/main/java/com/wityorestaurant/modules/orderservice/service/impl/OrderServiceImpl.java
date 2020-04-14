@@ -1,6 +1,13 @@
 package com.wityorestaurant.modules.orderservice.service.impl;
 
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 import com.google.gson.Gson;
+import com.wityorestaurant.modules.config.model.RestTable;
+import com.wityorestaurant.modules.config.repository.RestTableRepository;
 import com.wityorestaurant.modules.customerdata.CustomerCartItems;
 import com.wityorestaurant.modules.customerdata.CustomerInfoDTO;
 import com.wityorestaurant.modules.customerdata.CustomerOrderDTO;
@@ -22,8 +29,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.*;
 
 @Service(value = "OrderService")
 public class OrderServiceImpl implements OrderService {
@@ -99,7 +104,8 @@ public class OrderServiceImpl implements OrderService {
 
     public TableOrdersResponse getRestaurantTableOrders(Long tableId, Long restaurantId) {
         TableOrdersResponse response = new TableOrdersResponse();
-        response.setTableOrders(orderRepository.getOrderByTable(tableId, restaurantId));
+        List<Order> orderList = orderRepository.getOrderByTable(tableId, restaurantId);
+        response.setTableOrders(orderList);
         return response;
     }
 
@@ -112,11 +118,11 @@ public class OrderServiceImpl implements OrderService {
             List<Order> order = orderRepository.getOrderByCustomer(new Gson().toJson(dto.getCustomer()), restaurantId);
             OrderItem orderItemToBeUpdated = null;
             Order newOrder = null;
-            for(Order orderItr:order) {
+            for (Order orderItr : order) {
                 for (OrderItem item : orderItr.getMenuItemOrders()) {
                     if (dto.getOrderItemId().equals(item.getOrderItemId())) {
                         orderItemToBeUpdated = item;
-                        newOrder=orderItr;
+                        newOrder = orderItr;
                         break;
                     }
                 }
@@ -166,11 +172,11 @@ public class OrderServiceImpl implements OrderService {
             List<Order> order = orderRepository.getOrderByCustomer(new Gson().toJson(dto.getCustomer()), restaurantId);
             OrderItem orderItem = null;
             Order newOrder = null;
-            for(Order orderItr:order) {
+            for (Order orderItr : order) {
                 for (OrderItem orderItem2 : orderItr.getMenuItemOrders()) {
                     if (orderItem2.getOrderItemId().equals(dto.getOrderItemId())) {
                         orderItem = orderItem2;
-                        newOrder=orderItr;
+                        newOrder = orderItr;
                         break;
                     }
                 }
@@ -178,6 +184,14 @@ public class OrderServiceImpl implements OrderService {
             newOrder.setTotalCost(newOrder.getTotalCost() - (float) orderItem.getPrice());
             newOrder.getMenuItemOrders().remove(orderItem);
             orderRepository.save(newOrder);
+            if (newOrder.getTotalCost() == 0) {
+                orderRepository.deleteOrderById(newOrder.getOrderId());
+                if (orderRepository.getOrderByTable(newOrder.getAccordingReservation().getRelatedTable().getId(), restaurantId).isEmpty()) {
+                    reservationRepository.deleteReservationById(newOrder.getAccordingReservation().getId());
+                    return true;
+                }
+                return true;
+            }
             orderQueueService.updatingOrderToQueue(orderItem, restaurantId);
             return true;
         } catch (Exception e) {
