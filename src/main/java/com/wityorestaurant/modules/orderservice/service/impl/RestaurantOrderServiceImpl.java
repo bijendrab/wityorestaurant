@@ -46,11 +46,13 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 
@@ -345,14 +347,36 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService {
 
     }
 
-    public List<OrderHistory> getOrderHistory(Long restId, Long tableId,int duration) {
+    public List<OrderHistory> getOrderHistory(Long restId, Long tableId,int duration , String startDateTime , String endDateTime) {
         try {
-
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
             List<OrderHistory> orderHistories=orderHistoryRepository.getOrderTableHistory(tableId,restId);
             if(duration==0){
+                if (!startDateTime.isEmpty() && !endDateTime.isEmpty()){
+                    LocalDateTime startDateTimeParsed = LocalDateTime.parse(startDateTime, formatter);
+                    LocalDateTime endDateTimeParsed = LocalDateTime.parse(endDateTime, formatter);
+                    List<OrderHistory> orderTableHistoriesWithTimeDiff=orderHistoryRepository.getOrderTableHistoryWithStartAndEnd(tableId,restId,startDateTimeParsed,endDateTimeParsed);
+                    return orderTableHistoriesWithTimeDiff;
+                }
+                else if (!startDateTime.isEmpty() && endDateTime.isEmpty()){
+                    LocalDateTime startDateTimeParsed = LocalDateTime.parse(startDateTime, formatter);
+                    List<OrderHistory> orderTableHistoriesWithTimeStart=orderHistoryRepository.getOrderTableHistoryWithStart(tableId,restId,startDateTimeParsed);
+                    return orderTableHistoriesWithTimeStart;
+                }
                 return orderHistories;
             }
             if (duration==-1 && tableId==0L){
+                if (!startDateTime.isEmpty() && !endDateTime.isEmpty()){
+                    LocalDateTime startDateTimeParsed = LocalDateTime.parse(startDateTime, formatter);
+                    LocalDateTime endDateTimeParsed = LocalDateTime.parse(endDateTime, formatter);
+                    List<OrderHistory> orderRestaurantHistoriesWithTimeDiff=orderHistoryRepository.getOrderRestaurantHistoryWithStartAndEnd(restId,startDateTimeParsed,endDateTimeParsed);
+                    return orderRestaurantHistoriesWithTimeDiff;
+                }
+                else if (!startDateTime.isEmpty() && endDateTime.isEmpty()){
+                    LocalDateTime startDateTimeParsed = LocalDateTime.parse(startDateTime, formatter);
+                    List<OrderHistory> orderRestaurantHistoriesWithTimeStart=orderHistoryRepository.getOrderRestaurantHistoryWithStart(restId,startDateTimeParsed);
+                    return orderRestaurantHistoriesWithTimeStart;
+                }
                 return orderHistoryRepository.getOrderRestaurantHistory(restId);
             }
             for(Iterator<OrderHistory> orderHistoryIterator=orderHistories.iterator();orderHistoryIterator.hasNext();){
@@ -368,6 +392,8 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService {
         return null;
 
     }
+
+
 
     private void saveOrdersHistory(RestTable restTable, List<Order> orders) throws JsonProcessingException {
         OrderHistory orderHistory = new OrderHistory();

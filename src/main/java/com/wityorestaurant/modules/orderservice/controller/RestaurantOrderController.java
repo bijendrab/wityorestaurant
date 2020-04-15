@@ -89,30 +89,66 @@ public class RestaurantOrderController {
         return new ResponseEntity<>(restOrderService.saveToOrderHistory(restaurantUser.getRestDetails().getRestId(), tableId),HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
-    @GetMapping("/get-order-history/{tableId}/{duration}")
-    public ResponseEntity<List<OrderHistory>> getOrderHistory(@PathVariable("tableId") Long tableId,
-                                                   @PathVariable("duration") @NotBlank @Min(1) int duration ) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        RestaurantUser restaurantUser = restaurantUserRepository.findByUsername(auth.getName());
-        return new ResponseEntity<>(restOrderService.getOrderHistory(restaurantUser.getRestDetails().getRestId(), tableId,duration),HttpStatus.OK);
-    }
-
-    @PreAuthorize("hasRole('ROLE_USER')")
-    @GetMapping("/get-order-history-all/{tableId}")
-    public ResponseEntity<List<OrderHistory>> getOrderAllHistory(@PathVariable("tableId") Long tableId) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        RestaurantUser restaurantUser = restaurantUserRepository.findByUsername(auth.getName());
-        return new ResponseEntity<>(restOrderService.getOrderHistory(restaurantUser.getRestDetails().getRestId(), tableId,0),HttpStatus.OK);
-    }
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/get-order-history-all-tables")
     public ResponseEntity<List<OrderHistory>> getOrderAllTableHistory() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         RestaurantUser restaurantUser = restaurantUserRepository.findByUsername(auth.getName());
-        return new ResponseEntity<>(restOrderService.getOrderHistory(restaurantUser.getRestDetails().getRestId(), 0L,-1),HttpStatus.OK);
+        return new ResponseEntity<>(restOrderService.getOrderHistory(restaurantUser.getRestDetails().getRestId(), 0L,-1,"",""),HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping("/get-order-history-all-tables/{startDateTIme}/{endDateTIme}")
+    public ResponseEntity<List<OrderHistory>> getOrderAllTableStartEndHistory(@PathVariable("startDateTIme") String startDateTIme,
+                                                                      @PathVariable("endDateTIme") String endDateTIme) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        RestaurantUser restaurantUser = restaurantUserRepository.findByUsername(auth.getName());
+        return new ResponseEntity<>(restOrderService.getOrderHistory(restaurantUser.getRestDetails().getRestId(), 0L,-1,startDateTIme,endDateTIme),HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping("/get-order-history-all-tables/{startDateTIme}")
+    public ResponseEntity<List<OrderHistory>> getOrderAllTableStartHistory(@PathVariable("startDateTIme") String startDateTIme) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        RestaurantUser restaurantUser = restaurantUserRepository.findByUsername(auth.getName());
+        return new ResponseEntity<>(restOrderService.getOrderHistory(restaurantUser.getRestDetails().getRestId(), 0L,-1,startDateTIme,""),HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping("/get-order-history-table/{tableId}")
+    public ResponseEntity<List<OrderHistory>> getOrderTableHistory(@PathVariable("tableId") Long tableId) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        RestaurantUser restaurantUser = restaurantUserRepository.findByUsername(auth.getName());
+        return new ResponseEntity<>(restOrderService.getOrderHistory(restaurantUser.getRestDetails().getRestId(), tableId,0,"",""),HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping("/get-order-history-table/{tableId}/{startDateTIme}/{endDateTIme}")
+    public ResponseEntity<List<OrderHistory>> getOrderTableStartEndHistory(@PathVariable("tableId") Long tableId,
+                                                                      @PathVariable("startDateTIme") String startDateTIme,
+                                                                      @PathVariable("endDateTIme") String endDateTIme) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        RestaurantUser restaurantUser = restaurantUserRepository.findByUsername(auth.getName());
+        return new ResponseEntity<>(restOrderService.getOrderHistory(restaurantUser.getRestDetails().getRestId(), tableId,0,startDateTIme,endDateTIme),HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping("/get-order-history-table/{tableId}/{startDateTIme}")
+    public ResponseEntity<List<OrderHistory>> getOrderTableStartHistory(@PathVariable("tableId") Long tableId,
+                                                                      @PathVariable("startDateTIme") String startDateTIme) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        RestaurantUser restaurantUser = restaurantUserRepository.findByUsername(auth.getName());
+        return new ResponseEntity<>(restOrderService.getOrderHistory(restaurantUser.getRestDetails().getRestId(), tableId,0,startDateTIme,""),HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping("/get-order-history-table-duration/{tableId}/{duration}")
+    public ResponseEntity<List<OrderHistory>> getOrderDurationHistory(@PathVariable("tableId") Long tableId,
+                                                              @PathVariable("duration") @NotBlank @Min(1) int duration ) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        RestaurantUser restaurantUser = restaurantUserRepository.findByUsername(auth.getName());
+        return new ResponseEntity<>(restOrderService.getOrderHistory(restaurantUser.getRestDetails().getRestId(), tableId,duration,"",""),HttpStatus.OK);
+    }
 
 }

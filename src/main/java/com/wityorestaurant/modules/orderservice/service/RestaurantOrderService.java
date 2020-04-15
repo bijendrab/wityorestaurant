@@ -1,5 +1,6 @@
 package com.wityorestaurant.modules.orderservice.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import com.wityorestaurant.modules.orderservice.dto.RestaurantOrderDTO;
 import com.wityorestaurant.modules.orderservice.dto.UpdateOrderItemDTO;
@@ -20,6 +21,6 @@ public interface RestaurantOrderService {
 
     Boolean saveToOrderHistory(Long restId , Long tableId);
 
-    List<OrderHistory> getOrderHistory(Long restId , Long tableId, int duration);
+    List<OrderHistory> getOrderHistory(Long restId , Long tableId, int duration, String startDateTime, String endDateTime);
 
 }
