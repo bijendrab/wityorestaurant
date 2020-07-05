@@ -78,4 +78,17 @@ public class RestaurantAddOnProfileServiceImpl implements RestaurantAddOnProfile
             pqo.add(addOnItem);
         }
     }
+
+    public String setAddOnProfileToggleStatus(String ProfileId) {
+        AddOnProfile addOnProfile = getAddOnProfileItemById(ProfileId);
+        if (addOnProfile.getToggleAddOnItems().equals(true)) {
+            addOnProfile.setToggleAddOnItems(false);
+            addOnRepository.save(addOnProfile);
+            return "AddOn Profile Toggle Status is Disabled";
+        } else {
+            addOnProfile.setToggleAddOnItems(true);
+            addOnRepository.save(addOnProfile);
+            return "AddOn Profile Toggle Status is Enabled";
+        }
+    }
 }

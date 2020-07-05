@@ -31,6 +31,9 @@ public class AddOnProfile implements Serializable {
     @Column(name = "profileName")
     private String profileName;
 
+    @Column(name = "toggleAddOnItems")
+    private Boolean toggleAddOnItems;
+
     @ManyToOne()
     @JoinColumn(name = "restId")
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "restId")
@@ -71,5 +74,13 @@ public class AddOnProfile implements Serializable {
 
     public void setCustomItems(Set<AddOnItems> customItems) {
         this.customItems = customItems;
+    }
+
+    public Boolean getToggleAddOnItems() {
+        return toggleAddOnItems;
+    }
+
+    public void setToggleAddOnItems(Boolean toggleAddOnItems) {
+        this.toggleAddOnItems = toggleAddOnItems;
     }
 }

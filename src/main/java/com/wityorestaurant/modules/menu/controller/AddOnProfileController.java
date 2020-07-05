@@ -65,4 +65,10 @@ public class AddOnProfileController {
         return new ResponseEntity<>(restaurantAddOnProfileService.deleteAddOnProfileItem(profileId), HttpStatus.ACCEPTED);
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @PutMapping("/setAddOnProfileToggleStatus/{addOnProfileId}")
+    public ResponseEntity<?> setAddOnProfileToggleStatus(@PathVariable(value = "addOnProfileId") String addOnProfileId) {
+        return new ResponseEntity<>(restaurantAddOnProfileService.setAddOnProfileToggleStatus(addOnProfileId), HttpStatus.ACCEPTED);
+    }
+
 }
