@@ -13,11 +13,11 @@ public interface RestaurantOrderService {
 
     Order placeOrder(RestaurantOrderDTO orderDTO, Long tableId, RestaurantDetails restaurant);
 
-    Boolean removePlacedOrderItem(UpdateOrderItemDTO dto, Long restaurantId, Long orderId);
+    Boolean removePlacedOrderItem(UpdateOrderItemDTO dto, Long restaurantId, String orderId);
 
-    Order updateOrderedItem(UpdateOrderItemDTO dto, Long restaurantId, Long orderId);
+    Order updateOrderedItem(UpdateOrderItemDTO dto, Long restaurantId, String orderId);
 
-    OrderItem updateOrderItemSpecialDiscount(OrderItem orderItem, Long orderId);
+    OrderItem updateOrderItemSpecialDiscount(OrderItem orderItem, String orderId);
 
     Boolean saveToOrderHistory(Long restId , Long tableId);
 

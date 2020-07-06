@@ -62,14 +62,14 @@ public class RestaurantOrderController {
 
     @PutMapping("/delete-ordered-item/{orderId}")
     public ResponseEntity<?> deleteOrderItemFromOrder(@RequestBody UpdateOrderItemDTO dto,
-                                                      @PathVariable Long orderId) {
+                                                      @PathVariable String orderId) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         RestaurantUser restaurantUser = restaurantUserRepository.findByUsername(auth.getName());
         return new ResponseEntity<Boolean>(restOrderService.removePlacedOrderItem(dto, restaurantUser.getRestDetails().getRestId(), orderId), HttpStatus.OK);
     }
 
     @PutMapping("/update-ordered-item/{orderId}")
-    public ResponseEntity<?> updateOrderItemFromOrder(@RequestBody UpdateOrderItemDTO dto, @PathVariable Long orderId) {
+    public ResponseEntity<?> updateOrderItemFromOrder(@RequestBody UpdateOrderItemDTO dto, @PathVariable String orderId) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         RestaurantUser restaurantUser = restaurantUserRepository.findByUsername(auth.getName());
         return new ResponseEntity<Order>(restOrderService.updateOrderedItem(dto, restaurantUser.getRestDetails().getRestId(), orderId), HttpStatus.OK);
@@ -77,7 +77,7 @@ public class RestaurantOrderController {
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @PutMapping("/update-orderitem-charges/{orderId}")
-    public ResponseEntity<?> updateOrderItemFromOrder(@RequestBody OrderItem orderItem, @PathVariable Long orderId) {
+    public ResponseEntity<?> updateOrderItemFromOrder(@RequestBody OrderItem orderItem, @PathVariable String orderId) {
         return new ResponseEntity<OrderItem>(restOrderService.updateOrderItemSpecialDiscount(orderItem, orderId), HttpStatus.OK);
     }
 

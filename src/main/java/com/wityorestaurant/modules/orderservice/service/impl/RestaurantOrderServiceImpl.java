@@ -200,7 +200,7 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService {
         return false;
     }
 
-    public Boolean removePlacedOrderItem(UpdateOrderItemDTO dto, Long restaurantId, Long orderId) {
+    public Boolean removePlacedOrderItem(UpdateOrderItemDTO dto, Long restaurantId, String orderId) {
         try {
             Order order = orderRepository.findById(orderId).get();
             OrderItem orderItem = null;
@@ -231,7 +231,7 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService {
         return false;
     }
 
-    public Order updateOrderedItem(UpdateOrderItemDTO dto, Long restaurantId, Long orderId) {
+    public Order updateOrderedItem(UpdateOrderItemDTO dto, Long restaurantId, String orderId) {
         try {
             Order order = orderRepository.findById(orderId).get();
             OrderItem orderItemToBeUpdated = null;
@@ -282,7 +282,7 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService {
         return null;
     }
 
-    public OrderItem updateOrderItemSpecialDiscount(OrderItem orderItem, Long orderId) {
+    public OrderItem updateOrderItemSpecialDiscount(OrderItem orderItem, String orderId) {
         Order order = orderRepository.findById(orderId).get();
         OrderItem orderItemToBeUpdated = null;
         for (OrderItem temp : order.getMenuItemOrders()) {

@@ -12,7 +12,7 @@ import java.util.List;
 
 @Repository
 @Transactional
-public interface OrderRepository extends JpaRepository<Order, Long> {
+public interface OrderRepository extends JpaRepository<Order, String> {
     @Query(value = "SELECT * from foodorder fo inner join reservation r on fo.reservation_id=r.id inner join resttable c on c.id=r.table_Id where r.customer_Info=:customerInfo and c.rest_id=:restId", nativeQuery = true)
     List<Order> getOrderByCustomer(@Param("customerInfo") String customerInfo, @Param("restId") Long restId);
 
