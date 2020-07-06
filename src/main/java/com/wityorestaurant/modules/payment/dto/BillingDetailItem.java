@@ -7,7 +7,7 @@ import com.wityorestaurant.modules.tax.model.TaxProfile;
 
 public class BillingDetailItem {
 
-	private Long orderId;
+	private String orderId;
 	private String productId;
 	private String itemName;
 	private Integer quantity;
@@ -18,11 +18,11 @@ public class BillingDetailItem {
 	private TaxProfile appliedTaxProfile;
 	private Set<OrderItemAddOn> orderItemAddOns;
 
-	public Long getOrderId() {
+	public String getOrderId() {
 		return orderId;
 	}
 
-	public void setOrderId(Long orderId) {
+	public void setOrderId(String orderId) {
 		this.orderId = orderId;
 	}
 

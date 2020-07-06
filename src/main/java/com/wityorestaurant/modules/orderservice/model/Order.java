@@ -14,12 +14,9 @@ import java.util.Set;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "orderId")
 public class Order implements Serializable {
 
-    private static final long serialVersionUID = 8311754468336492518L;
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "orderId")
-    private Long orderId;
+    private String orderId;
 
     @Column(name = "totalCost")
     private Float totalCost;
@@ -41,11 +38,11 @@ public class Order implements Serializable {
     public Order() {
     }
 
-    public Long getOrderId() {
+    public String getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(Long orderId) {
+    public void setOrderId(String orderId) {
         this.orderId = orderId;
     }
 

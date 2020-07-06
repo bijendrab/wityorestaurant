@@ -25,6 +25,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     @Transactional
     @Modifying
     @Query(value = "DELETE  from foodorder where order_id=:orderId", nativeQuery = true)
-    void deleteOrderById(@Param("orderId") Long orderId);
+    void deleteOrderById(@Param("orderId") String orderId);
 
 }

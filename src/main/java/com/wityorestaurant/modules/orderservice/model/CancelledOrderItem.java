@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 public class CancelledOrderItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long cancelledOrderItemId;
+    private String cancelledOrderItemId;
     private Boolean isCustomerOrder;
     private Boolean isRestaurantOrder;
     private Long customerId;
@@ -19,11 +19,11 @@ public class CancelledOrderItem {
     private LocalDateTime cancellationTime;
     private String orderItemId;
 
-    public Long getCancelledOrderItemId() {
+    public String getCancelledOrderItemId() {
         return cancelledOrderItemId;
     }
 
-    public void setCancelledOrderItemId(Long cancelledOrderItemId) {
+    public void setCancelledOrderItemId(String cancelledOrderItemId) {
         this.cancelledOrderItemId = cancelledOrderItemId;
     }
 

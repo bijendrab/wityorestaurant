@@ -13,8 +13,6 @@ import java.time.LocalDate;
 @Table(name = "reservation")
 public class Reservation implements Serializable {
 
-    private static final long serialVersionUID = 1176593857442371821L;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

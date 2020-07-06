@@ -24,17 +24,17 @@ import com.wityorestaurant.modules.payment.service.PaymentService;
 @RestController
 @RequestMapping("/api/payment")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
-public class PaymentController {
-
+public class RestaurantPaymentController {
+	@Autowired
 	private PaymentService paymentService;
 	@Autowired
 	private RestaurantUserRepository restaurantUserRepository;
 
-	public PaymentController() {
+	public RestaurantPaymentController() {
 	}
 
 	@Autowired
-	public PaymentController(PaymentService paymentService) {
+	public RestaurantPaymentController(PaymentService paymentService) {
 		super();
 		this.paymentService = paymentService;
 	}
@@ -57,5 +57,6 @@ public class PaymentController {
 		return ResponseEntity.status(HttpStatus.OK)
 			.body(paymentService.updatePaymentStatus(restaurantUser.getRestDetails().getRestId(), tableId,paymentUpdateDTO));
 	}
+
 
 }
