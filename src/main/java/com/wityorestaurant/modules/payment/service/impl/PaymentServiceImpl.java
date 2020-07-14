@@ -129,79 +129,6 @@ public class PaymentServiceImpl implements PaymentService {
         return billingDetailsDto;
     }
 
-    /* Method to find out the total tax mapping based on componenets */
-    private Map<String, Map<Double, List<String>>> getTaxChargesPerItem(BillingDetailResponse response) {
-        Map<String, Map<Double, List<String>>> taxMap = response.getTaxCharges();
-        response.getBillingDetailItems().forEach(billingItem -> {
-
-            float taxPercent = billingItem.getAppliedTaxProfile().getTaxPercent();
-            if (billingItem.getAppliedTaxProfile().getTaxComponents().size() == ZERO) {
-
-                double taxPercentWeightageCalculated = taxPercent / PERCENT;
-                if (taxMap.containsKey(billingItem.getAppliedTaxProfile().getTaxProfileName())) {
-                    if (taxMap.get(billingItem.getAppliedTaxProfile().getTaxProfileName())
-                        .containsKey(taxPercentWeightageCalculated)) {
-                        List<String> itemNameList = taxMap.get(billingItem.getAppliedTaxProfile().getTaxProfileName())
-                            .get(taxPercentWeightageCalculated);
-                        itemNameList.add(billingItem.getItemName());
-                    } else {
-                        HashMap<Double, List<String>> weightageMapping = new HashMap<>();
-                        List<String> itemNameList = new ArrayList<>();
-                        itemNameList.add(billingItem.getItemName());
-                        weightageMapping.put(taxPercentWeightageCalculated, itemNameList);
-                        taxMap.put(billingItem.getAppliedTaxProfile().getTaxProfileName(), weightageMapping);
-                    }
-                }
-            } else {
-                billingItem.getAppliedTaxProfile().getTaxComponents().forEach(taxComponent -> {
-                    double taxPercentWeightageCalculated = taxPercent * (taxComponent.getWeightage() / PERCENT);
-                    String taxComponentName = taxComponent.getComponentName();
-                    // Check if component name exists in the map
-                    if (taxMap.containsKey(taxComponentName)) {
-                        // check if that tax percent is present in that map
-                        if (taxMap.get(taxComponent.getComponentName()).containsKey(taxPercentWeightageCalculated)) {
-                            taxMap.get(taxComponent.getComponentName()).get(taxPercentWeightageCalculated)
-                                .add(taxComponentName);
-                        } else {
-                            // if that tax percent is not present in that map
-                            List<String> itemNames = new ArrayList<>();
-                            itemNames.add(taxComponentName);
-                            taxMap.get(taxComponent.getComponentName()).put(taxPercentWeightageCalculated, itemNames);
-                        }
-                    }
-                    // if component name doesn't exist in the map
-                    else {
-                        HashMap<Double, List<String>> componentMapping = new HashMap<>();
-                        List<String> itemNameList = new ArrayList<>();
-                        itemNameList.add(billingItem.getItemName());
-                        componentMapping.put(taxPercentWeightageCalculated, itemNameList);
-                        taxMap.put(taxComponentName, componentMapping);
-                    }
-
-                });
-            }
-
-        });
-        return taxMap;
-
-    }
-
-    private double getTaxedItemPrice(List<Order> orders, double taxRate, String orderItemName) {
-
-        this.setTotalTaxedPrice(ZERO);
-        for (int i = ZERO; i < orders.size(); i++) {
-            orders.get(i).getMenuItemOrders().forEach(orderItem -> {
-                if (orderItem.getItemName().equals(orderItemName)) {
-                    this.setTotalTaxedPrice((orderItem.getPrice() * taxRate));
-                }
-            });
-            if (getTotalPrice() > ZERO) {
-                break;
-            }
-        }
-        return this.getTotalPrice();
-    }
-
     /*
      * Method to check the total taxes for each taxRate present and store it in a
      * response map
@@ -342,9 +269,6 @@ public class PaymentServiceImpl implements PaymentService {
             });
         });
         billingDetailsResponse.setBillingDetailItems(billingDetailsDtoList);
-
-        //Map<String, Map<Double, List<String>>> taxCharges = getTaxChargesPerItem(billingDetailsResponse);
-        billingDetailsResponse.setTaxCharges(null);
         List<TaxDetails> taxDetailsList = findTotalTaxes(billingDetailsResponse, orders);
         List<DiscountDetails> discountDetailsList = findTotalDiscount(billingDetailsResponse,restId);
         billingDetailsResponse.setTotalCalculatedDiscount(discountDetailsList);

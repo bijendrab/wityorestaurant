@@ -9,8 +9,6 @@ public class BillingDetailResponse {
 
 	private List<BillingDetailItem> billingDetailItems;
 
-	private Map<String, Map<Double, List<String>>> taxCharges = new HashMap<>();
-
 	private List<TaxDetails> totalCalculatedTaxed = new ArrayList<>();
 
 	private List<DiscountDetails> totalCalculatedDiscount= new ArrayList<>();
@@ -41,14 +39,6 @@ public class BillingDetailResponse {
 
 	public void setBillingDetailItems(List<BillingDetailItem> billingDetailItems) {
 		this.billingDetailItems = billingDetailItems;
-	}
-
-	public Map<String, Map<Double, List<String>>> getTaxCharges() {
-		return taxCharges;
-	}
-
-	public void setTaxCharges(Map<String, Map<Double, List<String>>> taxCharges) {
-		this.taxCharges = taxCharges;
 	}
 
 	public double getServiceCharge() {
