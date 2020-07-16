@@ -18,7 +18,7 @@ public class AddOnItems implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ItemId")
-    private int ItemId;
+    private int itemId;
 
     @NotNull(message = "AddOn Profile Name is mandatory")
     @Column(name = "itemName")
@@ -38,11 +38,11 @@ public class AddOnItems implements Serializable {
     private AddOnProfile addOnProfile;
 
     public int getItemId() {
-        return ItemId;
+        return itemId;
     }
 
     public void setItemId(int itemId) {
-        ItemId = itemId;
+        this.itemId = itemId;
     }
 
     public String getItemName() {
