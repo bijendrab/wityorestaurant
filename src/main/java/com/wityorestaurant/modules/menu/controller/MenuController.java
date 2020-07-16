@@ -72,4 +72,9 @@ public class MenuController {
     public ResponseEntity<?> getMenuItemByRestaurantId(@PathVariable("restaurantId") Long restId) {
         return new ResponseEntity<>(restMenuServiceImpl.getMenuByRestaurantId(restId), HttpStatus.ACCEPTED);
     }
+
+    @GetMapping("/{restaurantId}/{itemId}")
+    public ResponseEntity<?> getMenuItemByRestaurantId(@PathVariable("restaurantId") Long restId,@PathVariable(value = "itemId") String itemId ) {
+        return new ResponseEntity<>(restMenuServiceImpl.getMenuItemByIdCustomer(restId,itemId), HttpStatus.ACCEPTED);
+    }
 }
