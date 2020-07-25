@@ -5,6 +5,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.List;
 import com.wityorestaurant.modules.orderservice.dto.RestaurantOrderDTO;
+import com.wityorestaurant.modules.orderservice.dto.TableOrdersResponse;
 import com.wityorestaurant.modules.orderservice.dto.UpdateOrderItemDTO;
 import com.wityorestaurant.modules.orderservice.model.Order;
 import com.wityorestaurant.modules.orderservice.model.OrderHistory;
@@ -14,6 +15,7 @@ import com.wityorestaurant.modules.orderservice.service.RestaurantOrderService;
 import com.wityorestaurant.modules.restaurant.model.RestaurantDetails;
 import com.wityorestaurant.modules.restaurant.model.RestaurantUser;
 import com.wityorestaurant.modules.restaurant.repository.RestaurantUserRepository;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,6 +45,7 @@ public class RestaurantOrderController {
         return new ResponseEntity<>(orderService.getAllTableOrderDetails(restaurantUser.getRestDetails().getRestId()), HttpStatus.OK);
     }
 
+    @ApiOperation(value = "get order of a table", response = TableOrdersResponse.class)
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/order-by-table/{tableId}")
     public ResponseEntity<?> getOrderByTable(@PathVariable Long tableId) {
