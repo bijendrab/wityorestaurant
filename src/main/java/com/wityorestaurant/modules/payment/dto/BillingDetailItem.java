@@ -16,6 +16,7 @@ public class BillingDetailItem {
 	private Double value;
 	private Double specialDiscount;
 	private TaxProfile appliedTaxProfile;
+	private String customerInfo;
 	private Set<OrderItemAddOn> orderItemAddOns;
 
 	public String getOrderId() {
@@ -96,5 +97,13 @@ public class BillingDetailItem {
 
 	public void setOrderItemAddOns(Set<OrderItemAddOn> orderItemAddOns) {
 		this.orderItemAddOns = orderItemAddOns;
+	}
+
+	public String getCustomerInfo() {
+		return customerInfo;
+	}
+
+	public void setCustomerInfo(String customerInfo) {
+		this.customerInfo = customerInfo;
 	}
 }

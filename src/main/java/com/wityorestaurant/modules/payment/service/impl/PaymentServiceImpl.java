@@ -100,7 +100,7 @@ public class PaymentServiceImpl implements PaymentService {
         return this.totalComponentCost;
     }
 
-    private BillingDetailItem orderToBDto(OrderItem orderItem,Long restId) {
+    private BillingDetailItem orderToBDto(OrderItem orderItem,String customerInfo, Long restId) {
         CustomerCartItems cartItem = new Gson().fromJson(orderItem.getCustomerCartItems(), CustomerCartItems.class);
         Product productJson = new Gson().fromJson(cartItem.getProductJson(), Product.class);
         Product product = menuRepository.findByItemAndRestId(productJson.getProductId(),restId);
@@ -111,6 +111,7 @@ public class PaymentServiceImpl implements PaymentService {
         billingDetailsDto.setQuantityOption(orderItem.getQuantityOption());
         billingDetailsDto.setOrderId(orderItem.getOrder().getOrderId());
         billingDetailsDto.setQuantity(orderItem.getQuantity());
+        billingDetailsDto.setCustomerInfo(customerInfo);
         if(orderItem.getSpecialDiscount()){
             billingDetailsDto.setSpecialDiscount((double)orderItem.getSpecialDiscountValue());
         }
@@ -265,7 +266,7 @@ public class PaymentServiceImpl implements PaymentService {
         List<BillingDetailItem> billingDetailsDtoList = new ArrayList<>();
         orders.forEach(order -> {
             order.getMenuItemOrders().forEach(orderItem -> {
-                billingDetailsDtoList.add(orderToBDto(orderItem,restId));
+                billingDetailsDtoList.add(orderToBDto(orderItem,order.getAccordingReservation().getCustomerInfo(),restId));
             });
         });
         billingDetailsResponse.setBillingDetailItems(billingDetailsDtoList);
