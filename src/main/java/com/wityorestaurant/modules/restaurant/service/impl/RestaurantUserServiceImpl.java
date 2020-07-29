@@ -70,6 +70,7 @@ public class RestaurantUserServiceImpl implements RestaurantUserService {
                 restDetails.setBankAccountNumber(newUser.getBankAccountNumber());
                 restDetails.setBankName(newUser.getBankName());
                 restDetails.setBankIfscCode(newUser.getBankIfscCode());
+                restDetails.setGstIn(newUser.getGstIn());
                 user.setEnabled(TRUE);
                 user.setPassword(encoder.encode(newUser.getPassword()));
                 Role userRole = roleRepository.findByName(RoleName.ROLE_USER);

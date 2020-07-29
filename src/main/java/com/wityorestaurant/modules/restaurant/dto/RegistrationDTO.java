@@ -15,6 +15,7 @@ public class RegistrationDTO {
     private String bankAccountNumber;
     private String bankName;
     private String bankIfscCode;
+    private String gstIn;
 
 
     public String getUsername() {
@@ -128,5 +129,13 @@ public class RegistrationDTO {
 
     public void setBankIfscCode(String bankIfscCode) {
         this.bankIfscCode = bankIfscCode;
+    }
+
+    public String getGstIn() {
+        return gstIn;
+    }
+
+    public void setGstIn(String gstIn) {
+        this.gstIn = gstIn;
     }
 }
