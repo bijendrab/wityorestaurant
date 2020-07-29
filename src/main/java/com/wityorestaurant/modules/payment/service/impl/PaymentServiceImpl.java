@@ -125,7 +125,7 @@ public class PaymentServiceImpl implements PaymentService {
                 for(OrderItemAddOn orderItemAddOn: orderItem.getOrderItemAddOns()) {
                     addOnPrice = addOnPrice + orderItemAddOn.getPrice();
                 }
-                double itemCost = orderItem.getQuantity() * pq.getPrice() + addOnPrice ;
+                double itemCost = orderItem.getQuantity() * pq.getPrice() + orderItem.getQuantity() * addOnPrice ;
                 billingDetailsDto.setPrice(pq.getPrice());
                 billingDetailsDto.setValue(itemCost);
             }
