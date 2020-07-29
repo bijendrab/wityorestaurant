@@ -17,6 +17,7 @@ import com.wityorestaurant.modules.config.repository.RestTableRepository;
 import com.wityorestaurant.modules.customerdata.CustomerCartItems;
 import com.wityorestaurant.modules.discount.model.Discount;
 import com.wityorestaurant.modules.discount.repository.DiscountRepository;
+import com.wityorestaurant.modules.menu.model.AddOnProfile;
 import com.wityorestaurant.modules.menu.model.Product;
 import com.wityorestaurant.modules.menu.model.ProductQuantityOptions;
 import com.wityorestaurant.modules.menu.repository.MenuRepository;
@@ -120,7 +121,11 @@ public class PaymentServiceImpl implements PaymentService {
         }
         for(ProductQuantityOptions pq:product.getProductQuantityOptions()){
             if(pq.getQuantityOption().equals(orderItem.getQuantityOption())){
-                double itemCost = orderItem.getQuantity()*pq.getPrice();
+                double addOnPrice= 0;
+                for(OrderItemAddOn orderItemAddOn: orderItem.getOrderItemAddOns()) {
+                    addOnPrice = addOnPrice + orderItemAddOn.getPrice();
+                }
+                double itemCost = orderItem.getQuantity() * pq.getPrice() + addOnPrice ;
                 billingDetailsDto.setPrice(pq.getPrice());
                 billingDetailsDto.setValue(itemCost);
             }
