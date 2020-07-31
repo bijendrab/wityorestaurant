@@ -124,7 +124,8 @@ public class OrderServiceImpl implements OrderService {
             return newOrder;
         }
         catch (Exception e) {
-            System.out.println(e.getMessage());
+            logger.error("Exception in OrderServiceImpl, method: place order --> {}", e.getMessage());
+            logger.debug("Stacktrace===> {}", e);
         }
         return null;
     }
@@ -142,13 +143,20 @@ public class OrderServiceImpl implements OrderService {
     }
 
     public TableOrdersResponse getTableOrderDetails(CustomerInfoDTO customerInfoDTO, Long restId) {
-        Reservation accordingReservation = reservationRepository.getByCustomerId(new Gson().toJson(customerInfoDTO), restId);
-        if (accordingReservation == null) {
+        try {
+            Reservation accordingReservation = reservationRepository.getByCustomerId(new Gson().toJson(customerInfoDTO), restId);
+            if (accordingReservation == null) {
+                return new TableOrdersResponse();
+            }
+            TableOrdersResponse response = new TableOrdersResponse();
+            response.setTableOrders(orderRepository.getOrderByTable(accordingReservation.getRelatedTable().getId(), restId));
+            return response;
+        }
+        catch (Exception e) {
+            logger.error("Exception in OrderServiceImpl, method: place order --> {}", e.getMessage());
+            logger.debug("Stacktrace===> {}", e);
             return new TableOrdersResponse();
         }
-        TableOrdersResponse response = new TableOrdersResponse();
-        response.setTableOrders(orderRepository.getOrderByTable(accordingReservation.getRelatedTable().getId(), restId));
-        return response;
     }
 
     public TableOrdersResponse getRestaurantTableOrders(Long tableId, Long restaurantId) {

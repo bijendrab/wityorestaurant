@@ -11,7 +11,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "foodorder")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "orderId")
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "orderId")
 public class Order implements Serializable {
 
     @Id

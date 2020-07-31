@@ -1,5 +1,6 @@
 package com.wityorestaurant.modules.reservation.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.wityorestaurant.modules.config.model.RestTable;
 import com.wityorestaurant.modules.orderservice.model.Order;
 
@@ -39,6 +40,7 @@ public class Reservation implements Serializable {
     @JoinColumn(name = "tableId")
     private RestTable relatedTable;
 
+    @JsonIgnore
     @OneToOne(mappedBy = "accordingReservation", orphanRemoval=true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Order order;
 
