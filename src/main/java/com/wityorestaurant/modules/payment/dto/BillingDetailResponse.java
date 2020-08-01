@@ -1,9 +1,7 @@
 package com.wityorestaurant.modules.payment.dto;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class BillingDetailResponse {
 
@@ -17,11 +15,12 @@ public class BillingDetailResponse {
 	private float serviceChargePercent;
 	private double addOnCharge = 0.0F;
 	private float packagingCharge = 0.0F;
-	private double overallDiscount = 0.0F;
-	private float overallDiscountPercent;
+	private double tableDiscount = 0.0F;
+	private float tableDiscountPercent;
 	private double totalCostWithoutTaxAndDiscount;
 	private double totalTax;
 	private double totalItemsDiscount;
+	private double totalDiscount;
 	private double totalCost;
 
 
@@ -57,12 +56,12 @@ public class BillingDetailResponse {
 		this.packagingCharge = packagingCharge;
 	}
 
-	public double getOverallDiscount() {
-		return overallDiscount;
+	public double getTableDiscount() {
+		return tableDiscount;
 	}
 
-	public void setOverallDiscount(double overallDiscount) {
-		this.overallDiscount = overallDiscount;
+	public void setTableDiscount(double tableDiscount) {
+		this.tableDiscount = tableDiscount;
 	}
 
 	public float getServiceChargePercent() {
@@ -74,12 +73,12 @@ public class BillingDetailResponse {
 	}
 
 
-	public float getOverallDiscountPercent() {
-		return overallDiscountPercent;
+	public float getTableDiscountPercent() {
+		return tableDiscountPercent;
 	}
 
-	public void setOverallDiscountPercent(float overallDiscountPercent) {
-		this.overallDiscountPercent = overallDiscountPercent;
+	public void setTableDiscountPercent(float tableDiscountPercent) {
+		this.tableDiscountPercent = tableDiscountPercent;
 	}
 
 	public double getTotalCost() {
@@ -128,5 +127,13 @@ public class BillingDetailResponse {
 
 	public void setAddOnCharge(double addOnCharge) {
 		this.addOnCharge = addOnCharge;
+	}
+
+	public double getTotalDiscount() {
+		return totalDiscount;
+	}
+
+	public void setTotalDiscount(double totalDiscount) {
+		this.totalDiscount = totalDiscount;
 	}
 }

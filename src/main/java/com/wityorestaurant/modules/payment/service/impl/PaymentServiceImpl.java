@@ -1,23 +1,17 @@
 package com.wityorestaurant.modules.payment.service.impl;
 
-import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.wityorestaurant.modules.config.model.RestTable;
 import com.wityorestaurant.modules.config.repository.RestTableRepository;
 import com.wityorestaurant.modules.customerdata.CustomerCartItems;
 import com.wityorestaurant.modules.discount.model.Discount;
 import com.wityorestaurant.modules.discount.repository.DiscountRepository;
-import com.wityorestaurant.modules.menu.model.AddOnProfile;
 import com.wityorestaurant.modules.menu.model.Product;
 import com.wityorestaurant.modules.menu.model.ProductQuantityOptions;
 import com.wityorestaurant.modules.menu.repository.MenuRepository;
@@ -34,13 +28,11 @@ import com.wityorestaurant.modules.payment.dto.DiscountDetails;
 import com.wityorestaurant.modules.payment.dto.PaymentUpdateDTO;
 import com.wityorestaurant.modules.payment.dto.TaxDetails;
 import com.wityorestaurant.modules.payment.service.PaymentService;
-import com.wityorestaurant.modules.reservation.model.Reservation;
 import com.wityorestaurant.modules.reservation.repository.ReservationRepository;
 import com.wityorestaurant.modules.tax.model.TaxComponent;
 import com.wityorestaurant.modules.tax.model.TaxProfile;
 import com.wityorestaurant.modules.tax.repository.TaxRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 
 /**
@@ -308,23 +300,24 @@ public class PaymentServiceImpl implements PaymentService {
             billingDetailsResponse.setServiceCharge(ZERO);
         }
         if(restTable.isOverAllDiscountEnabled()){
-            billingDetailsResponse.setOverallDiscountPercent(restTable.getOverallDiscount());
+            billingDetailsResponse.setTableDiscountPercent(restTable.getOverallDiscount());
             double overAllDiscount = totalPriceWithoutTaxAndDiscount * restTable.getOverallDiscount()/ PERCENT;
             BigDecimal totalOverAllDiscount = getBigDecimal(overAllDiscount);
-            billingDetailsResponse.setOverallDiscount(totalOverAllDiscount.doubleValue());
+            billingDetailsResponse.setTableDiscount(totalOverAllDiscount.doubleValue());
         }
         else{
-            billingDetailsResponse.setOverallDiscountPercent(ZERO);
-            billingDetailsResponse.setOverallDiscount(ZERO);
+            billingDetailsResponse.setTableDiscountPercent(ZERO);
+            billingDetailsResponse.setTableDiscount(ZERO);
         }
 
         double totalPrice = (totalPriceWithoutTaxAndDiscount + totalTax + totalAddOnCharges - totalDiscount) +
             billingDetailsResponse.getServiceCharge() +
             billingDetailsResponse.getPackagingCharge()-
-            billingDetailsResponse.getOverallDiscount();
+            billingDetailsResponse.getTableDiscount();
 
         billingDetailsResponse.setTotalCostWithoutTaxAndDiscount(getBigDecimal(totalPriceWithoutTaxAndDiscount).doubleValue());
         billingDetailsResponse.setTotalItemsDiscount(getBigDecimal(totalDiscount).doubleValue());
+        billingDetailsResponse.setTotalDiscount(billingDetailsResponse.getTotalItemsDiscount()+ billingDetailsResponse.getTableDiscount());
         billingDetailsResponse.setTotalTax(getBigDecimal(totalTax).doubleValue());
         billingDetailsResponse.setAddOnCharge(totalAddOnCharges);
         billingDetailsResponse.setTotalCost(getBigDecimal(totalPrice).doubleValue());
