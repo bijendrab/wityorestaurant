@@ -99,6 +99,7 @@ public class OrderServiceImpl implements OrderService {
                 menuItem_Order.setQuantityOption(customerCartItems.getQuantityOption());
                 menuItem_Order.setCustomerCartItems(new Gson().toJson(customerCartItems));
                 menuItem_Order.setImmediateStatus(customerCartItems.getImmediateStatus());
+                menuItem_Order.setIsVeg(new Gson().fromJson(customerCartItems.getProductJson(), Product.class).getIsVeg());
                 menuItem_Order.setOrder(newOrder);
                 newOrder.getMenuItemOrders().add(menuItem_Order);
                 for (CustomerCartAddOnItems customerCartAddOnItems : customerCartItems.getSelectCartAddOnItems()) {
