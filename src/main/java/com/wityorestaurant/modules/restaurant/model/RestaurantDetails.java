@@ -27,6 +27,7 @@ public class RestaurantDetails implements Serializable {
     private String ownerName;
     private String phone;
     private String email;
+    private String description;
     private String address1;
     private String address2;
     private String city;
@@ -121,6 +122,14 @@ public class RestaurantDetails implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getAddress1() {

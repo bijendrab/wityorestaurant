@@ -4,15 +4,13 @@ import java.util.List;
 
 public class RestaurantListDto {
 
-    private List<RestaurantIdNameDto> restaurantDetails;
+    private List<RestaurantBasicDTO> restaurantDetails;
 
-    public List<RestaurantIdNameDto> getRestaurantDetails() {
+    public List<RestaurantBasicDTO> getRestaurantDetails() {
         return restaurantDetails;
     }
 
-    public void setRestaurantDetails(List<RestaurantIdNameDto> restaurantDetails) {
+    public void setRestaurantDetails(List<RestaurantBasicDTO> restaurantDetails) {
         this.restaurantDetails = restaurantDetails;
     }
-
-
 }

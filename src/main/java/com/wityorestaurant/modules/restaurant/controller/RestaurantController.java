@@ -88,19 +88,6 @@ public class RestaurantController {
 
     @GetMapping("/restaurant-id-list")
     public ResponseEntity<?> restDetailsByIdName() {
-        return new ResponseEntity<RestaurantListDto>(restUserServiceImpl.getAllRestaurantIdsAndName(), HttpStatus.OK);
-    }
-
-    @GetMapping("/{restId}")
-    public ResponseEntity<?> restDetailsByIdName(@PathVariable(value = "restId") Long restId) {
-        RestaurantUser restaurantUser = userRepo.findByUserId(restId);
-        RestaurantBasicDTO restaurantBasicDTO = new RestaurantBasicDTO();
-        restaurantBasicDTO.setRestName(restaurantUser.getRestDetails().getRestName());
-        restaurantBasicDTO.setPhone(restaurantUser.getRestDetails().getPhone());
-        restaurantBasicDTO.setAddress1(restaurantUser.getRestDetails().getAddress1());
-        restaurantBasicDTO.setAddress2(restaurantUser.getRestDetails().getAddress2());
-        restaurantBasicDTO.setCity(restaurantUser.getRestDetails().getCity());
-        restaurantBasicDTO.setGstIn(restaurantUser.getRestDetails().getGstIn());
-        return new ResponseEntity<RestaurantBasicDTO>(restaurantBasicDTO, HttpStatus.OK);
+        return new ResponseEntity<>(restUserServiceImpl.getAllRestaurantIdsAndName(), HttpStatus.OK);
     }
 }

@@ -2,11 +2,13 @@ package com.wityorestaurant.modules.restaurant.dto;
 
 public class RestaurantBasicDTO {
     private String restName;
+    private String description;
     private String phone;
     private String address1;
     private String address2;
     private String city;
     private String gstIn;
+
 
     public String getRestName() {
         return restName;
@@ -54,5 +56,13 @@ public class RestaurantBasicDTO {
 
     public void setGstIn(String gstIn) {
         this.gstIn = gstIn;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

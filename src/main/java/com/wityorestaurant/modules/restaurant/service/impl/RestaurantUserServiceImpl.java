@@ -2,7 +2,7 @@ package com.wityorestaurant.modules.restaurant.service.impl;
 
 import com.wityorestaurant.modules.cart.model.RestaurantCart;
 import com.wityorestaurant.modules.restaurant.dto.RegistrationDTO;
-import com.wityorestaurant.modules.restaurant.dto.RestaurantIdNameDto;
+import com.wityorestaurant.modules.restaurant.dto.RestaurantBasicDTO;
 import com.wityorestaurant.modules.restaurant.dto.RestaurantListDto;
 import com.wityorestaurant.modules.restaurant.exception.UsernameAlreadyExistsException;
 import com.wityorestaurant.modules.restaurant.model.RestaurantDetails;
@@ -94,14 +94,22 @@ public class RestaurantUserServiceImpl implements RestaurantUserService {
     public RestaurantListDto getAllRestaurantIdsAndName() {
         try {
             RestaurantListDto dto = new RestaurantListDto();
-            List<RestaurantIdNameDto> responseList = new ArrayList<RestaurantIdNameDto>();
+            List<RestaurantBasicDTO> responseList = new ArrayList<>();
             List<RestaurantDetails> restaurantList = restaurantRepository.findAll();
             if (restaurantList.size() != 0) {
-                for (RestaurantDetails restaurant : restaurantList) {
-                    RestaurantIdNameDto idName = new RestaurantIdNameDto();
-                    idName.setRestaurantId(restaurant.getRestId());
-                    idName.setRestaurantName(restaurant.getRestName());
-                    responseList.add(idName);
+                for (RestaurantDetails restaurantUser : restaurantList) {
+                    if (restaurantUser.getRestName().equals("adminrest")){
+                        continue;
+                    }
+                    RestaurantBasicDTO restaurantBasicDTO = new RestaurantBasicDTO();
+                    restaurantBasicDTO.setRestName(restaurantUser.getRestName());
+                    restaurantBasicDTO.setPhone(restaurantUser.getPhone());
+                    restaurantBasicDTO.setDescription(restaurantUser.getDescription());
+                    restaurantBasicDTO.setAddress1(restaurantUser.getAddress1());
+                    restaurantBasicDTO.setAddress2(restaurantUser.getAddress2());
+                    restaurantBasicDTO.setCity(restaurantUser.getCity());
+                    restaurantBasicDTO.setGstIn(restaurantUser.getGstIn());
+                    responseList.add(restaurantBasicDTO);
                 }
                 dto.setRestaurantDetails(responseList);
                 return dto;
