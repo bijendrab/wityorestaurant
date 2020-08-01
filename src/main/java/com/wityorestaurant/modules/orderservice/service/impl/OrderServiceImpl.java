@@ -244,7 +244,7 @@ public class OrderServiceImpl implements OrderService {
             orderRepository.save(newOrder);
             if (newOrder.getTotalCost() == 0) {
                 orderRepository.deleteOrderById(newOrder.getOrderId());
-                if (orderRepository.getOrderByTable(newOrder.getAccordingReservation().getRelatedTable().getId(), restaurantId).isEmpty()) {
+                if (orderRepository.getOrderByCustomer(newOrder.getAccordingReservation().getCustomerInfo(), restaurantId).isEmpty()) {
                     reservationRepository.deleteReservationById(newOrder.getAccordingReservation().getId());
                     return true;
                 }
