@@ -112,6 +112,7 @@ public class PaymentServiceImpl implements PaymentService {
         billingDetailsDto.setQuantityOption(orderItem.getQuantityOption());
         billingDetailsDto.setOrderId(orderItem.getOrder().getOrderId());
         billingDetailsDto.setQuantity(orderItem.getQuantity());
+        billingDetailsDto.setIsVeg(orderItem.getIsVeg());
         billingDetailsDto.setCustomerInfo(customerInfo);
         if(orderItem.getSpecialDiscount()){
             billingDetailsDto.setSpecialDiscount((double)orderItem.getSpecialDiscountValue());

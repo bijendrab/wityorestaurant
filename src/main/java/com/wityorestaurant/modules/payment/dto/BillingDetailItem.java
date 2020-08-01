@@ -12,6 +12,7 @@ public class BillingDetailItem {
 	private String itemName;
 	private Integer quantity;
 	private String quantityOption;
+	private Boolean isVeg;
 	private Double price;
 	private Double value;
 	private Double specialDiscount;
@@ -57,6 +58,14 @@ public class BillingDetailItem {
 
 	public void setQuantityOption(String quantityOption) {
 		this.quantityOption = quantityOption;
+	}
+
+	public Boolean getIsVeg() {
+		return this.isVeg;
+	}
+
+	public void setIsVeg(Boolean isVeg) {
+		this.isVeg = isVeg;
 	}
 
 	public Double getPrice() {

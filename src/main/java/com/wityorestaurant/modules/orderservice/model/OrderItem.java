@@ -34,6 +34,9 @@ public class OrderItem implements Serializable {
 
     private String quantityOption;
 
+    private Boolean isVeg;
+
+
 
     private Boolean immediateStatus;
 
@@ -84,6 +87,14 @@ public class OrderItem implements Serializable {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public Boolean getIsVeg() {
+        return this.isVeg;
+    }
+
+    public void setIsVeg(Boolean isVeg) {
+        this.isVeg = isVeg;
     }
 
     public double getPrice() {
