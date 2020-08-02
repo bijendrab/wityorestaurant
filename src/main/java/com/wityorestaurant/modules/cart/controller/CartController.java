@@ -50,7 +50,7 @@ public class CartController {
     }
 
     @PutMapping("/updateQuantity")
-    public ResponseEntity<?>  UpdateCartItem(@RequestBody RestaurantCartItemQuanityChange restaurantCartItemQuanityChange) {
+    public ResponseEntity<?>  UpdateCartItemQuantity(@RequestBody RestaurantCartItemQuanityChange restaurantCartItemQuanityChange) {
         Map<String, Object> response = new HashMap<>();
         response.put("message", "Update in Cart Item Quantity");
         if(cartServiceImpl.updateQuantityItemInCart(restaurantCartItemQuanityChange) == null){
