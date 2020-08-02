@@ -53,6 +53,7 @@ public class CartServiceImpl implements CartService {
             cart.setCartItems(cart.getCartItems().stream().filter(item -> item.getTable().getId() == tableId).collect(Collectors.toList()));
             return cart;
         } catch (Exception e) {
+            logger.error(e.getMessage());
         }
         return null;
     }

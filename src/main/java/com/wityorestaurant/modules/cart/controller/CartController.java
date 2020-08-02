@@ -43,7 +43,14 @@ public class CartController {
     public ResponseEntity<?> addCartItem(@RequestBody RestaurantCartItemInput restaurantCartItemInput) {
         Map<String, Object> response = new HashMap<>();
         response.put("message", "Adding Item to Cart");
-        response.put("body", cartServiceImpl.addToCart(restaurantCartItemInput));
+        String addToCartStatus = cartServiceImpl.addToCart(restaurantCartItemInput);
+        if(addToCartStatus == null){
+            response.put("body","Item did not get added to Cart. Check the http method/request input again please");
+            response.put("error", true);
+            response.put("status", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        response.put("body", addToCartStatus);
         response.put("status", HttpStatus.ACCEPTED);
         response.put("error", false);
         return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
@@ -53,13 +60,14 @@ public class CartController {
     public ResponseEntity<?>  UpdateCartItemQuantity(@RequestBody RestaurantCartItemQuanityChange restaurantCartItemQuanityChange) {
         Map<String, Object> response = new HashMap<>();
         response.put("message", "Update in Cart Item Quantity");
-        if(cartServiceImpl.updateQuantityItemInCart(restaurantCartItemQuanityChange) == null){
-            response.put("body","Item Quantity did not get changed");
+        String updateQuantityInCartStatus = cartServiceImpl.updateQuantityItemInCart(restaurantCartItemQuanityChange);
+        if(updateQuantityInCartStatus == null){
+            response.put("body","Item Quantity did not get changed. Check the http method/request input again please");
             response.put("error", true);
             response.put("status", HttpStatus.INTERNAL_SERVER_ERROR);
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        response.put("body", cartServiceImpl.updateQuantityItemInCart(restaurantCartItemQuanityChange));
+        response.put("body", updateQuantityInCartStatus);
         response.put("status", HttpStatus.ACCEPTED);
         response.put("error", false);
         return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
@@ -69,13 +77,14 @@ public class CartController {
     public ResponseEntity<?>  UpdateCartAddOn(@RequestBody RestaurantCartAddOnItemChange restaurantCartAddOnItemChange) {
         Map<String, Object> response = new HashMap<>();
         response.put("message", "Update in Cart Item AddOn");
-        if(cartServiceImpl.updateAddOnItemsInCart(restaurantCartAddOnItemChange) == null){
-            response.put("body","Add On did not get updated");
+        String updateAddOnInCartStatus = cartServiceImpl.updateAddOnItemsInCart(restaurantCartAddOnItemChange);
+        if(updateAddOnInCartStatus == null){
+            response.put("body","Add On did not get updated. Check the http method/request input again please");
             response.put("error", true);
             response.put("status", HttpStatus.INTERNAL_SERVER_ERROR);
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        response.put("body", cartServiceImpl.updateAddOnItemsInCart(restaurantCartAddOnItemChange));
+        response.put("body", updateAddOnInCartStatus);
         response.put("status", HttpStatus.ACCEPTED);
         response.put("error", false);
         return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
@@ -85,7 +94,14 @@ public class CartController {
     public ResponseEntity<?> removeCartItem(@PathVariable Long cartItemId) {
         Map<String, Object> response = new HashMap<>();
         response.put("message", "Delete Cart Item");
-        response.put("body", cartServiceImpl.deleteCartItemById(cartItemId));
+        String deleteCartITemStatus = cartServiceImpl.deleteCartItemById(cartItemId);
+        if(deleteCartITemStatus == null){
+            response.put("body","Delete CartItem did not happen. Check the http method/request input again please");
+            response.put("error", true);
+            response.put("status", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        response.put("body",deleteCartITemStatus );
         response.put("status", HttpStatus.ACCEPTED);
         response.put("error", false);
         return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
