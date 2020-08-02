@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.wityorestaurant.modules.config.model.RestTable;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Table(name = "restaurant_cart_item")
@@ -20,6 +22,8 @@ public class RestaurantCartItem {
     private int quantity;
     private double price;
     private Boolean immediateStatus = Boolean.FALSE;
+    private LocalDateTime addItemToCartTime;
+    private LocalDateTime updateItemInCartTime;
 
     @ManyToOne
     @JoinColumn(name = "cart_id")
@@ -31,10 +35,13 @@ public class RestaurantCartItem {
     @JoinColumn(name = "table_id")
     private RestTable table;
 
-    @Lob
+
     private String productJson;
 
     private String orderTaker;
+
+    @OneToMany(mappedBy = "restaurantCartItem", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<RestaurantCartAddOnItems> restaurantCartAddOnItems;
 
     public Long getCartItemId() {
         return cartItemId;
@@ -116,5 +123,27 @@ public class RestaurantCartItem {
         this.productJson = productJson;
     }
 
+    public Set<RestaurantCartAddOnItems> getRestaurantCartAddOnItems() {
+        return restaurantCartAddOnItems;
+    }
 
+    public void setRestaurantCartAddOnItems(Set<RestaurantCartAddOnItems> restaurantCartAddOnItems) {
+        this.restaurantCartAddOnItems = restaurantCartAddOnItems;
+    }
+
+    public LocalDateTime getAddItemToCartTime() {
+        return addItemToCartTime;
+    }
+
+    public void setAddItemToCartTime(LocalDateTime addItemToCartTime) {
+        this.addItemToCartTime = addItemToCartTime;
+    }
+
+    public LocalDateTime getUpdateItemInCartTime() {
+        return updateItemInCartTime;
+    }
+
+    public void setUpdateItemInCartTime(LocalDateTime updateItemInCartTime) {
+        this.updateItemInCartTime = updateItemInCartTime;
+    }
 }

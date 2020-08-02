@@ -46,14 +46,14 @@ public class ManagerReservationServiceImpl implements MangerReservationService {
         List<RestTable> fittingTables = tableRepository.findAll();
 
         // check if they are available for the given time
-        RestTable availableTable = isAvailable(r.getDate(), fittingTables, r.getTs(), r.getTableNumber(), restId);
+        RestTable availableTable = isAvailable(r.getReservationDTO().getDate(), fittingTables, r.getReservationDTO().getReservationTime(), r.getReservationDTO().getTableNumber(), restId);
 
         if (availableTable != null) { // reserve it if you can
             /*
              * 1- reserve the availableTable 2- update the table state 3- return true
              */
             LocalDate now = LocalDate.now();
-            return reservationService.saveReserve(availableTable, r.getCustomerInfo(), r.getTs(), now, r.getDate(), "");
+            return reservationService.saveReserve(availableTable, r.getCustomerInfo(), r.getReservationDTO().getReservationTime(), now, r.getReservationDTO().getDate(), "");
 
         }
         return null;

@@ -18,8 +18,6 @@ import java.util.List;
 @Table(name = "restDetails")
 public class RestaurantDetails implements Serializable {
 
-    private static final long serialVersionUID = 2903949587384355232L;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     /*@GenericGenerator(
@@ -29,6 +27,7 @@ public class RestaurantDetails implements Serializable {
     private String ownerName;
     private String phone;
     private String email;
+    private String description;
     private String address1;
     private String address2;
     private String city;
@@ -37,6 +36,7 @@ public class RestaurantDetails implements Serializable {
     private String bankAccountNumber;
     private String bankName;
     private String bankIfscCode;
+    private String gstIn;
 
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -122,6 +122,14 @@ public class RestaurantDetails implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getAddress1() {
@@ -275,5 +283,13 @@ public class RestaurantDetails implements Serializable {
 
     public void setStaff(List<Staff> staff) {
         this.staff = staff;
+    }
+
+    public String getGstIn() {
+        return gstIn;
+    }
+
+    public void setGstIn(String gstIn) {
+        this.gstIn = gstIn;
     }
 }

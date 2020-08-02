@@ -19,6 +19,8 @@ public interface RestaurantMenuService {
     String setMenuItemStatus(String productId);
 
     RestaurantMenuDto getMenuByRestaurantId(Long restId);
+
+    Product getMenuItemByIdCustomer(Long restId, String productId);
 }
 
 

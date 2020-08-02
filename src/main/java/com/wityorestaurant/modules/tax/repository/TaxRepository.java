@@ -17,6 +17,9 @@ public interface TaxRepository extends JpaRepository<TaxProfile, Long>{
 	
 	@Query(value = "SELECT * FROM tax_profile WHERE tax_profile_id=?1 AND rest_id=?2", nativeQuery = true)
 	TaxProfile findTaxProfileByRestId(Long taxProfileId, Long restId);
+
+	@Query(value = "SELECT * FROM tax_profile WHERE rest_id=?1 AND tax_type=?2", nativeQuery = true)
+	TaxProfile findTaxProfileByRestIdAndTaxType(Long restId, String txType);
 	
 	@Query(value = "SELECT * FROM tax_profile WHERE rest_id=?1", nativeQuery = true)
 	List<TaxProfile> findProfilesByRestId(Long restId);

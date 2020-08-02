@@ -1,6 +1,8 @@
 package com.wityorestaurant.modules.reservation.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.wityorestaurant.modules.config.model.RestTable;
+import com.wityorestaurant.modules.orderservice.model.Order;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -11,8 +13,6 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "reservation")
 public class Reservation implements Serializable {
-
-    private static final long serialVersionUID = 1176593857442371821L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,6 +40,9 @@ public class Reservation implements Serializable {
     @JoinColumn(name = "tableId")
     private RestTable relatedTable;
 
+    @JsonIgnore
+    @OneToOne(mappedBy = "accordingReservation", orphanRemoval=true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Order order;
 
     public Long getId() {
         return id;
@@ -95,6 +98,14 @@ public class Reservation implements Serializable {
 
     public void setRelatedTable(RestTable relatedTable) {
         this.relatedTable = relatedTable;
+    }
+
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
     }
 
     public boolean doesTimeSpanConflicts(TimeSpan ts) {

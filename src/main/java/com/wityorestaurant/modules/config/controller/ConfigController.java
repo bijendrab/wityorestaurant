@@ -1,7 +1,9 @@
 package com.wityorestaurant.modules.config.controller;
 
 import com.wityorestaurant.modules.config.dto.ConfigurationDTO;
+import com.wityorestaurant.modules.config.dto.PaymentModeDTO;
 import com.wityorestaurant.modules.config.dto.RestTableDTO;
+import com.wityorestaurant.modules.config.model.PaymentMode;
 import com.wityorestaurant.modules.config.model.RestTable;
 import com.wityorestaurant.modules.config.model.Staff;
 import com.wityorestaurant.modules.config.repository.RestTableRepository;
@@ -65,20 +67,19 @@ public class ConfigController {
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/getTables")
-    public ResponseEntity<?> getTables() {
+    public ResponseEntity<List<RestTable>> getTables() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         RestaurantUser restUser = userRepo.findByUsername(auth.getName());
         return new ResponseEntity<>(restTableRepository.findByRestaurantId(restUser.getRestDetails().getRestId()), HttpStatus.ACCEPTED);
     }
 
-
     @GetMapping("/{restaurantId}/getTables")
-    public ResponseEntity<?> getTables(@PathVariable("restaurantId") Long restId) {
+    public ResponseEntity<List<RestTable>> getTables(@PathVariable("restaurantId") Long restId) {
         return new ResponseEntity<>(restTableRepository.findByRestaurantId(restId), HttpStatus.ACCEPTED);
     }
 
     @GetMapping("/get-table/{tableId}")
-    public ResponseEntity<?> getTable(@PathVariable Long tableId) {
+    public ResponseEntity<RestTable> getTable(@PathVariable Long tableId) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         RestaurantUser restUser = userRepo.findByUsername(auth.getName());
         RestaurantDetails restaurant = restUser.getRestDetails();
@@ -87,45 +88,45 @@ public class ConfigController {
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/staff/add")
-    public ResponseEntity<?> addStaff(@RequestBody Staff staff) {
+    public ResponseEntity<Staff> addStaff(@RequestBody Staff staff) {
     	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         RestaurantUser restUser = userRepo.findByUsername(auth.getName());
         RestaurantDetails restaurant = restUser.getRestDetails();
-        return new ResponseEntity<Staff>(restConfigServiceImpl.addNewStaff(staff, restaurant.getRestId()), HttpStatus.OK);
+        return new ResponseEntity<>(restConfigServiceImpl.addNewStaff(staff, restaurant.getRestId()), HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @DeleteMapping("/staff/delete/{staffId}")
-    public ResponseEntity<?> removeStaff(@PathVariable Long staffId) {
-        return new ResponseEntity<Boolean>(restConfigServiceImpl.deleteStaffById(staffId), HttpStatus.OK);
+    public ResponseEntity<Boolean> removeStaff(@PathVariable Long staffId) {
+        return new ResponseEntity<>(restConfigServiceImpl.deleteStaffById(staffId), HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @PutMapping("/staff/update")
-    public ResponseEntity<?> updateStaff(@RequestBody Staff staff) {
-        return new ResponseEntity<Staff>(restConfigServiceImpl.updateStaff(staff), HttpStatus.OK);
+    public ResponseEntity<Staff> updateStaff(@RequestBody Staff staff) {
+        return new ResponseEntity<>(restConfigServiceImpl.updateStaff(staff), HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/staff/get-all-staffs")
-    public ResponseEntity<?> getAllStaff() {
-        return new ResponseEntity<List<Staff>>(restConfigServiceImpl.getAllStaffs(), HttpStatus.OK);
+    public ResponseEntity<List<Staff>> getAllStaff() {
+        return new ResponseEntity<>(restConfigServiceImpl.getAllStaffs(), HttpStatus.OK);
     }
 
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/staff/get-custom-staffs")
-    public ResponseEntity<?> getCustomStaffs() {
-        return new ResponseEntity<List<Staff>>(restConfigServiceImpl.getCustomStaffs(), HttpStatus.OK);
+    public ResponseEntity<List<Staff>> getCustomStaffs() {
+        return new ResponseEntity<>(restConfigServiceImpl.getCustomStaffs(), HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @PutMapping("/table/update-table-charges")
-    public ResponseEntity<?> updateTableCharges(@RequestBody RestTable table) {
+    public ResponseEntity<RestTable> updateTableCharges(@RequestBody RestTable table) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         RestaurantUser restUser = userRepo.findByUsername(auth.getName());
         RestaurantDetails restaurant = restUser.getRestDetails();
-        return new ResponseEntity<RestTable>(restConfigServiceImpl.updateTableCharges(table, restaurant.getRestId()), HttpStatus.OK);
+        return new ResponseEntity<>(restConfigServiceImpl.updateTableCharges(table, restaurant.getRestId()), HttpStatus.OK);
     }
     
     @PreAuthorize("hasRole('ROLE_USER')")
@@ -142,5 +143,42 @@ public class ConfigController {
     public ResponseEntity<?> deleteTable(@PathVariable Long tableId){
     	return new ResponseEntity<Boolean>(restConfigServiceImpl.deleteTableById(tableId), HttpStatus.OK);
     }
-    
+
+
+
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping("/getPaymentMethod")
+    public ResponseEntity<List<PaymentMode>> getPaymentMethod() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        RestaurantUser restUser = userRepo.findByUsername(auth.getName());
+        Long restId = restUser.getRestDetails().getRestId();
+        return new ResponseEntity<>(restConfigServiceImpl.getPaymentMethod(restId), HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @PostMapping("/addPaymentMethod")
+    public ResponseEntity<PaymentMode> addPaymentMethod(@RequestBody PaymentModeDTO paymentModeDTO) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        RestaurantUser restUser = userRepo.findByUsername(auth.getName());
+        RestaurantDetails restaurantDetails = restUser.getRestDetails();
+        return new ResponseEntity<>(restConfigServiceImpl.addPaymentMethod(paymentModeDTO,restaurantDetails), HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @DeleteMapping("/deletePaymentMethod/{paymentId}")
+    public ResponseEntity<Boolean> deletePaymentMethod(@PathVariable Long paymentId) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        RestaurantUser restUser = userRepo.findByUsername(auth.getName());
+        Long restId = restUser.getRestDetails().getRestId();
+        return new ResponseEntity<>(restConfigServiceImpl.deletePaymentMethod(paymentId,restId), HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @PutMapping("/setPaymentMethodStatus/{paymentId}")
+    public ResponseEntity<Boolean> setPaymentMethodStatus(@PathVariable(value = "paymentId") Long paymentId) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        RestaurantUser restUser = userRepo.findByUsername(auth.getName());
+        Long restId = restUser.getRestDetails().getRestId();
+        return new ResponseEntity<>(restConfigServiceImpl.setPaymentMethodStatus(paymentId,restId), HttpStatus.OK);
+    }
 }

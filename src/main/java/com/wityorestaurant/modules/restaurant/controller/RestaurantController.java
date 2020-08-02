@@ -4,6 +4,7 @@ import com.wityorestaurant.common.Constant;
 import com.wityorestaurant.modules.config.service.RestaurantConfigurationService;
 import com.wityorestaurant.modules.restaurant.dto.LoginRequestDTO;
 import com.wityorestaurant.modules.restaurant.dto.RegistrationDTO;
+import com.wityorestaurant.modules.restaurant.dto.RestaurantBasicDTO;
 import com.wityorestaurant.modules.restaurant.dto.RestaurantListDto;
 import com.wityorestaurant.modules.restaurant.model.RestaurantUser;
 import com.wityorestaurant.modules.restaurant.repository.RestaurantUserRepository;
@@ -87,6 +88,6 @@ public class RestaurantController {
 
     @GetMapping("/restaurant-id-list")
     public ResponseEntity<?> restDetailsByIdName() {
-        return new ResponseEntity<RestaurantListDto>(restUserServiceImpl.getAllRestaurantIdsAndName(), HttpStatus.OK);
+        return new ResponseEntity<>(restUserServiceImpl.getAllRestaurantIdsAndName(), HttpStatus.OK);
     }
 }

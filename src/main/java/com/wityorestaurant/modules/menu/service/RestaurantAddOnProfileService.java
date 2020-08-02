@@ -10,6 +10,8 @@ public interface RestaurantAddOnProfileService {
 
     String deleteAddOnProfileItem(String ProfileId);
 
+    String setAddOnProfileToggleStatus(String ProfileId);
+
     AddOnProfile addAddOnProfileItem(AddOnProfile addOnProfile);
 
     AddOnProfile editAddOnProfileItem(AddOnProfile addOnProfile);

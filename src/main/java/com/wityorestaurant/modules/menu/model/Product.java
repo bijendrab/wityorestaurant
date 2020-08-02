@@ -18,6 +18,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Cascade;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -83,6 +84,7 @@ public class Product implements Serializable {
     private String selectedQuantity;
 
 
+
     @ManyToOne()
     @JoinColumn(name = "restId")
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "restId")
@@ -92,12 +94,6 @@ public class Product implements Serializable {
 
     @OneToMany(mappedBy = "product", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<ProductQuantityOptions> productQuantityOptions;
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "item_addOn",
-        joinColumns = @JoinColumn(name = "product_id"),
-        inverseJoinColumns = @JoinColumn(name = "profile_id"))
-    private Set<AddOnProfile> addOnProfiles = new HashSet<>();
 
     public Product() {
     }
@@ -214,13 +210,5 @@ public class Product implements Serializable {
 	public void setAppliedTax(TaxProfile appliedTax) {
 		this.appliedTax = appliedTax;
 	}
-
-    public Set<AddOnProfile> getAddOnProfiles() {
-        return addOnProfiles;
-    }
-
-    public void setAddOnProfiles(Set<AddOnProfile> addOnProfiles) {
-        this.addOnProfiles = addOnProfiles;
-    }
     
 }

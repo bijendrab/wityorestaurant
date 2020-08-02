@@ -111,4 +111,13 @@ public class RestaurantMenuServiceImpl implements RestaurantMenuService {
         dto.setRestaurantMenu(menuList);
         return dto;
     }
+
+    private Product getMenuItemForCustomer(String productId, Long restId) {
+        return menuRepository.findByItemAndRestId(productId, restId);
+    }
+
+    public Product getMenuItemByIdCustomer(Long restId, String productId) {
+        Product product = getMenuItemForCustomer(productId,restId);
+        return product;
+    }
 }

@@ -18,58 +18,21 @@ public class ReservationDetailsDto implements Serializable {
     @Column(name = "id")
     private int id;*/
 
-    @NotNull
-    private LocalDate date;
-
-    @NotNull
-    @Column(name = "numberOfSeats")
-    private Integer numberOfSeats;
-
-    @NotNull
-    @Column(name = "tableNumber")
-    private Integer tableNumber;
-
+    private ReservationDTO reservationDTO;
 
     private CustomerInfoDTO customerInfo;
 
-    @NotNull
-    @Embedded
-    private TimeSpan ts;
 
     public ReservationDetailsDto() {
 
     }
-/*
-    public int getId() {
-        return id;
+
+    public ReservationDTO getReservationDTO() {
+        return reservationDTO;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }*/
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
-
-    public Integer getNumberOfSeats() {
-        return numberOfSeats;
-    }
-
-    public void setNumberOfSeats(Integer numberOfSeats) {
-        this.numberOfSeats = numberOfSeats;
-    }
-
-    public Integer getTableNumber() {
-        return tableNumber;
-    }
-
-    public void setTableNumber(Integer tableNumber) {
-        this.tableNumber = tableNumber;
+    public void setReservationDTO(ReservationDTO reservationDTO) {
+        this.reservationDTO = reservationDTO;
     }
 
     public CustomerInfoDTO getCustomerInfo() {
@@ -80,13 +43,7 @@ public class ReservationDetailsDto implements Serializable {
         this.customerInfo = customerInfo;
     }
 
-    public TimeSpan getTs() {
-        return ts;
-    }
 
-    public void setTs(TimeSpan ts) {
-        this.ts = ts;
-    }
 }
 
 

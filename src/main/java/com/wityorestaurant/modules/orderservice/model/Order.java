@@ -11,15 +11,12 @@ import java.util.Set;
 
 @Entity
 @Table(name = "foodorder")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "orderId")
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "orderId")
 public class Order implements Serializable {
 
-    private static final long serialVersionUID = 8311754468336492518L;
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "orderId")
-    private Long orderId;
+    private String orderId;
 
     @Column(name = "totalCost")
     private Float totalCost;
@@ -33,7 +30,7 @@ public class Order implements Serializable {
     private Reservation accordingReservation;
 
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "order", orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "order", cascade = CascadeType.ALL,orphanRemoval=true)
     private Set<OrderItem> menuItemOrders = new HashSet<OrderItem>(0);
 
     private String orderedBy;
@@ -41,11 +38,11 @@ public class Order implements Serializable {
     public Order() {
     }
 
-    public Long getOrderId() {
+    public String getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(Long orderId) {
+    public void setOrderId(String orderId) {
         this.orderId = orderId;
     }
 

@@ -4,6 +4,7 @@ import com.wityorestaurant.modules.menu.model.Product;
 import com.wityorestaurant.modules.menu.service.RestaurantMenuService;
 import com.wityorestaurant.modules.restaurant.repository.RestaurantUserRepository;
 import com.wityorestaurant.modules.restaurant.service.RestaurantUserService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,12 +37,14 @@ public class MenuController {
     }
 
     @PreAuthorize("hasRole('ROLE_USER')")
+    @ApiOperation(value = "get menu items of a restaurant", response = Product.class,responseContainer = "List")
     @GetMapping("/getMenu")
     public ResponseEntity<?> getMenu() {
         return new ResponseEntity<>(restMenuServiceImpl.getAllProducts(), HttpStatus.ACCEPTED);
     }
 
     @PreAuthorize("hasRole('ROLE_USER')")
+    @ApiOperation(value = "get menu item details of a restaurant", response = Product.class)
     @GetMapping("/getMenu/{itemId}")
     public ResponseEntity<?> getMenuItem(@PathVariable(value = "itemId") String itemId) {
         return new ResponseEntity<>(restMenuServiceImpl.getMenuItemById(itemId), HttpStatus.ACCEPTED);
@@ -70,8 +73,8 @@ public class MenuController {
         return new ResponseEntity<>(restMenuServiceImpl.getMenuByRestaurantId(restId), HttpStatus.ACCEPTED);
     }
 
-    @GetMapping("/get-restaurant-order-menu")
-    public ResponseEntity<?> getMenuItemForRestaurantOrders() {
-        return new ResponseEntity<List<Product>>(restMenuServiceImpl.getAllProducts(), HttpStatus.OK);
+    @GetMapping("/{restaurantId}/{itemId}")
+    public ResponseEntity<?> getMenuItemByRestaurantId(@PathVariable("restaurantId") Long restId,@PathVariable(value = "itemId") String itemId ) {
+        return new ResponseEntity<>(restMenuServiceImpl.getMenuItemByIdCustomer(restId,itemId), HttpStatus.ACCEPTED);
     }
 }

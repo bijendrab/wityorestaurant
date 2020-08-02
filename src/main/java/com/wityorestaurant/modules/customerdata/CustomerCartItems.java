@@ -1,6 +1,11 @@
 package com.wityorestaurant.modules.customerdata;
 
+import javax.persistence.CascadeType;
+import javax.persistence.FetchType;
 import javax.persistence.Lob;
+import javax.persistence.OneToMany;
+import java.time.LocalDateTime;
+import java.util.Set;
 
 public class CustomerCartItems {
     private Long cartItemId;
@@ -9,9 +14,10 @@ public class CustomerCartItems {
     private int quantity;
     private double price;
     private Boolean immediateStatus;
-
-    @Lob
+    private LocalDateTime addItemToCartTime;
+    private LocalDateTime updateItemInCartTime;
     private String productJson;
+    private Set<CustomerCartAddOnItems> selectCartAddOnItems;
 
     public Long getCartItemId() {
         return cartItemId;
@@ -67,5 +73,29 @@ public class CustomerCartItems {
 
     public void setImmediateStatus(Boolean immediateStatus) {
         this.immediateStatus = immediateStatus;
+    }
+
+    public LocalDateTime getAddItemToCartTime() {
+        return addItemToCartTime;
+    }
+
+    public void setAddItemToCartTime(LocalDateTime addItemToCartTime) {
+        this.addItemToCartTime = addItemToCartTime;
+    }
+
+    public LocalDateTime getUpdateItemInCartTime() {
+        return updateItemInCartTime;
+    }
+
+    public void setUpdateItemInCartTime(LocalDateTime updateItemInCartTime) {
+        this.updateItemInCartTime = updateItemInCartTime;
+    }
+
+    public Set<CustomerCartAddOnItems> getSelectCartAddOnItems() {
+        return selectCartAddOnItems;
+    }
+
+    public void setSelectCartAddOnItems(Set<CustomerCartAddOnItems> selectCartAddOnItems) {
+        this.selectCartAddOnItems = selectCartAddOnItems;
     }
 }
