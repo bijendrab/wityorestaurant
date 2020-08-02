@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.wityorestaurant.modules.config.model.RestTable;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
@@ -21,6 +22,8 @@ public class RestaurantCartItem {
     private int quantity;
     private double price;
     private Boolean immediateStatus = Boolean.FALSE;
+    private LocalDateTime addItemToCartTime;
+    private LocalDateTime updateItemInCartTime;
 
     @ManyToOne
     @JoinColumn(name = "cart_id")
@@ -32,7 +35,7 @@ public class RestaurantCartItem {
     @JoinColumn(name = "table_id")
     private RestTable table;
 
-    @Lob
+
     private String productJson;
 
     private String orderTaker;
@@ -126,5 +129,21 @@ public class RestaurantCartItem {
 
     public void setRestaurantCartAddOnItems(Set<RestaurantCartAddOnItems> restaurantCartAddOnItems) {
         this.restaurantCartAddOnItems = restaurantCartAddOnItems;
+    }
+
+    public LocalDateTime getAddItemToCartTime() {
+        return addItemToCartTime;
+    }
+
+    public void setAddItemToCartTime(LocalDateTime addItemToCartTime) {
+        this.addItemToCartTime = addItemToCartTime;
+    }
+
+    public LocalDateTime getUpdateItemInCartTime() {
+        return updateItemInCartTime;
+    }
+
+    public void setUpdateItemInCartTime(LocalDateTime updateItemInCartTime) {
+        this.updateItemInCartTime = updateItemInCartTime;
     }
 }

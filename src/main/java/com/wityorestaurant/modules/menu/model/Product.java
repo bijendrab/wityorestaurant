@@ -18,6 +18,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Cascade;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -81,6 +82,7 @@ public class Product implements Serializable {
 
     @Column(name = "selectedQuantity")
     private String selectedQuantity;
+
 
 
     @ManyToOne()
