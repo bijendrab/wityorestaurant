@@ -1,6 +1,7 @@
 package com.wityorestaurant.modules.restaurant.dto;
 
 public class RestaurantBasicDTO {
+    private Long restaurantId;
     private String restName;
     private String description;
     private String phone;
@@ -9,6 +10,14 @@ public class RestaurantBasicDTO {
     private String city;
     private String gstIn;
 
+
+    public Long getRestaurantId() {
+        return restaurantId;
+    }
+
+    public void setRestaurantId(Long restaurantId) {
+        this.restaurantId = restaurantId;
+    }
 
     public String getRestName() {
         return restName;

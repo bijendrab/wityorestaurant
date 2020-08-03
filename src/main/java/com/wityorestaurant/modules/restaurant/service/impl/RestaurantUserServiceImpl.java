@@ -102,6 +102,7 @@ public class RestaurantUserServiceImpl implements RestaurantUserService {
                         continue;
                     }
                     RestaurantBasicDTO restaurantBasicDTO = new RestaurantBasicDTO();
+                    restaurantBasicDTO.setRestaurantId(restaurantUser.getRestId());
                     restaurantBasicDTO.setRestName(restaurantUser.getRestName());
                     restaurantBasicDTO.setPhone(restaurantUser.getPhone());
                     restaurantBasicDTO.setDescription(restaurantUser.getDescription());
