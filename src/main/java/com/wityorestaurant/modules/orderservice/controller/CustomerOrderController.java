@@ -4,8 +4,10 @@ import com.wityorestaurant.modules.customerdata.CustomerInfoDTO;
 import com.wityorestaurant.modules.customerdata.CustomerOrderDTO;
 import com.wityorestaurant.modules.orderservice.dto.TableOrdersResponse;
 import com.wityorestaurant.modules.orderservice.dto.UpdateOrderItemDTO;
+import com.wityorestaurant.modules.orderservice.model.EndDiningInfo;
 import com.wityorestaurant.modules.orderservice.model.Order;
 import com.wityorestaurant.modules.orderservice.service.OrderService;
+import com.wityorestaurant.modules.orderservice.service.RestaurantOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,10 @@ import org.springframework.web.bind.annotation.*;
 public class CustomerOrderController {
     @Autowired
     OrderService orderService;
+
+    @Autowired
+    RestaurantOrderService restOrderService;
+
 
     @PostMapping("/checkout/{restaurantId}")
     public ResponseEntity<?> createOrder(@PathVariable("restaurantId") Long restId, @RequestBody CustomerOrderDTO customerCheckoutItems) {
@@ -36,6 +42,11 @@ public class CustomerOrderController {
     @DeleteMapping("/deleteUserOrderedItem/{restaurantId}")
     public ResponseEntity<?> deleteUserOrderedItem(@PathVariable Long restaurantId, @RequestBody UpdateOrderItemDTO orderItemDto) {
         return new ResponseEntity<Boolean>(orderService.removePlacedOrderItem(orderItemDto, restaurantId), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/end-dining")
+    public ResponseEntity<Boolean> finalizeOrder(@RequestBody EndDiningInfo endDiningInfo) {
+        return new ResponseEntity<>(restOrderService.saveToOrderHistory(endDiningInfo.getRestId(), endDiningInfo.getTableId()),HttpStatus.OK);
     }
 
 }
