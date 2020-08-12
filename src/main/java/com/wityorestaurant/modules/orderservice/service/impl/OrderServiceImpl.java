@@ -84,7 +84,6 @@ public class OrderServiceImpl implements OrderService {
             }
             newOrder.setStatus(OrderStatus.ON_HOLD);
             float totalPrice = 0;
-            Date creationDate = new Date();
             for (CustomerCartItems customerCartItems : customerOrderDTO.getCartItems()) {
                 String orderItemUUID = UUID.randomUUID().toString();
                 orderItemUUID = orderItemUUID.replaceAll("-", "");
@@ -94,7 +93,7 @@ public class OrderServiceImpl implements OrderService {
                 menuItem_Order.setQuantity(customerCartItems.getQuantity());
                 menuItem_Order.setItemName(customerCartItems.getItemName());
                 menuItem_Order.setPrice(customerCartItems.getPrice());
-                menuItem_Order.setOrderCreationTime(creationDate);
+                menuItem_Order.setOrderCreationTime(LocalDateTime.now());
                 menuItem_Order.setStatus(OrderStatus.UNPROCESSED.toString());
                 menuItem_Order.setQuantityOption(customerCartItems.getQuantityOption());
                 menuItem_Order.setCustomerCartItems(new Gson().toJson(customerCartItems));

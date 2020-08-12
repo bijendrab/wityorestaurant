@@ -54,8 +54,7 @@ public class OrderHistory {
     @JsonProperty("restId")
     private RestaurantDetails restaurantDetails;
 
-    @Temporal(value = TemporalType.TIMESTAMP)
-    private Date orderCreationTime;
+    private LocalDateTime orderCreationTime;
 
     private LocalDateTime orderHistoryTime;
 
@@ -93,11 +92,11 @@ public class OrderHistory {
         this.tableId = tableId;
     }
 
-    public Date getOrderCreationTime() {
+    public LocalDateTime getOrderCreationTime() {
         return orderCreationTime;
     }
 
-    public void setOrderCreationTime(Date orderCreationTime) {
+    public void setOrderCreationTime(LocalDateTime orderCreationTime) {
         this.orderCreationTime = orderCreationTime;
     }
 

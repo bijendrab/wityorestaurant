@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -17,8 +18,7 @@ public class OrderItem implements Serializable {
     @Id
     private String orderItemId;
 
-    @Temporal(value = TemporalType.TIMESTAMP)
-    private Date orderCreationTime;
+    private LocalDateTime orderCreationTime;
 
     private int quantity;
 
@@ -73,11 +73,11 @@ public class OrderItem implements Serializable {
         this.orderItemId = orderItemId;
     }
 
-    public Date getOrderCreationTime() {
+    public LocalDateTime getOrderCreationTime() {
         return orderCreationTime;
     }
 
-    public void setOrderCreationTime(Date orderCreationTime) {
+    public void setOrderCreationTime(LocalDateTime orderCreationTime) {
         this.orderCreationTime = orderCreationTime;
     }
 

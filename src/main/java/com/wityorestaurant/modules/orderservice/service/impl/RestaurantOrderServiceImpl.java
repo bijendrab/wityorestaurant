@@ -122,7 +122,6 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService {
             }
             newOrder.setStatus(OrderStatus.ON_HOLD);
             float totalPrice = 0;
-            Date creationDate = new Date();
             for (RestaurantCartItem mi : orderDTO.getCartItems()) {
                 String orderItemUUID = UUID.randomUUID().toString();
                 orderItemUUID = orderItemUUID.replaceAll("-", "");
@@ -132,7 +131,7 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService {
                 menuItem_Order.setQuantity(mi.getQuantity());
                 menuItem_Order.setItemName(mi.getItemName());
                 menuItem_Order.setPrice(mi.getPrice());
-                menuItem_Order.setOrderCreationTime(creationDate);
+                menuItem_Order.setOrderCreationTime(LocalDateTime.now());
                 menuItem_Order.setStatus(OrderStatus.UNPROCESSED.toString());
                 menuItem_Order.setQuantityOption(mi.getQuantityOption());
                 menuItem_Order.setCustomerCartItems(new Gson().toJson(mi));
@@ -395,7 +394,7 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService {
         orderHistory.setTableId(restTable.getId());
         orderHistory.setPaymentStatus(Boolean.FALSE);
         orderHistory.setPaymentMethod("TBD");
-        orderHistory.setOrderCreationTime(orders.get(0).getMenuItemOrders().iterator().next().getOrderCreationTime());Date creationDate = new Date();
+        orderHistory.setOrderCreationTime(orders.get(0).getMenuItemOrders().iterator().next().getOrderCreationTime());
         orderHistory.setOrderHistoryTime(LocalDateTime.now());
         orderHistory.setTotalCost(paymentService.getOrderPaymentSummary(restTable.getRestaurantDetails().getRestId(),restTable.getId()).getTotalCost());
         orderHistoryRepository.save(orderHistory);

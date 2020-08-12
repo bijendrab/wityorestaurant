@@ -1,6 +1,7 @@
 package com.wityorestaurant.modules.orderservice.model;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -16,7 +17,7 @@ public class OrderQueue {
     private Long category;
     private Long subCategory;
     private Long cuisine;
-    private Date orderCreationTime;
+    private LocalDateTime orderCreationTime;
     private String quantityOption;
     private Boolean immediateStatus;
 
@@ -92,11 +93,11 @@ public class OrderQueue {
         this.cuisine = cuisine;
     }
 
-    public Date getOrderCreationTime() {
+    public LocalDateTime getOrderCreationTime() {
         return orderCreationTime;
     }
 
-    public void setOrderCreationTime(Date orderCreationTime) {
+    public void setOrderCreationTime(LocalDateTime orderCreationTime) {
         this.orderCreationTime = orderCreationTime;
     }
 
