@@ -1,6 +1,7 @@
 package com.wityorestaurant.modules.restaurant.service;
 
 import com.wityorestaurant.modules.restaurant.dto.RegistrationDTO;
+import com.wityorestaurant.modules.restaurant.dto.RestaurantBasicDTO;
 import com.wityorestaurant.modules.restaurant.dto.RestaurantListDto;
 import com.wityorestaurant.modules.restaurant.model.RestaurantUser;
 
@@ -16,4 +17,6 @@ public interface RestaurantUserService {
     RestaurantUser getUserByUsername(String username);
 
     RestaurantListDto getAllRestaurantIdsAndName();
+
+    RestaurantBasicDTO getRestaurantDetails(Long restaurantId);
 }

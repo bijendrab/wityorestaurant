@@ -90,4 +90,9 @@ public class RestaurantController {
     public ResponseEntity<?> restDetailsByIdName() {
         return new ResponseEntity<>(restUserServiceImpl.getAllRestaurantIdsAndName(), HttpStatus.OK);
     }
+
+    @GetMapping("/{restaurantId}")
+    public ResponseEntity<?> restDetailsByIdName(@PathVariable Long restaurantId) {
+        return new ResponseEntity<>(restUserServiceImpl.getRestaurantDetails(restaurantId), HttpStatus.OK);
+    }
 }
