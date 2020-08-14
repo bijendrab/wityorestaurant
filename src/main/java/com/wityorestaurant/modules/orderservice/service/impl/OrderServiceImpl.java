@@ -125,7 +125,7 @@ public class OrderServiceImpl implements OrderService {
         }
         catch (Exception e) {
             logger.error("Exception in OrderServiceImpl, method: place order --> {}", e.getMessage());
-            logger.debug("Stacktrace===> {}", e);
+            logger.error("Stacktrace===> {}", e);
         }
         return null;
     }
@@ -154,7 +154,7 @@ public class OrderServiceImpl implements OrderService {
         }
         catch (Exception e) {
             logger.error("Exception in OrderServiceImpl, method: place order --> {}", e.getMessage());
-            logger.debug("Stacktrace===> {}", e);
+            logger.error("Stacktrace===> {}", e);
             return new TableOrdersResponse();
         }
     }
@@ -219,7 +219,7 @@ public class OrderServiceImpl implements OrderService {
             }
         } catch (Exception e) {
             logger.error("Exception in OrderServiceImpl, method: editOrder --> {}", e.getMessage());
-            logger.debug("Stacktrace===> {}", e);
+            logger.error("Stacktrace===> {}", e);
         }
         return null;
     }
@@ -253,7 +253,7 @@ public class OrderServiceImpl implements OrderService {
             return true;
         } catch (Exception e) {
             logger.error("Exception in OrderServiceImpl, method: removePlacedOrderItem --> {}", e.getMessage());
-            logger.debug("Stacktrace===> {}", e);
+            logger.error("Stacktrace===> {}", e);
         }
         return false;
 

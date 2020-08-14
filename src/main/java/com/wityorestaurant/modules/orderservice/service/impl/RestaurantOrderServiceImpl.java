@@ -193,7 +193,7 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService {
             cancelItemRepository.save(orderItem);
             return true;
         } catch (Exception e) {
-            logger.debug("Unable to save in cancelled order items");
+            logger.error("Unable to save in cancelled order items");
             logger.error("Exception in cancelledOrderLogger==>{}", e);
         }
         return false;
@@ -225,7 +225,7 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService {
             return true;
         } catch (Exception e) {
             logger.error("Exception in OrderServiceImpl, method: removePlacedOrderItem --> {}", e.getMessage());
-            logger.debug("Stacktrace===> {}", e);
+            logger.error("Stacktrace===> {}", e);
         }
         return false;
     }
@@ -276,7 +276,7 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService {
             }
         } catch (Exception e) {
             logger.error("Exception in RestaurantOrderServiceImpl, method: updateOrderedItem --> {}", e.getMessage());
-            logger.debug("Stacktrace===> {}", e);
+            logger.error("Stacktrace===> {}", e);
         }
         return null;
     }
