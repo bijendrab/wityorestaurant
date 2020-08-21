@@ -4,6 +4,7 @@ public class RegistrationDTO {
     private String username;
     private String password;
     private String restName;
+    private String description;
     private String ownerName;
     private String phone;
     private String email;
@@ -40,6 +41,14 @@ public class RegistrationDTO {
 
     public void setRestName(String restName) {
         this.restName = restName;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getOwnerName() {
@@ -138,4 +147,5 @@ public class RegistrationDTO {
     public void setGstIn(String gstIn) {
         this.gstIn = gstIn;
     }
+
 }

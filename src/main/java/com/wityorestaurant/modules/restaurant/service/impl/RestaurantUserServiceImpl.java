@@ -57,6 +57,7 @@ public class RestaurantUserServiceImpl implements RestaurantUserService {
 
             if (tempUser == null) {
                 restDetails.setRestName(newUser.getRestName());
+                restDetails.setDescription(newUser.getDescription());
                 restDetails.setOwnerName(newUser.getOwnerName());
                 restDetails.setPhone(newUser.getPhone());
                 restDetails.setEmail(newUser.getEmail());
