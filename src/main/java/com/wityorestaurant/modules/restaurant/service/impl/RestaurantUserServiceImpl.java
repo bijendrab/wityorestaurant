@@ -96,7 +96,7 @@ public class RestaurantUserServiceImpl implements RestaurantUserService {
             List<RestaurantDetails> restaurantList = restaurantRepository.findAll();
             if (restaurantList.size() != 0) {
                 for (RestaurantDetails restaurantUser : restaurantList) {
-                    if (restaurantUser.getRestName().equals("adminrest")){
+                    if (restaurantUser.getRestName().equals("adminrest") || restaurantUser.getRestaurantuser().getEnabled()==false){
                         continue;
                     }
                     RestaurantBasicDTO restaurantBasicDTO = new RestaurantBasicDTO();
