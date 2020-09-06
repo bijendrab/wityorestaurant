@@ -50,6 +50,7 @@ VOLUME $APP_HOME/config
 
 WORKDIR $APP_HOME
 
+RUN mkdir -p /pkcs
 #Copy executable jar file from the builder image
 
 COPY --from=builder /build/target/*.jar wityorestaurant.jar
