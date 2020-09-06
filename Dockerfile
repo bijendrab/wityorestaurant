@@ -55,7 +55,7 @@ RUN mkdir -p /pkcs
 
 COPY --from=builder /build/target/*.jar wityorestaurant.jar
 
-ENTRYPOINT [ "sh", "-c", "java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -Dspring.profiles.active=dev -jar wityorestaurant.jar" ]
+ENTRYPOINT [ "sh", "-c", "java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -Dspring.profiles.active=dev -Dserver.ssl.key-store=file:/pkcs/keystorewityorest.p12 -jar wityorestaurant.jar" ]
 
 #Second option using shell form:
 
