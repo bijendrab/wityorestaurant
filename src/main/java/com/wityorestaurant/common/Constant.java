@@ -10,5 +10,7 @@ public class Constant {
     public static final String AUTHORITIES_KEY = "scopes";
     
     public static final String RESTAURANT_CART_API = "/api/rest-cart";
+
+
 }
 
